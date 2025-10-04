@@ -15,7 +15,7 @@ import java.util.List;
 public class Guide {
 
     @Id
-    private Long id; // même ID que User
+    private Long id; 
 
     @OneToOne
     @MapsId
@@ -28,5 +28,10 @@ public class Guide {
     private Double hourlyRate;
     private Double ratingAvg;
     private boolean verified;
+
+    // 🔹 Lien vers l'agence de voyage
+    @ManyToOne
+    @JoinColumn(name = "agence_voyage_id")
+    private AgenceVoyage agenceVoyage;
 }
 
