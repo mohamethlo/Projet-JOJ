@@ -1,0 +1,21 @@
+// Export all modals from a single entry point
+export { default as ReviewModal } from './ReviewModal';
+export { default as ReviewsModal } from './ReviewsModal';
+export { default as EventRegistrationModal } from './EventRegistrationModal';
+export { default as EventDetailsModal } from './EventDetailsModal';
+export { default as GuideDetailsModal } from './GuideDetailsModal';
+export { default as GuideBookingModal } from './GuideBookingModal';
+export { default as GuideContactModal } from './GuideContactModal';
+export { default as CostEstimationModal } from './CostEstimationModal';
+export { default as AccommodationDetailsModal } from './AccommodationDetailsModal';
+export { default as AccommodationBookingModal } from './AccommodationBookingModal';
+export { default as AccommodationEditModal } from './AccommodationEditModal';
+export { default as ReportDetailsModal } from './ReportDetailsModal';
+export { default as CommentModerationModal } from './CommentModerationModal';
+export { default as UserManagementModal } from './UserManagementModal';
+export { default as ArticleDetailsModal } from './ArticleDetailsModal';
+export { default as ArticleEditModal } from './ArticleEditModal';
+export { default as UserEditModal } from './UserEditModal';
+export { default as UserDetailsModal } from './UserDetailsModal';
+export { default as EventEditModal } from './EventEditModal';
+export { default as GuideEditModal } from './GuideEditModal';
