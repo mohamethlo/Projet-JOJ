@@ -1,31 +1,30 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security';
+// Mapping des rôles backend vers frontend
+export type UserRole = 'VISITOR' | 'LOCAL' | 'GUIDE' | 'ORGANIZER' | 'ADMIN';
 
 export interface User {
-  id: string;
+  id: number;
   email: string;
-  name: string;
   role: UserRole;
-  avatar?: string;
-  phone?: string;
-  languages?: string[];
-  interests?: string[];
-  location?: string;
-  bio?: string;
-  isVerified?: boolean;
+  token: string;
+  createdAt?: string;
+  lastLogin?: string;
+  profile?: any;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (userData: Partial<User> & { password: string }) => Promise<void>;
+  register: (email: string, password: string, role: UserRole) => Promise<void>;
   logout: () => void;
-  updateProfile: (userData: Partial<User>) => Promise<void>;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Configuration de l'API
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -40,10 +39,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading user from localStorage or API
+    // Charger l'utilisateur depuis le localStorage au démarrage
     const savedUser = localStorage.getItem('lateranga_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    const savedToken = localStorage.getItem('lateranga_token');
+    
+    if (savedUser && savedToken) {
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setUser({ ...parsedUser, token: savedToken });
+      } catch (error) {
+        console.error('Erreur lors du chargement de l\'utilisateur:', error);
+        localStorage.removeItem('lateranga_user');
+        localStorage.removeItem('lateranga_token');
+      }
     }
     setIsLoading(false);
   }, []);
@@ -51,78 +59,91 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // Mock login - replace with actual API call
-      // Déterminer le rôle basé sur l'email pour les tests
-      let role: UserRole = 'tourist';
-      if (email.includes('admin')) role = 'admin';
-      else if (email.includes('guide')) role = 'guide';
-      else if (email.includes('organizer')) role = 'organizer';
-      else if (email.includes('security')) role = 'security';
-      else if (email.includes('local')) role = 'local';
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-        role,
-        avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
-        languages: ['français', 'english'],
-        interests: ['culture', 'histoire', 'gastronomie'],
-        location: 'Dakar',
-        bio: 'Passionné par la culture sénégalaise et l\'accueil des visiteurs. J\'aime partager les richesses de mon pays.',
-        isVerified: true
-      };
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Email ou mot de passe incorrect');
+        }
+        throw new Error('Erreur de connexion au serveur');
+      }
+
+      const data = await response.json();
       
-      setUser(mockUser);
-      localStorage.setItem('lateranga_user', JSON.stringify(mockUser));
+      // Décoder le token JWT pour obtenir les informations utilisateur
+      const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
+      
+      const userData: User = {
+        id: tokenPayload.userId || tokenPayload.sub,
+        email: tokenPayload.sub || email,
+        role: tokenPayload.role || 'VISITOR',
+        token: data.token,
+      };
+
+      setUser(userData);
+      localStorage.setItem('lateranga_user', JSON.stringify(userData));
+      localStorage.setItem('lateranga_token', data.token);
     } catch (error) {
-      throw new Error('Erreur de connexion');
+      console.error('Erreur de connexion:', error);
+      throw error instanceof Error ? error : new Error('Erreur de connexion');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const register = async (userData: Partial<User> & { password: string }) => {
-    setIsLoading(true);
-    try {
-      // Mock registration - replace with actual API call
-      const newUser: User = {
-        id: Date.now().toString(),
-        email: userData.email!,
-        name: userData.name!,
-        role: userData.role || 'tourist',
-        avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
-        languages: userData.languages || ['français'],
-        interests: userData.interests || [],
-        location: userData.location,
-        bio: userData.bio || '',
-        isVerified: false
-      };
-      
-      setUser(newUser);
-      localStorage.setItem('lateranga_user', JSON.stringify(newUser));
-    } catch (error) {
+  const register = async (email: string, password: string) => {
+  setIsLoading(true);
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, role: 'VISITOR' }), // rôle fixé à VISITOR
+    });
+
+    if (!response.ok) {
+      if (response.status === 400) {
+        throw new Error('Cet email est déjà utilisé');
+      }
       throw new Error('Erreur lors de l\'inscription');
-    } finally {
-      setIsLoading(false);
     }
-  };
+
+    const data = await response.json();
+    const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
+
+    const userData: User = {
+      id: tokenPayload.userId || tokenPayload.sub,
+      email: tokenPayload.sub || email,
+      role: 'VISITOR',
+      token: data.token,
+    };
+
+    setUser(userData);
+    localStorage.setItem('lateranga_user', JSON.stringify(userData));
+    localStorage.setItem('lateranga_token', data.token);
+
+  } catch (error) {
+    console.error('Erreur d\'inscription:', error);
+    throw error instanceof Error ? error : new Error('Erreur lors de l\'inscription');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('lateranga_user');
-  };
-
-  const updateProfile = async (userData: Partial<User>) => {
-    if (!user) return;
-    
-    const updatedUser = { ...user, ...userData };
-    setUser(updatedUser);
-    localStorage.setItem('lateranga_user', JSON.stringify(updatedUser));
+    localStorage.removeItem('lateranga_token');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, updateProfile, isLoading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

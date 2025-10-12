@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Bell, Globe, LogOut, Settings, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import ConfirmationDialog from '@/components/ui/confirmation-dialog';
 
 const Header = () => {
@@ -21,16 +20,17 @@ const Header = () => {
   const navigate = useNavigate();
   const [showLogoutDialog, setShowLogoutDialog] = React.useState(false);
 
-  const handleLogout = () => {
-    setShowLogoutDialog(true);
-  };
+  const handleLogout = () => setShowLogoutDialog(true);
 
   const confirmLogout = () => {
     logout();
     navigate('/');
   };
 
+  // 🚨 Protection : si user n’est pas encore chargé
   if (!user) return null;
+
+  const userInitial = user?.name?.charAt(0)?.toUpperCase() ?? '?';
 
   return (
     <header className="bg-white shadow-sm border-b ml-64 h-16 fixed top-0 right-0 left-64 z-20">
@@ -40,14 +40,16 @@ const Header = () => {
             {user.role === 'admin' ? 'Administration' : t('dashboard')}
           </h2>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          {/* Language Selector */}
+          {/* 🌐 Language Selector */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="flex items-center space-x-2">
                 <Globe size={16} />
-                <span className="hidden sm:inline">{availableLanguages.find(l => l.code === currentLanguage)?.flag}</span>
+                <span className="hidden sm:inline">
+                  {availableLanguages.find(l => l.code === currentLanguage)?.flag}
+                </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -64,7 +66,7 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Notifications */}
+          {/* 🔔 Notifications */}
           <Button variant="ghost" size="sm" className="relative">
             <Bell size={16} />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -72,17 +74,17 @@ const Header = () => {
             </span>
           </Button>
 
-          {/* User Menu */}
+          {/* 👤 User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center space-x-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.avatar} />
-                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                  <AvatarImage src={user?.avatar || ''} alt={user?.name || 'User'} />
+                  <AvatarFallback>{userInitial}</AvatarFallback>
                 </Avatar>
                 <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium">{user.name}</p>
-                  <p className="text-xs text-gray-500">{t(user.role)}</p>
+                  <p className="text-sm font-medium">{user?.name ?? 'Utilisateur'}</p>
+                  <p className="text-xs text-gray-500">{t(user?.role ?? 'guest')}</p>
                 </div>
               </Button>
             </DropdownMenuTrigger>
@@ -109,7 +111,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Dialog de confirmation de déconnexion */}
+      {/* 🧭 Dialog de confirmation de déconnexion */}
       <ConfirmationDialog
         open={showLogoutDialog}
         onOpenChange={setShowLogoutDialog}

@@ -5,29 +5,48 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff } from 'lucide-react';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css'; // Import du style SweetAlert2
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
 
     try {
       await login(email, password);
-      navigate('/dashboard');
+
+      // ✅ Affichage du message de succès avec SweetAlert2
+      Swal.fire({
+        icon: 'success',
+        title: 'Connexion réussie 🎉',
+        text: 'Bienvenue sur la plateforme laTeranga !',
+        confirmButtonColor: '#f97316', // orange-500
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      // Redirection après un léger délai pour laisser apparaître le message
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur de connexion');
+      // ❌ Message d’erreur avec SweetAlert2
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de connexion',
+        text: err instanceof Error ? err.message : 'Email ou mot de passe incorrect',
+        confirmButtonColor: '#f97316',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -58,7 +77,7 @@ const LoginPage: React.FC = () => {
                   required
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="password">Mot de passe</Label>
                 <div className="relative">
@@ -80,14 +99,8 @@ const LoginPage: React.FC = () => {
                 </div>
               </div>
 
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-orange-600 hover:bg-orange-700"
                 disabled={isLoading}
               >
@@ -98,22 +111,13 @@ const LoginPage: React.FC = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Pas encore de compte ?{' '}
-                <Link to="/auth/register" className="text-orange-600 hover:underline font-medium">
+                <Link
+                  to="/auth/register"
+                  className="text-orange-600 hover:underline font-medium"
+                >
                   Créer un compte
                 </Link>
               </p>
-            </div>
-
-            {/* Demo Accounts */}
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <p className="text-xs text-gray-500 mb-2">Comptes de démonstration :</p>
-              <div className="space-y-1 text-xs text-gray-600">
-                <p>• admin@lateranga.com (Administrateur)</p>
-                <p>• guide@lateranga.com (Guide)</p>
-                <p>• tourist@lateranga.com (Touriste)</p>
-                <p>• organizer@lateranga.com (Organisateur)</p>
-                <p>Mot de passe : demo123</p>
-              </div>
             </div>
           </CardContent>
         </Card>
