@@ -1,37 +1,92 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trophy, Calendar, Users, TrendingUp, MapPin, Clock } from 'lucide-react';
+import { Trophy, Calendar, Users, TrendingUp, MapPin } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { mockEvents } from '@/lib/mockData';
+import { apiGet } from '@/lib/api';
 import { SportsEventsTab, OtherEventsTab } from '@/components/events';
+import { Button } from '@/components/ui/button';
+import AddEventForm from '@/components/events/AddEventForm';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogHeader } from '@/components/ui/dialog';
+
+export interface Event {
+  id: string;
+  title: string;
+  description?: string;
+  location: string;
+  startDateTime: string;
+  endDateTime?: string;
+  type: 'sport' | 'other';
+  isLive?: boolean;
+  registered: number;
+  capacity?: number;
+  category?: string;
+  price?: string;
+}
 
 const EventsPage: React.FC = () => {
   const { user } = useAuth();
-  
-  // Compter les événements par type
-  const sportsEvents = mockEvents.filter(event => event.type === 'sport');
-  const otherEvents = mockEvents.filter(event => event.type === 'other');
+  const [events, setEvents] = useState<Event[]>([]);
+  const [, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  const fetchEvents = async () => {
+    setLoading(true);
+    try {
+      const data = await apiGet<Event[]>('/api/events');
+      setEvents(data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des événements:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const sportsEvents = events.filter(event => event.type === 'sport');
+  const otherEvents = events.filter(event => event.type === 'other');
   const liveEvents = sportsEvents.filter(event => event.isLive);
-  
-  // Statistiques supplémentaires
-  const totalParticipants = mockEvents.reduce((sum, event) => sum + event.registered, 0);
-  const totalCapacity = mockEvents.reduce((sum, event) => sum + event.capacity, 0);
-  const participationRate = Math.round((totalParticipants / totalCapacity) * 100);
-  
-  // Événements par ville
-  const eventsByCity = mockEvents.reduce((acc, event) => {
+
+  const totalParticipants = events.reduce((sum, event) => sum + (event.registered || 0), 0);
+  const totalCapacity = events.reduce((sum, event) => sum + (event.capacity || 0), 0);
+  const participationRate = totalCapacity ? Math.round((totalParticipants / totalCapacity) * 100) : 0;
+
+  const eventsByCity = events.reduce((acc: Record<string, number>, event) => {
     acc[event.location] = (acc[event.location] || 0) + 1;
     return acc;
-  }, {} as Record<string, number>);
-  
+  }, {});
   const topCities = Object.entries(eventsByCity)
     .sort(([,a], [,b]) => b - a)
     .slice(0, 3);
 
   return (
     <div className="space-y-6">
+      {/* Bouton d'ajout d'événement pour admin/organizer */}
+      {(user?.role === 'ADMIN' || user?.role === 'ORGANIZER') && (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button className="mb-4" onClick={() => setOpen(true)}>
+              Ajouter un événement
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Ajouter un nouvel événement</DialogTitle>
+            </DialogHeader>
+            <AddEventForm
+              onEventAdded={() => {
+                fetchEvents();
+                setOpen(false); // ✅ Fermer la modale avant le SweetAlert
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -39,12 +94,8 @@ const EventsPage: React.FC = () => {
           <p className="text-gray-600 mt-1">Découvrez tous les événements du Sénégal</p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="bg-red-100 text-red-700">
-            {liveEvents.length} en direct
-          </Badge>
-          <Badge className="bg-blue-100 text-blue-700">
-            {mockEvents.length} événement(s)
-          </Badge>
+          <Badge className="bg-red-100 text-red-700">{liveEvents.length} en direct</Badge>
+          <Badge className="bg-blue-100 text-blue-700">{events.length} événement(s)</Badge>
         </div>
       </div>
 
@@ -58,7 +109,7 @@ const EventsPage: React.FC = () => {
               </div>
               <div>
                 <p className="text-sm text-gray-600">Total Événements</p>
-                <p className="text-2xl font-bold text-gray-900">{mockEvents.length}</p>
+                <p className="text-2xl font-bold text-gray-900">{events.length}</p>
               </div>
             </div>
           </CardContent>
@@ -142,26 +193,22 @@ const EventsPage: React.FC = () => {
             <Trophy className="h-4 w-4" />
             <span>Événements Sportifs</span>
             {liveEvents.length > 0 && (
-              <Badge className="bg-red-100 text-red-700 text-xs ml-1">
-                {liveEvents.length} live
-              </Badge>
+              <Badge className="bg-red-100 text-red-700 text-xs ml-1">{liveEvents.length} live</Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="other" className="flex items-center space-x-2">
             <Calendar className="h-4 w-4" />
             <span>Autres Événements</span>
-            <Badge className="bg-blue-100 text-blue-700 text-xs ml-1">
-              {otherEvents.length}
-            </Badge>
+            <Badge className="bg-blue-100 text-blue-700 text-xs ml-1">{otherEvents.length}</Badge>
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="sports" className="space-y-6">
-          <SportsEventsTab />
+          <SportsEventsTab events={sportsEvents} />
         </TabsContent>
 
         <TabsContent value="other" className="space-y-6">
-          <OtherEventsTab />
+          <OtherEventsTab events={otherEvents} />
         </TabsContent>
       </Tabs>
     </div>

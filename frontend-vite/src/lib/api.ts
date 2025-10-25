@@ -25,6 +25,7 @@ export const apiRequest = async (
     headers,
   });
 
+
   // Gérer l'expiration du token
   if (response.status === 401) {
     localStorage.removeItem('lateranga_token');

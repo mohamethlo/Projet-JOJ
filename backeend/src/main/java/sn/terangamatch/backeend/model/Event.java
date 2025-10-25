@@ -3,9 +3,11 @@ package sn.terangamatch.backeend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "events")
@@ -24,9 +26,20 @@ public class Event {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    private String location;
+
+    private String type; // "sport" ou "other"
+    private String category; // (ex: "Culture", "Musique", "Football")
+
+    private String status; // "À venir", "En cours", "Terminé"
+
+    private String price; // ex: "2000 FCFA"
+    private boolean isLive;
+    private int registered;
+
+    private LocalDateTime date; // date principale (utilisée par le front)
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private Integer capacity;
 
     @ManyToOne
     @JoinColumn(name = "organizer_id")
@@ -40,7 +53,16 @@ public class Event {
     )
     private List<User> participants;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<Review> reviews;
-}
+    // Informations optionnelles pour les matchs en direct
+    @Embedded
+    private LiveData liveData;
 
+    // 🕓 Ajout de ces deux lignes :
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+}

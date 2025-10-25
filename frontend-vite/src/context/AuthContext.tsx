@@ -103,7 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, role: 'VISITOR' }), // rôle fixé à VISITOR
+      body: JSON.stringify({ email, password, role: 'VISITOR' }),
     });
 
     if (!response.ok) {
@@ -113,19 +113,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error('Erreur lors de l\'inscription');
     }
 
-    const data = await response.json();
-    const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
-
-    const userData: User = {
-      id: tokenPayload.userId || tokenPayload.sub,
-      email: tokenPayload.sub || email,
-      role: 'VISITOR',
-      token: data.token,
-    };
-
-    setUser(userData);
-    localStorage.setItem('lateranga_user', JSON.stringify(userData));
-    localStorage.setItem('lateranga_token', data.token);
+    // ✅ On ne connecte pas l’utilisateur ici
+    // On ne stocke pas le token, car ce n’est pas nécessaire à l’inscription
+    console.log('Inscription réussie');
 
   } catch (error) {
     console.error('Erreur d\'inscription:', error);
