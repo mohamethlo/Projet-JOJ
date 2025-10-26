@@ -12,9 +12,13 @@ export const apiRequest = async (
   const token = localStorage.getItem('lateranga_token');
   
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
     ...options.headers,
   };
+
+  // N'ajouter Content-Type que si ce n'est pas un FormData
+  if (!(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -24,7 +28,6 @@ export const apiRequest = async (
     ...options,
     headers,
   });
-
 
   // Gérer l'expiration du token
   if (response.status === 401) {
@@ -53,9 +56,11 @@ export const apiGet = async <T>(endpoint: string): Promise<T> => {
  * Méthode POST
  */
 export const apiPost = async <T>(endpoint: string, data: any): Promise<T> => {
+  const body = data instanceof FormData ? data : JSON.stringify(data);
+  
   const response = await apiRequest(endpoint, {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: body,
   });
   
   if (!response.ok) {
@@ -69,9 +74,11 @@ export const apiPost = async <T>(endpoint: string, data: any): Promise<T> => {
  * Méthode PUT
  */
 export const apiPut = async <T>(endpoint: string, data: any): Promise<T> => {
+  const body = data instanceof FormData ? data : JSON.stringify(data);
+  
   const response = await apiRequest(endpoint, {
     method: 'PUT',
-    body: JSON.stringify(data),
+    body: body,
   });
   
   if (!response.ok) {
@@ -84,14 +91,18 @@ export const apiPut = async <T>(endpoint: string, data: any): Promise<T> => {
 /**
  * Méthode DELETE
  */
-export const apiDelete = async <T>(endpoint: string): Promise<T> => {
+export const apiDelete = async <T>(endpoint: string): Promise<T | null> => {
   const response = await apiRequest(endpoint, { method: 'DELETE' });
   
   if (!response.ok) {
     throw new Error(`Erreur API: ${response.statusText}`);
   }
   
-  return response.json();
+  // Si la réponse est vide (204 No Content), retourner null
+  const text = await response.text();
+  if (!text) return null as T | null;
+  
+  return JSON.parse(text);
 };
 
 export default {
