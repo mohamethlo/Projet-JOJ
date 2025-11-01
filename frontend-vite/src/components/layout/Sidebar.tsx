@@ -33,7 +33,6 @@ const Sidebar = () => {
   const menuItems = useMemo(() => {
     const commonItems = [
       { href: '/dashboard', icon: Home, label: t('dashboard') },
-      { href: '/profile', icon: User, label: t('profile') },
       { href: '/guides', icon: Users, label: t('guides') },
       { href: '/events', icon: Calendar, label: t('events') },
       { href: '/accommodation', icon: Building, label: 'Hébergement' },
