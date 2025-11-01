@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { QRCode } from 'react-qr-code';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -50,23 +51,45 @@ interface TicketModalProps {
 const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }) => {
   const [qrCodeData, setQrCodeData] = useState<string>('');
 
-  // Générer le QR code (simulation avec une URL)
+  // Générer les données du QR code
   useEffect(() => {
-    console.log('TicketModal - isOpen:', isOpen);
-    console.log('TicketModal - ticketData:', ticketData);
-    
     if (ticketData) {
-      // En réalité, on utiliserait une librairie comme qrcode.js
-      // Pour la démo, on génère une URL avec les données du ticket
       const qrData = {
         id: ticketData.id,
         type: ticketData.type,
         date: ticketData.date,
-        customer: ticketData.customerName
+        customer: ticketData.customerName,
+        location: ticketData.location
       };
       setQrCodeData(JSON.stringify(qrData));
     }
   }, [ticketData, isOpen]);
+
+  // Forcer le z-index de l'overlay et du contenu pour être au-dessus des autres modals
+  useEffect(() => {
+    if (isOpen) {
+      // Attendre que le DOM soit mis à jour
+      const timer = setTimeout(() => {
+        // Sélectionner le dernier overlay (celui du TicketModal qui vient de s'ouvrir)
+        const overlays = Array.from(document.querySelectorAll('[data-radix-dialog-overlay]'));
+        const contents = Array.from(document.querySelectorAll('[data-radix-dialog-content]'));
+        
+        if (overlays.length > 0) {
+          // Le dernier overlay est celui du TicketModal
+          const lastOverlay = overlays[overlays.length - 1] as HTMLElement;
+          lastOverlay.style.zIndex = '99998';
+        }
+        
+        if (contents.length > 0) {
+          // Le dernier content est celui du TicketModal
+          const lastContent = contents[contents.length - 1] as HTMLElement;
+          lastContent.style.zIndex = '99999';
+        }
+      }, 10);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -127,12 +150,18 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto z-[10000]">
+      <DialogContent 
+        className="max-w-4xl max-h-[90vh] overflow-y-auto !z-[99999]" 
+        style={{ zIndex: 99999 }}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <CheckCircle className="h-5 w-5 text-green-500" />
             <span>Ticket de Réservation</span>
           </DialogTitle>
+          <DialogDescription>
+            Votre ticket de réservation pour {ticketData?.title || 'l\'événement'}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -142,11 +171,17 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
             <div className="bg-white border-2 border-dashed border-gray-300 rounded-lg overflow-hidden shadow-sm">
               <div className="flex items-center h-24">
                 {/* QR Code - Côté gauche */}
-                <div className="flex-shrink-0 w-20 h-20 bg-white border-r border-gray-200 flex items-center justify-center">
-                  <div className="text-center">
-                    <QrCode className="h-8 w-8 text-gray-600 mx-auto mb-1" />
-                    <p className="text-xs text-gray-500 font-mono">{ticketData.id.slice(-6)}</p>
-                  </div>
+                <div className="flex-shrink-0 w-28 h-24 bg-white border-r border-gray-200 flex flex-col items-center justify-center p-2">
+                  {qrCodeData && (
+                    <div className="bg-white p-2 rounded-md border-2 border-gray-200 shadow-sm">
+                      <QRCode
+                        value={qrCodeData}
+                        size={64}
+                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                      />
+                    </div>
+                  )}
+                  <p className="text-[10px] text-gray-500 font-mono mt-1">{ticketData.id.slice(-6)}</p>
                 </div>
                 
                 {/* Informations principales - Centre */}
@@ -188,49 +223,35 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
               </div>
             </div>
 
-            {/* Ticket Client - Bande horizontale */}
-            <div className="bg-white border-2 border-dashed border-blue-300 rounded-lg overflow-hidden shadow-sm">
-              <div className="flex items-center h-20">
-                {/* QR Code - Côté gauche */}
-                <div className="flex-shrink-0 w-20 h-20 bg-white border-r border-gray-200 flex items-center justify-center">
-                  <div className="text-center">
-                    <QrCode className="h-8 w-8 text-blue-600 mx-auto mb-1" />
-                    <p className="text-xs text-gray-500 font-mono">{ticketData.id.slice(-6)}</p>
-                  </div>
-                </div>
-                
-                {/* Informations client - Centre */}
-                <div className="flex-1 px-4 py-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-bold text-lg text-gray-900">{ticketData.customerName}</h3>
-                      <div className="flex items-center space-x-4 text-sm text-gray-600">
-                        <div className="flex items-center space-x-1">
-                          <Mail className="h-3 w-3" />
-                          <span>{ticketData.customerEmail}</span>
-                        </div>
-                        {ticketData.customerPhone && (
-                          <div className="flex items-center space-x-1">
-                            <Phone className="h-3 w-3" />
-                            <span>{ticketData.customerPhone}</span>
-                          </div>
-                        )}
+            {/* Informations client - Section séparée */}
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-lg text-gray-900 mb-2 flex items-center gap-2">
+                      <User className="h-4 w-4 text-blue-600" />
+                      Informations client
+                    </h3>
+                    <div className="flex items-center space-x-4 text-sm text-gray-600">
+                      <div className="flex items-center space-x-1">
+                        <Mail className="h-3 w-3" />
+                        <span>{ticketData.customerEmail}</span>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-600">Réservé le</p>
-                      <p className="text-sm font-medium">{ticketData.bookingDate}</p>
+                      {ticketData.customerPhone && (
+                        <div className="flex items-center space-x-1">
+                          <Phone className="h-3 w-3" />
+                          <span>{ticketData.customerPhone}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600">Réservé le</p>
+                    <p className="text-sm font-medium">{ticketData.bookingDate}</p>
+                  </div>
                 </div>
-                
-                {/* Type et icône - Côté droit */}
-                <div className="flex-shrink-0 w-16 h-20 bg-blue-50 border-l border-gray-200 flex flex-col items-center justify-center">
-                  <User className="h-6 w-6 text-blue-600 mb-1" />
-                  <p className="text-xs text-blue-600 font-medium">CLIENT</p>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Informations supplémentaires si disponibles */}
             {ticketData.additionalInfo && (
@@ -279,6 +300,35 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
               </div>
             )}
           </div>
+
+          {/* QR Code principal pour vérification */}
+          {qrCodeData && (
+            <Card className="bg-gradient-to-br from-orange-50 to-white border-2 border-orange-200">
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="text-center">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center justify-center gap-2">
+                      <QrCode className="h-5 w-5 text-orange-600" />
+                      Code QR de vérification
+                    </h3>
+                    <p className="text-sm text-gray-600">Présentez ce code pour une vérification rapide</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-xl border-4 border-orange-300 shadow-lg">
+                    <QRCode
+                      value={qrCodeData}
+                      size={180}
+                      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                    />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs font-mono text-gray-500 bg-gray-100 px-3 py-1 rounded-full inline-block">
+                      ID: {ticketData.id}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Actions */}
           <div className="flex justify-center space-x-4">

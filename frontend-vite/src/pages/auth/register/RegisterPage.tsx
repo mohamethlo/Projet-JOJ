@@ -68,8 +68,8 @@ const RegisterPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-orange-50 to-white px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-orange-600 mb-2">laTeranga</h1>
-          <p className="text-gray-600">Rejoignez notre communauté</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-orange-600 mb-2">DiscoverSenegal</h1>
+          <p className="text-gray-600 text-sm sm:text-base">Rejoignez notre communauté</p>
         </div>
 
         <Card>

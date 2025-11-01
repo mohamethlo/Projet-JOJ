@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Bell, Globe, LogOut, Settings, User } from 'lucide-react';
+import { Bell, Globe, LogOut, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ConfirmationDialog from '@/components/ui/confirmation-dialog';
 
@@ -65,7 +65,13 @@ const Header = () => {
           </DropdownMenu>
 
           {/* Notifications */}
-          <Button variant="ghost" size="sm" className="relative">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="relative"
+            onClick={() => navigate('/notifications')}
+            aria-label="Ouvrir les notifications"
+          >
             <Bell size={16} />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               3
@@ -93,12 +99,7 @@ const Header = () => {
                   {t('profile')}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/settings" className="flex items-center">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Paramètres
-                </Link>
-              </DropdownMenuItem>
+              
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                 <LogOut className="mr-2 h-4 w-4" />

@@ -49,13 +49,13 @@ const MapPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 px-4 py-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Carte Interactive</h1>
-          <p className="text-gray-600 mt-1">Explorez les lieux incontournables de Dakar</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Carte Interactive</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Explorez les lieux incontournables de Dakar</p>
         </div>
-        <Badge className="bg-green-100 text-green-700">
+        <Badge className="bg-green-100 text-green-700 text-xs sm:text-sm w-fit">
           {filteredPlaces.length} lieu(x) trouvé(s)
         </Badge>
       </div>
@@ -149,7 +149,7 @@ const MapPage: React.FC = () => {
 
         {/* Map */}
         <div className="lg:col-span-2">
-          <Card className="h-[700px]">
+          <Card className="h-[400px] sm:h-[500px] lg:h-[700px]">
             <CardContent className="p-0 h-full">
               {/* Mock Map - In real implementation, use Google Maps or Leaflet */}
               <div className="w-full h-full bg-gradient-to-br from-blue-100 to-green-100 relative rounded-lg overflow-hidden">

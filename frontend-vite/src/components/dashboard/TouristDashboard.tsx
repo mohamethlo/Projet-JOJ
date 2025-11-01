@@ -89,7 +89,7 @@ const TouristDashboard: React.FC<TouristDashboardProps> = ({ user }) => {
       <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
         <CardContent className="p-6">
           <h2 className="text-2xl font-bold mb-2">Bienvenue, {user.name}! 👋</h2>
-          <p className="opacity-90">Découvrez les merveilles du Sénégal avec laTeranga</p>
+          <p className="opacity-90">Découvrez les merveilles du Sénégal avec DiscoverSenegal</p>
         </CardContent>
       </Card>
 

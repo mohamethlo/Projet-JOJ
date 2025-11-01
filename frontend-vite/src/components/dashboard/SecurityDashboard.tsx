@@ -15,7 +15,8 @@ import {
   Eye,
   Ban,
   FileText,
-  Camera
+  Camera,
+  Flag
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -309,6 +310,13 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ user }) => {
             <CardTitle>Actions rapides</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
+            <Link to="/security/scanner">
+              <Button className="w-full justify-start">
+                <Eye className="mr-2 h-4 w-4" />
+                Scanner QR
+                <ArrowRight className="ml-auto h-4 w-4" />
+              </Button>
+            </Link>
             <Link to="/security/reports">
               <Button variant="outline" className="w-full justify-start">
                 <FileText className="mr-2 h-4 w-4" />
@@ -316,10 +324,10 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ user }) => {
                 <ArrowRight className="ml-auto h-4 w-4" />
               </Button>
             </Link>
-            <Link to="/security/lost-found">
+            <Link to="/signaler">
               <Button variant="outline" className="w-full justify-start">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Objets trouvés
+                <Flag className="mr-2 h-4 w-4" />
+                Signaler/Commenter
                 <ArrowRight className="ml-auto h-4 w-4" />
               </Button>
             </Link>

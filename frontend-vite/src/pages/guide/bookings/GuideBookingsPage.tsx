@@ -1,10 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { QRCode } from 'react-qr-code';
 import { 
   Calendar, 
   Clock, 
@@ -39,7 +41,10 @@ import {
   BarChart3 as BarChart3Icon,
   TrendingUp as TrendingUpIcon,
   DollarSign as DollarSignIcon,
-  User as UserIcon
+  User as UserIcon,
+  QrCode,
+  Play,
+  Square
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -188,6 +193,8 @@ const GuideBookingsPage: React.FC = () => {
   const [bookings, setBookings] = useState(mockBookings);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isQrScannerOpen, setIsQrScannerOpen] = useState(false);
+  const [scannedTicket, setScannedTicket] = useState<any>(null);
 
   // Filtrage des réservations
   const filteredBookings = useMemo(() => {
@@ -275,6 +282,80 @@ const GuideBookingsPage: React.FC = () => {
     toast.info(`Message envoyé à ${booking.tourist.name}`);
   };
 
+  const handleMarkAsPresent = (bookingId: string) => {
+    setBookings(prev => prev.map(booking => 
+      booking.id === bookingId 
+        ? { ...booking, present: true, presentAt: new Date().toISOString() }
+        : booking
+    ));
+    toast.success('Client marqué comme présent');
+  };
+
+  const handleStartVisit = (bookingId: string) => {
+    setBookings(prev => prev.map(booking => 
+      booking.id === bookingId 
+        ? { ...booking, visitStarted: true, visitStartedAt: new Date().toISOString() }
+        : booking
+    ));
+    toast.success('Visite démarrée');
+  };
+
+  const handleEndVisit = (bookingId: string) => {
+    setBookings(prev => prev.map(booking => 
+      booking.id === bookingId 
+        ? { ...booking, visitEnded: true, visitEndedAt: new Date().toISOString() }
+        : booking
+    ));
+    toast.success('Visite terminée');
+  };
+
+  const handleScanQRCode = () => {
+    setIsQrScannerOpen(true);
+  };
+
+  const handleQRCodeScanned = (qrData: string) => {
+    try {
+      // Essayer de parser comme JSON (QR code structuré)
+      let ticketData;
+      try {
+        ticketData = JSON.parse(qrData);
+      } catch {
+        // Si ce n'est pas du JSON, chercher par ID direct
+        const booking = bookings.find(b => b.id === qrData || b.id.includes(qrData));
+        if (booking) {
+          setScannedTicket(booking);
+          setIsQrScannerOpen(false);
+          setSelectedBooking(booking);
+          setIsDetailsModalOpen(true);
+          toast.success(`Réservation trouvée pour ${booking.tourist.name}`);
+          return;
+        } else {
+          toast.error('Aucune réservation trouvée pour ce code');
+          return;
+        }
+      }
+
+      // Si c'est du JSON, chercher par les données du ticket
+      const booking = bookings.find(b => 
+        b.id === ticketData.id || 
+        b.tourist.name.toLowerCase() === ticketData.customer?.toLowerCase() ||
+        (ticketData.id && b.id.includes(ticketData.id))
+      );
+      
+      if (booking) {
+        setScannedTicket(booking);
+        setIsQrScannerOpen(false);
+        setSelectedBooking(booking);
+        setIsDetailsModalOpen(true);
+        toast.success(`Réservation trouvée pour ${booking.tourist.name}`);
+      } else {
+        toast.error('Aucune réservation trouvée pour ce QR code');
+      }
+    } catch (error) {
+      toast.error('QR code invalide');
+    }
+  };
+
   // Statistiques
   const stats = useMemo(() => {
     const total = bookings.length;
@@ -342,6 +423,13 @@ const GuideBookingsPage: React.FC = () => {
         </div>
         
         <div className="flex items-center space-x-4 mt-4 lg:mt-0">
+          <Button 
+            onClick={handleScanQRCode}
+            className="flex items-center space-x-2 bg-orange-600 hover:bg-orange-700"
+          >
+            <QrCode className="h-4 w-4" />
+            <span>Scanner QR</span>
+          </Button>
           <Button variant="outline" className="flex items-center space-x-2">
             <DownloadIcon className="h-4 w-4" />
             <span>Exporter</span>
@@ -475,6 +563,24 @@ const GuideBookingsPage: React.FC = () => {
                         <div className="flex flex-col items-end space-y-2">
                           {getStatusBadge(booking.status)}
                           {getPaymentStatusBadge(booking.paymentStatus)}
+                          {booking.present && (
+                            <Badge className="bg-green-100 text-green-700 border-green-200">
+                              <CheckCircle className="h-3 w-3 mr-1" />
+                              Présent
+                            </Badge>
+                          )}
+                          {booking.visitStarted && (
+                            <Badge className="bg-blue-100 text-blue-700 border-blue-200">
+                              <Play className="h-3 w-3 mr-1" />
+                              Visite en cours
+                            </Badge>
+                          )}
+                          {booking.visitEnded && (
+                            <Badge className="bg-purple-100 text-purple-700 border-purple-200">
+                              <Square className="h-3 w-3 mr-1" />
+                              Visite terminée
+                            </Badge>
+                          )}
                         </div>
                         
                         <div className="text-right">
@@ -525,14 +631,48 @@ const GuideBookingsPage: React.FC = () => {
                           )}
 
                           {booking.status === 'confirmed' && (
-                            <Button
-                              size="sm"
-                              onClick={() => handleCompleteBooking(booking.id)}
-                              className="bg-blue-600 hover:bg-blue-700"
-                            >
-                              <CheckCircle className="h-4 w-4 mr-1" />
-                              Terminer
-                            </Button>
+                            <>
+                              {!booking.present && (
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleMarkAsPresent(booking.id)}
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Présent
+                                </Button>
+                              )}
+                              {booking.present && !booking.visitStarted && (
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleStartVisit(booking.id)}
+                                  className="bg-blue-600 hover:bg-blue-700"
+                                >
+                                  <Play className="h-4 w-4 mr-1" />
+                                  Démarrer
+                                </Button>
+                              )}
+                              {booking.visitStarted && !booking.visitEnded && (
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleEndVisit(booking.id)}
+                                  className="bg-purple-600 hover:bg-purple-700"
+                                >
+                                  <Square className="h-4 w-4 mr-1" />
+                                  Terminer
+                                </Button>
+                              )}
+                              {!booking.visitStarted && (
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleCompleteBooking(booking.id)}
+                                  className="bg-gray-600 hover:bg-gray-700"
+                                >
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Finaliser
+                                </Button>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
@@ -762,6 +902,33 @@ const GuideBookingsPage: React.FC = () => {
                     <p className="font-medium">{new Date(selectedBooking.bookingDate).toLocaleDateString('fr-FR')}</p>
                   </div>
                 </div>
+                
+                {/* Suivi de visite */}
+                {(selectedBooking.present || selectedBooking.visitStarted || selectedBooking.visitEnded) && (
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="text-sm font-semibold text-blue-900 mb-2">Suivi de visite</h4>
+                    <div className="space-y-1 text-sm">
+                      {selectedBooking.present && selectedBooking.presentAt && (
+                        <div className="flex items-center gap-2 text-green-700">
+                          <CheckCircle className="h-4 w-4" />
+                          <span>Présent à: {new Date(selectedBooking.presentAt).toLocaleTimeString('fr-FR')}</span>
+                        </div>
+                      )}
+                      {selectedBooking.visitStarted && selectedBooking.visitStartedAt && (
+                        <div className="flex items-center gap-2 text-blue-700">
+                          <Play className="h-4 w-4" />
+                          <span>Visite démarrée à: {new Date(selectedBooking.visitStartedAt).toLocaleTimeString('fr-FR')}</span>
+                        </div>
+                      )}
+                      {selectedBooking.visitEnded && selectedBooking.visitEndedAt && (
+                        <div className="flex items-center gap-2 text-purple-700">
+                          <Square className="h-4 w-4" />
+                          <span>Visite terminée à: {new Date(selectedBooking.visitEndedAt).toLocaleTimeString('fr-FR')}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Demandes spéciales */}
@@ -816,9 +983,85 @@ const GuideBookingsPage: React.FC = () => {
                   </div>
                 </div>
               )}
+
+              {/* QR Code du ticket */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                  <QrCode className="h-5 w-5 text-orange-600" />
+                  QR Code du Ticket
+                </h3>
+                <Card className="bg-gradient-to-br from-orange-50 to-white border-2 border-orange-200">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col items-center space-y-4">
+                      <div className="bg-white p-4 rounded-xl border-4 border-orange-300 shadow-lg">
+                        <QRCode
+                          value={JSON.stringify({
+                            id: selectedBooking.id,
+                            type: 'guide',
+                            date: selectedBooking.tour.date,
+                            customer: selectedBooking.tourist.name,
+                            location: selectedBooking.tour.location
+                          })}
+                          size={150}
+                          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                        />
+                      </div>
+                      <p className="text-xs font-mono text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                        ID: {selectedBooking.id}
+                      </p>
+                      <p className="text-sm text-gray-600 text-center">
+                        Le client peut présenter ce QR code pour vérification
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
 
-            <div className="flex justify-end space-x-3 mt-6">
+            <div className="flex flex-wrap justify-end gap-3 mt-6">
+              {selectedBooking.status === 'confirmed' && (
+                <>
+                  {!selectedBooking.present && (
+                    <Button 
+                      onClick={() => {
+                        handleMarkAsPresent(selectedBooking.id);
+                        setIsDetailsModalOpen(false);
+                        setSelectedBooking(null);
+                      }}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Marquer présent
+                    </Button>
+                  )}
+                  {selectedBooking.present && !selectedBooking.visitStarted && (
+                    <Button 
+                      onClick={() => {
+                        handleStartVisit(selectedBooking.id);
+                        setIsDetailsModalOpen(false);
+                        setSelectedBooking(null);
+                      }}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      Démarrer la visite
+                    </Button>
+                  )}
+                  {selectedBooking.visitStarted && !selectedBooking.visitEnded && (
+                    <Button 
+                      onClick={() => {
+                        handleEndVisit(selectedBooking.id);
+                        setIsDetailsModalOpen(false);
+                        setSelectedBooking(null);
+                      }}
+                      className="bg-purple-600 hover:bg-purple-700"
+                    >
+                      <Square className="h-4 w-4 mr-2" />
+                      Terminer la visite
+                    </Button>
+                  )}
+                </>
+              )}
               <Button 
                 variant="outline" 
                 onClick={() => {
@@ -836,12 +1079,48 @@ const GuideBookingsPage: React.FC = () => {
                 }}
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
-                Contacter le Touriste
+                Contacter
               </Button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Modal Scanner QR Code */}
+      <Dialog open={isQrScannerOpen} onOpenChange={setIsQrScannerOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <QrCode className="h-5 w-5 text-orange-600" />
+              Scanner le QR Code du ticket
+            </DialogTitle>
+            <DialogDescription>
+              Scannez le QR code du ticket du client pour accéder rapidement aux détails de la réservation
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="text-center p-4 bg-orange-50 rounded-lg">
+              <p className="text-sm text-gray-600 mb-4">
+                Fonctionnalité de scan caméra à venir. Pour l'instant, saisissez le code du ticket manuellement.
+              </p>
+              <Input
+                placeholder="Collez le code QR ou saisissez l'ID du ticket"
+                onChange={(e) => {
+                  if (e.target.value.length > 10) {
+                    handleQRCodeScanned(e.target.value);
+                  }
+                }}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsQrScannerOpen(false)}>
+                Fermer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

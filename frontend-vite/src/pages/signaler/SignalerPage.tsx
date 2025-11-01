@@ -189,8 +189,8 @@ const SignalerPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Signaler / Commenter</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Signaler / Commenter</h1>
+          <p className="text-gray-600 text-sm sm:text-base">
             Signalez des problèmes ou partagez vos commentaires pour améliorer notre plateforme.
           </p>
         </div>
@@ -550,7 +550,7 @@ const SignalerPage: React.FC = () => {
           <div className="mt-6 pt-4 border-t border-gray-200">
             <p className="text-xs text-gray-500 text-center">
               En utilisant ce service, vous acceptez nos conditions d'utilisation et notre politique de confidentialité. 
-              Pour toute question, contactez-nous à : support@lateranga.sn
+              Pour toute question, contactez-nous à : support@discoversenegal.sn
             </p>
           </div>
         </div>

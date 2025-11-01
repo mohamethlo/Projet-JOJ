@@ -31,18 +31,18 @@ const EventsPage: React.FC = () => {
     .slice(0, 3);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 py-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Événements</h1>
-          <p className="text-gray-600 mt-1">Découvrez tous les événements du Sénégal</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Événements</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Découvrez tous les événements du Sénégal</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Badge className="bg-red-100 text-red-700">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <Badge className="bg-red-100 text-red-700 text-xs sm:text-sm">
             {liveEvents.length} en direct
           </Badge>
-          <Badge className="bg-blue-100 text-blue-700">
+          <Badge className="bg-blue-100 text-blue-700 text-xs sm:text-sm">
             {mockEvents.length} événement(s)
           </Badge>
         </div>

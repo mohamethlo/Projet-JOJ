@@ -28,13 +28,13 @@ const HistoryPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 px-4 py-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Histoire & Culture</h1>
-          <p className="text-gray-600 mt-1">Explorez le riche patrimoine sénégalais</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Histoire & Culture</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Explorez le riche patrimoine sénégalais</p>
         </div>
-        <Badge className="bg-blue-100 text-blue-700">
+        <Badge className="bg-blue-100 text-blue-700 text-xs sm:text-sm w-fit">
           {filteredArticles.length} article(s)
         </Badge>
       </div>

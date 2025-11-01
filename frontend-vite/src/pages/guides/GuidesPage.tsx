@@ -319,10 +319,10 @@ const GuidesPage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Guides Certifiés</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Guides Certifiés</h1>
+          <p className="text-gray-600 text-sm sm:text-base">
             Découvrez nos guides professionnels pour une expérience touristique inoubliable
           </p>
         </div>
@@ -334,14 +334,16 @@ const GuidesPage: React.FC = () => {
               size="sm"
               onClick={() => setViewMode('grid')}
             >
-              Grille
+              <span className="hidden sm:inline">Grille</span>
+              <span className="sm:hidden">📋</span>
             </Button>
             <Button
               variant={viewMode === 'list' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setViewMode('list')}
             >
-              Liste
+              <span className="hidden sm:inline">Liste</span>
+              <span className="sm:hidden">☰</span>
             </Button>
           </div>
         </div>
@@ -548,15 +550,15 @@ const GuidesPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Tri et résultats */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-        <div className="flex items-center space-x-4 mb-4 md:mb-0">
-          <span className="text-sm text-gray-600">
+        {/* Tri et résultats */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:space-x-4">
+          <span className="text-xs sm:text-sm text-gray-600">
             {filteredGuides.length} guide{filteredGuides.length > 1 ? 's' : ''} trouvé{filteredGuides.length > 1 ? 's' : ''}
           </span>
           
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

@@ -101,7 +101,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user }) => {
       <Card className="bg-gradient-to-r from-red-500 to-red-600 text-white">
         <CardContent className="p-6">
           <h2 className="text-2xl font-bold mb-2">Bonjour, {user.name}! 👋</h2>
-          <p className="opacity-90">Gérez la plateforme laTeranga et supervisez l'activité</p>
+          <p className="opacity-90">Gérez la plateforme DiscoverSenegal et supervisez l'activité</p>
         </CardContent>
       </Card>
 

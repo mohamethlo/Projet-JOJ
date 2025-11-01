@@ -22,6 +22,12 @@ import GuideBookingsPage from '@/pages/guide/bookings/GuideBookingsPage'
 import ValidationDashboard from '@/pages/admin/validation/ValidationDashboard'
 import SignalerPage from '@/pages/signaler/SignalerPage'
 import LandingPage from '@/pages/landing/LandingPage'
+import NotificationsPage from '@/pages/notifications/NotificationsPage'
+import ScannerPage from '@/pages/security/ScannerPage'
+import SecurityDashboardPage from '@/pages/security/DashboardPage'
+import SecurityReportsPage from '@/pages/security/ReportsPage'
+import MesTicketsPage from '@/pages/mes-tickets/index'
+import TicketDetailsPage from '@/pages/mes-tickets/TicketDetailsPage'
 
 const App = () => {
   const { user, isLoading } = useAuth()
@@ -53,6 +59,11 @@ const App = () => {
             <DashboardPage />
           </Layout>
         } />
+        <Route path="/notifications" element={
+          <Layout>
+            <NotificationsPage />
+          </Layout>
+        } />
         <Route path="/guides" element={
           <Layout>
             <GuidesPage />
@@ -81,6 +92,16 @@ const App = () => {
         <Route path="/profile" element={
           <Layout>
             <ProfilePage />
+          </Layout>
+        } />
+        <Route path="/mes-tickets" element={
+          <Layout>
+            <MesTicketsPage />
+          </Layout>
+        } />
+        <Route path="/mes-tickets/:id" element={
+          <Layout>
+            <TicketDetailsPage />
           </Layout>
         } />
         
@@ -130,6 +151,23 @@ const App = () => {
           </Layout>
         } />
         
+        {/* Routes Sécurité */}
+        <Route path="/security/dashboard" element={
+          <Layout>
+            <SecurityDashboardPage />
+          </Layout>
+        } />
+        <Route path="/security/reports" element={
+          <Layout>
+            <SecurityReportsPage />
+          </Layout>
+        } />
+        <Route path="/security/scanner" element={
+          <Layout>
+            <ScannerPage />
+          </Layout>
+        } />
+
         {/* Route Signaler */}
         <Route path="/signaler" element={
           <Layout>

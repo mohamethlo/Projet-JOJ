@@ -20,7 +20,9 @@ import {
   Flag,
   FileText,
   UserCog,
-  Compass
+  Compass,
+  QrCode,
+  Ticket
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -35,6 +37,7 @@ const Sidebar = () => {
       { href: '/guides', icon: Users, label: t('guides') },
       { href: '/events', icon: Calendar, label: t('events') },
       { href: '/accommodation', icon: Building, label: 'Hébergement' },
+      { href: '/mes-tickets', icon: Ticket, label: 'Mes Tickets' },
       { href: '/history', icon: BookOpen, label: t('history') },
       { href: '/map', icon: Map, label: t('map') },
       { href: '/signaler', icon: Flag, label: 'Signaler/Commenter' }
@@ -48,8 +51,7 @@ const Sidebar = () => {
         { href: '/admin/users', icon: UserCog, label: 'Gestion des Utilisateurs', isAdminSection: true },
         { href: '/admin/statistics', icon: BarChart3, label: 'Statistiques', isAdminSection: true },
         { href: '/admin/articles', icon: FileText, label: 'Gestion des Articles', isAdminSection: true },
-        { href: '/admin/accommodation', icon: Building, label: 'Gestion Hébergements' },
-        { href: '/settings', icon: Settings, label: 'Paramètres' }
+        { href: '/admin/accommodation', icon: Building, label: 'Gestion Hébergements' }
       ];
     }
 
@@ -57,8 +59,7 @@ const Sidebar = () => {
           return [
             ...commonItems,
             { href: '/guide/tours', icon: Compass, label: 'Mes Visites Guidées' },
-            { href: '/guide/bookings', icon: Calendar, label: 'Réservations' },
-            { href: '/guide/reviews', icon: Star, label: 'Avis' }
+            { href: '/guide/bookings', icon: Calendar, label: 'Réservations' }
           ];
         }
 
@@ -69,17 +70,20 @@ const Sidebar = () => {
       ];
     }
 
+    // Espace Agent de sécurité
     if (user?.role === 'security') {
       return [
         { href: '/security/dashboard', icon: Home, label: 'Dashboard' },
+        { href: '/guides', icon: Users, label: t('guides') },
+        { href: '/accommodation', icon: Building, label: 'Hébergement' },
         { href: '/security/reports', icon: Shield, label: 'Signalements' },
-        { href: '/security/lost-found', icon: MessageSquare, label: 'Objets trouvés' }
+        { href: '/signaler', icon: Flag, label: 'Signaler/Commenter' },
+        { href: '/security/scanner', icon: QrCode, label: 'Scanner QR' }
       ];
     }
 
     return [
-      ...commonItems,
-      { href: '/security', icon: Shield, label: t('security') }
+      ...commonItems
     ];
   }, [user?.role, t]);
 
@@ -90,7 +94,7 @@ const Sidebar = () => {
   return (
     <div className="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 z-30 overflow-y-auto">
       <div className="p-6 border-b">
-        <h1 className="text-2xl font-bold text-orange-600">laTeranga</h1>
+        <h1 className="text-2xl font-bold text-orange-600">DiscoverSenegal</h1>
         <p className="text-sm text-gray-500 mt-1">Plateforme de tourisme</p>
       </div>
       

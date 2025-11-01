@@ -37,8 +37,8 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-orange-50 to-white px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-orange-600 mb-2">laTeranga</h1>
-          <p className="text-gray-600">Connectez-vous pour continuer</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-orange-600 mb-2">DiscoverSenegal</h1>
+          <p className="text-gray-600 text-sm sm:text-base">Connectez-vous pour continuer</p>
         </div>
 
         <Card>
@@ -108,10 +108,10 @@ const LoginPage: React.FC = () => {
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <p className="text-xs text-gray-500 mb-2">Comptes de démonstration :</p>
               <div className="space-y-1 text-xs text-gray-600">
-                <p>• admin@lateranga.com (Administrateur)</p>
-                <p>• guide@lateranga.com (Guide)</p>
-                <p>• tourist@lateranga.com (Touriste)</p>
-                <p>• organizer@lateranga.com (Organisateur)</p>
+                <p>• admin@discoversenegal.com (Administrateur)</p>
+                <p>• guide@discoversenegal.com (Guide)</p>
+                <p>• tourist@discoversenegal.com (Touriste)</p>
+                <p>• organizer@discoversenegal.com (Organisateur)</p>
                 <p>Mot de passe : demo123</p>
               </div>
             </div>

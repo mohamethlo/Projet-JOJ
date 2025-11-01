@@ -116,14 +116,14 @@ const AccommodationPage: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
           {/* Header */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Hébergement & Restauration</h1>
-              <p className="text-gray-600 mt-1">Découvrez les meilleurs établissements du Sénégal</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Hébergement & Restauration</h1>
+              <p className="text-gray-600 mt-1 text-sm sm:text-base">Découvrez les meilleurs établissements du Sénégal</p>
             </div>
-            <div className="flex items-center space-x-4">
-              <Badge className="bg-blue-100 text-blue-700 text-sm">
-                {sortedAccommodations.length} établissement(s) trouvé(s)
+            <div className="flex items-center justify-between sm:justify-end space-x-2 sm:space-x-4">
+              <Badge className="bg-blue-100 text-blue-700 text-xs sm:text-sm">
+                {sortedAccommodations.length} établissement(s)
               </Badge>
               <div className="flex items-center space-x-2">
                 <Button
@@ -146,21 +146,21 @@ const AccommodationPage: React.FC = () => {
 
           {/* Onglets */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="all" className="flex items-center space-x-2">
-                <Building className="h-4 w-4" />
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-1">
+              <TabsTrigger value="all" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+                <Building className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span>Tous</span>
               </TabsTrigger>
-              <TabsTrigger value="hotels" className="flex items-center space-x-2">
-                <Building className="h-4 w-4" />
+              <TabsTrigger value="hotels" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+                <Building className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span>Hôtels</span>
               </TabsTrigger>
-              <TabsTrigger value="restaurants" className="flex items-center space-x-2">
-                <Utensils className="h-4 w-4" />
+              <TabsTrigger value="restaurants" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+                <Utensils className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span>Restaurants</span>
               </TabsTrigger>
-              <TabsTrigger value="lodging" className="flex items-center space-x-2">
-                <Home className="h-4 w-4" />
+              <TabsTrigger value="lodging" className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm">
+                <Home className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span>Hébergement</span>
               </TabsTrigger>
             </TabsList>
@@ -180,9 +180,9 @@ const AccommodationPage: React.FC = () => {
                       />
                     </div>
 
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                       <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                        <SelectTrigger className="w-48">
+                        <SelectTrigger className="w-full sm:w-48">
                           <MapPin className="h-4 w-4 mr-2" />
                           <SelectValue placeholder="Localisation" />
                         </SelectTrigger>
@@ -194,7 +194,7 @@ const AccommodationPage: React.FC = () => {
                       </Select>
 
                       <Select value={selectedType} onValueChange={setSelectedType}>
-                        <SelectTrigger className="w-48">
+                        <SelectTrigger className="w-full sm:w-48">
                           <Bed className="h-4 w-4 mr-2" />
                           <SelectValue placeholder="Type" />
                         </SelectTrigger>
@@ -211,7 +211,7 @@ const AccommodationPage: React.FC = () => {
                       </Select>
 
                       <Select value={sortBy} onValueChange={setSortBy}>
-                        <SelectTrigger className="w-40">
+                        <SelectTrigger className="w-full sm:w-40">
                           <ArrowUpDown className="h-4 w-4 mr-2" />
                           <SelectValue placeholder="Trier par" />
                         </SelectTrigger>
@@ -227,7 +227,7 @@ const AccommodationPage: React.FC = () => {
                       <Button
                         variant="outline"
                         onClick={() => setShowFilters(!showFilters)}
-                        className="px-4"
+                        className="px-4 w-full sm:w-auto"
                       >
                         <Filter className="h-4 w-4 mr-2" />
                         Filtres

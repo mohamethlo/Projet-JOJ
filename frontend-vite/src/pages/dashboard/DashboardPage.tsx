@@ -14,7 +14,7 @@ const DashboardPage: React.FC = () => {
   const getDashboardTitle = (role: string) => {
     switch (role) {
       case 'admin':
-        return 'Administration - laTeranga';
+        return 'Administration - DiscoverSenegal';
       case 'guide':
         return 'Espace Guide';
       case 'organizer':
@@ -29,7 +29,7 @@ const DashboardPage: React.FC = () => {
   const getDashboardDescription = (role: string) => {
     switch (role) {
       case 'admin':
-        return 'Gérez la plateforme laTeranga et supervisez l\'activité';
+        return 'Gérez la plateforme DiscoverSenegal et supervisez l\'activité';
       case 'guide':
         return 'Gérez vos visites et développez votre activité de guide';
       case 'organizer':
@@ -37,7 +37,7 @@ const DashboardPage: React.FC = () => {
       case 'security':
         return 'Assurez la sécurité et la tranquillité sur la plateforme';
       default:
-        return 'Découvrez le meilleur du Sénégal avec laTeranga';
+        return 'Découvrez le meilleur du Sénégal avec DiscoverSenegal';
     }
   };
 

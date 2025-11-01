@@ -24,10 +24,10 @@ const LandingPage: React.FC = () => {
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
-            <h1 className="text-6xl font-bold text-gray-900 mb-6">
-              <span className="text-orange-600">la</span>Teranga
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              <span className="text-orange-600">Discover</span>Senegal
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-8 max-w-3xl mx-auto px-4">
               La plateforme qui connecte les voyageurs aux authentiques expériences sénégalaises. 
               Découvrez la culture, rencontrez des locaux passionnés et créez des souvenirs inoubliables.
             </p>
@@ -63,11 +63,11 @@ const LandingPage: React.FC = () => {
       {/* Features Section */}
       <div className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-16 px-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Une expérience authentique vous attend
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600">
               Découvrez le Sénégal à travers les yeux de ses habitants
             </p>
           </div>
@@ -143,15 +143,15 @@ const LandingPage: React.FC = () => {
       {/* CTA Section */}
       <div className="py-24 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
             Prêt à découvrir la Teranga sénégalaise ?
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-8">
             Rejoignez notre communauté et vivez des expériences uniques au cœur du Sénégal
           </p>
           <Link to="/auth/register">
             <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3">
-              Rejoindre laTeranga
+              Rejoindre DiscoverSenegal
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
@@ -161,7 +161,7 @@ const LandingPage: React.FC = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl font-bold mb-4">laTeranga</h3>
+          <h3 className="text-2xl font-bold mb-4">DiscoverSenegal</h3>
           <p className="text-gray-400 mb-4">
             Connecter les cultures, créer des souvenirs
           </p>

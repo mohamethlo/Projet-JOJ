@@ -180,17 +180,17 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6 px-4 py-6">
       {/* Header du profil */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Mon Profil</h1>
-          <p className="text-gray-600 mt-1">Gérez vos informations personnelles et vos préférences</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mon Profil</h1>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">Gérez vos informations personnelles et vos préférences</p>
         </div>
         <Button
           onClick={() => setIsEditing(!isEditing)}
           variant={isEditing ? "outline" : "default"}
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 w-full sm:w-auto"
         >
           {isEditing ? <X className="h-4 w-4" /> : <Edit3 className="h-4 w-4" />}
           <span>{isEditing ? 'Annuler' : 'Modifier'}</span>
@@ -198,9 +198,9 @@ const ProfilePage: React.FC = () => {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${userTabs.length}, 1fr)` }}>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 overflow-x-auto">
           {userTabs.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value}>
+            <TabsTrigger key={tab.value} value={tab.value} className="text-xs sm:text-sm whitespace-nowrap">
               {tab.label}
             </TabsTrigger>
           ))}
@@ -384,12 +384,12 @@ const ProfilePage: React.FC = () => {
               </div>
 
               {isEditing && (
-                <div className="flex space-x-4">
-                  <Button onClick={handleSave} className="flex items-center space-x-2">
+                <div className="flex flex-col sm:flex-row gap-2 sm:space-x-4">
+                  <Button onClick={handleSave} className="flex items-center space-x-2 w-full sm:w-auto">
                     <Save className="h-4 w-4" />
                     <span>Sauvegarder</span>
                   </Button>
-                  <Button onClick={handleCancel} variant="outline">
+                  <Button onClick={handleCancel} variant="outline" className="w-full sm:w-auto">
                     Annuler
                   </Button>
                 </div>

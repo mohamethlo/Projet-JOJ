@@ -50,6 +50,10 @@ interface ReportDetailsModalProps {
   onReject?: (reportId: string, reason: string) => void;
   onBanUser?: (userId: string, reason: string, duration: string) => void;
   onWarnUser?: (userId: string, reason: string) => void;
+  hideBan?: boolean;
+  hideWarn?: boolean;
+  showWriteReport?: boolean;
+  onWriteReport?: (reportId: string, content: string) => void;
 }
 
 const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({
@@ -59,13 +63,18 @@ const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({
   onApprove,
   onReject,
   onBanUser,
-  onWarnUser
+  onWarnUser,
+  hideBan,
+  hideWarn,
+  showWriteReport,
+  onWriteReport
 }) => {
   const [action, setAction] = useState('');
   const [comment, setComment] = useState('');
   const [reason, setReason] = useState('');
   const [banDuration, setBanDuration] = useState('7');
   const [showActionForm, setShowActionForm] = useState(false);
+  const [adminReport, setAdminReport] = useState('');
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -321,28 +330,32 @@ Statut de l'utilisateur signalé: ${report.reportedUserStatus}
                     <X className="h-4 w-4 mr-2" />
                     Rejeter
                   </Button>
-                  <Button
-                    onClick={() => {
-                      setAction('warn');
-                      setShowActionForm(true);
-                    }}
-                    variant="outline"
-                    className="border-yellow-500 text-yellow-600 hover:bg-yellow-50"
-                  >
-                    <UserCheck className="h-4 w-4 mr-2" />
-                    Avertir
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setAction('ban');
-                      setShowActionForm(true);
-                    }}
-                    variant="outline"
-                    className="border-red-500 text-red-600 hover:bg-red-50"
-                  >
-                    <Ban className="h-4 w-4 mr-2" />
-                    Bannir
-                  </Button>
+                  {!hideWarn && (
+                    <Button
+                      onClick={() => {
+                        setAction('warn');
+                        setShowActionForm(true);
+                      }}
+                      variant="outline"
+                      className="border-yellow-500 text-yellow-600 hover:bg-yellow-50"
+                    >
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      Avertir
+                    </Button>
+                  )}
+                  {!hideBan && (
+                    <Button
+                      onClick={() => {
+                        setAction('ban');
+                        setShowActionForm(true);
+                      }}
+                      variant="outline"
+                      className="border-red-500 text-red-600 hover:bg-red-50"
+                    >
+                      <Ban className="h-4 w-4 mr-2" />
+                      Bannir
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -433,7 +446,26 @@ Statut de l'utilisateur signalé: ${report.reportedUserStatus}
             </Card>
           )}
 
-          {/* Actions */}
+          {/* Rédaction de rapport pour admin (optionnel) */}
+          {showWriteReport && (
+            <Card>
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-3">Rédiger un rapport pour l'administrateur</h3>
+                <Textarea
+                  value={adminReport}
+                  onChange={(e) => setAdminReport(e.target.value)}
+                  placeholder="Décrivez brièvement l'intervention, le contexte et la résolution..."
+                  rows={4}
+                />
+                <div className="flex justify-end mt-3">
+                  <Button onClick={() => onWriteReport?.(report.id, adminReport)} disabled={!adminReport.trim()}>
+                    Envoyer le rapport
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="flex justify-end space-x-3">
             <Button variant="outline" onClick={onClose}>
               Fermer

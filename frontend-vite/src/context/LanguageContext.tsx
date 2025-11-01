@@ -11,7 +11,7 @@ interface LanguageContextType {
 
 const translations: Record<Language, Record<string, string>> = {
   fr: {
-    welcome: 'Bienvenue sur laTeranga',
+    welcome: 'Bienvenue sur DiscoverSenegal',
     login: 'Connexion',
     register: 'Inscription',
     dashboard: 'Tableau de bord',
@@ -30,7 +30,7 @@ const translations: Record<Language, Record<string, string>> = {
     security_agent: 'Agent de sécurité'
   },
   en: {
-    welcome: 'Welcome to laTeranga',
+    welcome: 'Welcome to DiscoverSenegal',
     login: 'Login',
     register: 'Register',
     dashboard: 'Dashboard',
@@ -49,7 +49,7 @@ const translations: Record<Language, Record<string, string>> = {
     security_agent: 'Security Agent'
   },
   wo: {
-    welcome: 'Dalal ak laTeranga',
+    welcome: 'Dalal ak DiscoverSenegal',
     login: 'Dugg',
     register: 'Andal',
     dashboard: 'Plateau',
@@ -68,7 +68,7 @@ const translations: Record<Language, Record<string, string>> = {
     security_agent: 'Agent sécurité'
   },
   sr: {
-    welcome: 'Dalal ak laTeranga',
+    welcome: 'Dalal ak DiscoverSenegal',
     login: 'Dugg',
     register: 'Andal',
     dashboard: 'Plateau',
@@ -87,7 +87,7 @@ const translations: Record<Language, Record<string, string>> = {
     security_agent: 'Agent sécurité'
   },
   es: {
-    welcome: 'Bienvenido a laTeranga',
+    welcome: 'Bienvenido a DiscoverSenegal',
     login: 'Iniciar sesión',
     register: 'Registrarse',
     dashboard: 'Panel',
@@ -129,7 +129,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   ], []);
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('lateranga_language') as Language;
+    const savedLanguage = localStorage.getItem('discoversenegal_language') as Language;
     if (savedLanguage && availableLanguages.find(lang => lang.code === savedLanguage)) {
       setCurrentLanguage(savedLanguage);
     }
@@ -137,7 +137,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const setLanguage = (lang: Language) => {
     setCurrentLanguage(lang);
-    localStorage.setItem('lateranga_language', lang);
+    localStorage.setItem('discoversenegal_language', lang);
   };
 
   const t = useMemo(() => (key: string): string => {

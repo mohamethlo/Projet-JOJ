@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Simulate loading user from localStorage or API
-    const savedUser = localStorage.getItem('lateranga_user');
+    const savedUser = localStorage.getItem('discoversenegal_user');
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
@@ -74,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       
       setUser(mockUser);
-      localStorage.setItem('lateranga_user', JSON.stringify(mockUser));
+      localStorage.setItem('discoversenegal_user', JSON.stringify(mockUser));
     } catch (error) {
       throw new Error('Erreur de connexion');
     } finally {
@@ -100,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       
       setUser(newUser);
-      localStorage.setItem('lateranga_user', JSON.stringify(newUser));
+      localStorage.setItem('discoversenegal_user', JSON.stringify(newUser));
     } catch (error) {
       throw new Error('Erreur lors de l\'inscription');
     } finally {
@@ -110,7 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('lateranga_user');
+    localStorage.removeItem('discoversenegal_user');
   };
 
   const updateProfile = async (userData: Partial<User>) => {
@@ -118,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     const updatedUser = { ...user, ...userData };
     setUser(updatedUser);
-    localStorage.setItem('lateranga_user', JSON.stringify(updatedUser));
+    localStorage.setItem('discoversenegal_user', JSON.stringify(updatedUser));
   };
 
   return (
