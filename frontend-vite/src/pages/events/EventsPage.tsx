@@ -157,11 +157,11 @@ const EventsPage: React.FC = () => {
         </TabsList>
 
         <TabsContent value="sports" className="space-y-6">
-          <SportsEventsTab />
+          <SportsEventsTab events={sportsEvents} />
         </TabsContent>
 
         <TabsContent value="other" className="space-y-6">
-          <OtherEventsTab />
+          <OtherEventsTab events={otherEvents} />
         </TabsContent>
       </Tabs>
     </div>

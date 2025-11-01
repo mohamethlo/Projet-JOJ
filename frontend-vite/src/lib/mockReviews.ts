@@ -91,21 +91,97 @@ export const mockEventReviews: PublicReview[] = [
       role: 'Touriste'
     },
     rating: 5,
+    title: 'Match fantastique !',
+    content: 'Le match était incroyable, l\'ambiance au stade était électrisante. Les Lions ont bien joué !',
+    pros: 'Ambiance géniale, match de qualité',
+    cons: 'Aucun',
+    wouldRecommend: true,
+    date: '2024-04-26',
+    likes: 25,
+    replies: 5
+  },
+  {
+    id: 'event-review-5',
+    targetId: '1',
+    targetType: 'event',
+    author: {
+      name: 'Ahmed Kone',
+      avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
+      role: 'Touriste'
+    },
+    rating: 4,
+    title: 'Bonne expérience',
+    content: 'Très bon match, bien organisé. Seul bémol : les files d\'attente pour les rafraîchissements.',
+    pros: 'Bien organisé, match intéressant',
+    cons: 'Files d\'attente longues',
+    wouldRecommend: true,
+    date: '2024-04-25',
+    likes: 12,
+    replies: 2
+  },
+  {
+    id: 'event-review-6',
+    targetId: '2',
+    targetType: 'event',
+    author: {
+      name: 'Moussa Diop',
+      avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
+      role: 'Touriste'
+    },
+    rating: 5,
+    title: 'Tournoi de lutte exceptionnel',
+    content: 'Un spectacle incroyable ! La tradition et la passion étaient au rendez-vous. À revoir sans hésitation.',
+    pros: 'Tradition respectée, ambiance unique',
+    cons: 'Aucun',
+    wouldRecommend: true,
+    date: '2024-04-29',
+    likes: 18,
+    replies: 4
+  },
+  {
+    id: 'event-review-7',
+    targetId: '7',
+    targetType: 'event',
+    author: {
+      name: 'Claire Dubois',
+      avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
+      role: 'Touriste'
+    },
+    rating: 5,
     title: 'Festival magnifique !',
     content: 'Le Festival de Jazz de Saint-Louis était incroyable. L\'ambiance était fantastique et les artistes de qualité.',
     pros: 'Artistes de qualité, ambiance géniale',
     cons: 'Un peu cher',
     wouldRecommend: true,
-    date: '2024-03-20',
+    date: '2024-04-16',
     likes: 15,
     replies: 3
+  },
+  {
+    id: 'event-review-8',
+    targetId: '8',
+    targetType: 'event',
+    author: {
+      name: 'Ibrahima Ba',
+      avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
+      role: 'Touriste'
+    },
+    rating: 4,
+    title: 'Foire intéressante',
+    content: 'Beaucoup de produits locaux à découvrir. Bien organisé mais un peu de monde.',
+    pros: 'Produits locaux variés',
+    cons: 'Beaucoup de monde',
+    wouldRecommend: true,
+    date: '2024-04-21',
+    likes: 8,
+    replies: 1
   }
 ];
 
 // Mock data pour les avis des hébergements
 export const mockAccommodationReviews: PublicReview[] = [
   {
-    id: '5',
+    id: 'acc-review-5',
     targetId: '1',
     targetType: 'accommodation',
     author: {

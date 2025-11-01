@@ -6,6 +6,7 @@ import { Calendar, MapPin, Users, Clock, Eye, UserPlus, Star } from 'lucide-reac
 import { EventRegistrationModal, EventDetailsModal } from '@/components/modals';
 import { ReviewModal, ReviewsModal } from '@/components/modals';
 import { useAuth } from '@/context/AuthContext';
+import { getReviewStats, getRecentReviews } from '@/lib/mockReviews';
 
 interface EventProps {
   id: string;
@@ -70,12 +71,9 @@ const EventCard: React.FC<{
   // Vérifier si l'utilisateur peut laisser un avis (tous les utilisateurs connectés peuvent laisser un avis)
   const canLeaveReviewForEvent = user !== null;
 
-  // Mock data pour les avis (à remplacer par les vraies données)
-  const reviewStats = { averageRating: 4.3, totalReviews: 8 };
-  const recentReviews = [
-    { id: '1', author: { name: 'Sophie M.' }, rating: 5, content: 'Événement fantastique, très bien organisé !' },
-    { id: '2', author: { name: 'Ahmed K.' }, rating: 4, content: 'Belle expérience culturelle.' }
-  ];
+  // Récupérer les données des avis
+  const reviewStats = getReviewStats(event.id, 'event');
+  const recentReviews = getRecentReviews(event.id, 'event', 2);
 
   return (
     <>
@@ -192,34 +190,20 @@ const EventCard: React.FC<{
           </div>
 
           {/* Boutons d'action */}
-          <div className="flex items-center justify-between">
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleViewDetails}
-                className="flex items-center space-x-1"
-              >
-                <Eye className="h-4 w-4" />
-                <span>Détails</span>
-              </Button>
-              {canLeaveReviewForEvent && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleReview}
-                  className="text-yellow-600 border-yellow-600 hover:bg-yellow-50"
-                >
-                  <Star className="h-4 w-4 mr-1" />
-                  Avis
-                </Button>
-              )}
-            </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleViewDetails}
+              className="flex-1 min-w-0 border-gray-300 text-gray-700 hover:bg-gray-50"
+            >
+              <Eye className="h-4 w-4 mr-1" />
+              Détails
+            </Button>
             <Button
               onClick={handleRegister}
               disabled={spotsLeft === 0}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-              size="sm"
+              className="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700"
             >
               {spotsLeft === 0 ? (
                 "Complet"
@@ -230,6 +214,17 @@ const EventCard: React.FC<{
                 </>
               )}
             </Button>
+            {canLeaveReviewForEvent && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleReview}
+                className="flex-1 min-w-0 text-yellow-600 border-yellow-600 hover:bg-yellow-50"
+              >
+                <Star className="h-4 w-4 mr-1" />
+                Avis
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
