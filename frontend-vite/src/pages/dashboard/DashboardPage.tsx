@@ -5,6 +5,7 @@ import GuideDashboard from '@/components/dashboard/GuideDashboard';
 import OrganizerDashboard from '@/components/dashboard/OrganizerDashboard';
 import AdminDashboard from '@/components/dashboard/AdminDashboard';
 import SecurityDashboard from '@/components/dashboard/SecurityDashboard';
+import EstablishmentDashboard from '@/components/dashboard/EstablishmentDashboard';
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -21,6 +22,10 @@ const DashboardPage: React.FC = () => {
         return 'Espace Organisateur';
       case 'security':
         return 'Sécurité & Surveillance';
+      case 'hotel':
+        return 'Espace Hôtel';
+      case 'restaurant':
+        return 'Espace Restaurant';
       default:
         return 'Tableau de bord';
     }
@@ -36,6 +41,10 @@ const DashboardPage: React.FC = () => {
         return 'Créez et gérez vos événements pour la communauté';
       case 'security':
         return 'Assurez la sécurité et la tranquillité sur la plateforme';
+      case 'hotel':
+        return 'Gérez votre hôtel et offrez un séjour inoubliable à vos clients';
+      case 'restaurant':
+        return 'Gérez votre restaurant et offrez une expérience culinaire exceptionnelle';
       default:
         return 'Découvrez le meilleur du Sénégal avec DiscoverSenegal';
     }
@@ -51,6 +60,9 @@ const DashboardPage: React.FC = () => {
         return <OrganizerDashboard user={user} />;
       case 'security':
         return <SecurityDashboard user={user} />;
+      case 'hotel':
+      case 'restaurant':
+        return <EstablishmentDashboard user={user} />;
       case 'tourist':
       case 'local':
       default:

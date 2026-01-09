@@ -28,6 +28,11 @@ import SecurityDashboardPage from '@/pages/security/DashboardPage'
 import SecurityReportsPage from '@/pages/security/ReportsPage'
 import MesTicketsPage from '@/pages/mes-tickets/index'
 import TicketDetailsPage from '@/pages/mes-tickets/TicketDetailsPage'
+import RoomsPage from '@/pages/establishment/RoomsPage'
+import MenuPage from '@/pages/establishment/MenuPage'
+import BookingsPage from '@/pages/establishment/BookingsPage'
+import EstablishmentProfilePage from '@/pages/establishment/ProfilePage'
+import ReviewsPage from '@/pages/establishment/ReviewsPage'
 
 const App = () => {
   const { user, isLoading } = useAuth()
@@ -172,6 +177,33 @@ const App = () => {
         <Route path="/signaler" element={
           <Layout>
             <SignalerPage />
+          </Layout>
+        } />
+        
+        {/* Routes Établissement */}
+        <Route path="/establishment/bookings" element={
+          <Layout>
+            <BookingsPage />
+          </Layout>
+        } />
+        <Route path="/establishment/rooms" element={
+          <Layout>
+            <RoomsPage />
+          </Layout>
+        } />
+        <Route path="/establishment/menu" element={
+          <Layout>
+            <MenuPage />
+          </Layout>
+        } />
+        <Route path="/establishment/profile" element={
+          <Layout>
+            <EstablishmentProfilePage />
+          </Layout>
+        } />
+        <Route path="/establishment/reviews" element={
+          <Layout>
+            <ReviewsPage />
           </Layout>
         } />
         

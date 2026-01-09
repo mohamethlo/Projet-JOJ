@@ -22,7 +22,9 @@ import {
   UserCog,
   Compass,
   QrCode,
-  Ticket
+  Ticket,
+  Bed,
+  UtensilsCrossed
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -66,6 +68,30 @@ const Sidebar = () => {
       return [
         ...commonItems,
         { href: '/organizer/events', icon: Calendar, label: 'Mes Événements' }
+      ];
+    }
+
+    if (user?.role === 'hotel') {
+      return [
+        { href: '/dashboard', icon: Home, label: t('dashboard') },
+        { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
+        { href: '/establishment/rooms', icon: Bed, label: 'Chambres' },
+        { href: '/establishment/profile', icon: Building, label: 'Profil Hôtel' },
+        { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
+        { href: '/history', icon: BookOpen, label: t('history') },
+        { href: '/profile', icon: User, label: 'Mon Profil' }
+      ];
+    }
+
+    if (user?.role === 'restaurant') {
+      return [
+        { href: '/dashboard', icon: Home, label: t('dashboard') },
+        { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
+        { href: '/establishment/menu', icon: UtensilsCrossed, label: 'Menu' },
+        { href: '/establishment/profile', icon: Building, label: 'Profil Restaurant' },
+        { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
+        { href: '/history', icon: BookOpen, label: t('history') },
+        { href: '/profile', icon: User, label: 'Mon Profil' }
       ];
     }
 

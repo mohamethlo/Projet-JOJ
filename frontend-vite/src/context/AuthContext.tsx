@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security';
+export type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security' | 'hotel' | 'restaurant';
 
 export interface User {
   id: string;
@@ -59,6 +59,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       else if (email.includes('organizer')) role = 'organizer';
       else if (email.includes('security')) role = 'security';
       else if (email.includes('local')) role = 'local';
+      else if (email.includes('restaurant')) role = 'restaurant';
+      else if (email.includes('hotel') || email.includes('auberge')) role = 'hotel';
 
       const mockUser: User = {
         id: '1',
