@@ -5,12 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { 
-  Bed, 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
+import {
+  Bed,
+  Plus,
+  Search,
+  Edit,
+  Trash2,
   CheckCircle,
   XCircle,
   MapPin,
@@ -42,7 +42,7 @@ import {
 
 const RoomsPage: React.FC = () => {
   const { user } = useAuth();
-  
+
   // Rediriger les restaurants vers leur dashboard
   if (user?.role === 'restaurant') {
     return <Navigate to="/dashboard" replace />;
@@ -63,7 +63,7 @@ const RoomsPage: React.FC = () => {
       status: 'Disponible',
       amenities: ['WiFi', 'TV', 'Climatisation', 'Salle de bain privée'],
       description: 'Chambre confortable avec vue sur la mer',
-      image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400'
+      images: ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400', 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400']
     },
     {
       id: '2',
@@ -74,7 +74,7 @@ const RoomsPage: React.FC = () => {
       status: 'Occupée',
       amenities: ['WiFi', 'TV', 'Climatisation', 'Salle de bain privée', 'Balcon', 'Mini-bar'],
       description: 'Suite spacieuse avec balcon et vue panoramique',
-      image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400'
+      images: ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400']
     },
     {
       id: '3',
@@ -85,7 +85,7 @@ const RoomsPage: React.FC = () => {
       status: 'Disponible',
       amenities: ['WiFi', 'TV', 'Ventilateur'],
       description: 'Chambre simple et fonctionnelle',
-      image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400'
+      images: ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400']
     },
     {
       id: '4',
@@ -96,9 +96,11 @@ const RoomsPage: React.FC = () => {
       status: 'Réservée',
       amenities: ['WiFi', 'TV', 'Climatisation', 'Salle de bain privée', 'Salon', 'Cuisine équipée'],
       description: 'Chambre familiale spacieuse avec salon et cuisine',
-      image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400'
+      images: ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400']
     }
   ]);
+
+  const [formImages, setFormImages] = useState<string[]>(['']);
 
   const filteredRooms = rooms.filter(room =>
     room.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -109,13 +111,66 @@ const RoomsPage: React.FC = () => {
   const handleAddRoom = () => {
     setSelectedRoom(null);
     setIsEditing(false);
+    setFormImages(['']);
     setIsDialogOpen(true);
   };
 
   const handleEditRoom = (room: any) => {
     setSelectedRoom(room);
     setIsEditing(true);
+    setFormImages(room.images && room.images.length > 0 ? [...room.images] : ['']);
     setIsDialogOpen(true);
+  };
+
+  const handleAddImageField = () => {
+    setFormImages([...formImages, '']);
+  };
+
+  const handleRemoveImageField = (index: number) => {
+    const newImages = [...formImages];
+    newImages.splice(index, 1);
+    setFormImages(newImages.length > 0 ? newImages : ['']);
+  };
+
+  const handleImageChange = (index: number, value: string) => {
+    const newImages = [...formImages];
+    newImages[index] = value;
+    setFormImages(newImages);
+  };
+
+  const handleSaveRoom = () => {
+    const numberInput = document.getElementById('number') as HTMLInputElement;
+    const priceInput = document.getElementById('price') as HTMLInputElement;
+    const capacityInput = document.getElementById('capacity') as HTMLInputElement;
+    const descriptionInput = document.getElementById('description') as HTMLInputElement;
+    const amenitiesInput = document.getElementById('amenities') as HTMLInputElement;
+
+    // Nettoyer les URLs d'images (enlever les vides)
+    const cleanedImages = formImages.filter(img => img.trim() !== '');
+    if (cleanedImages.length === 0) {
+      alert('Veuillez ajouter au moins une image.');
+      return;
+    }
+
+    const roomData = {
+      id: isEditing ? selectedRoom.id : Math.random().toString(36).substr(2, 9),
+      number: numberInput.value,
+      type: (document.querySelector('[data-placeholder="Sélectionner"]') as any)?.textContent || selectedRoom?.type || 'Simple',
+      price: priceInput.value,
+      capacity: parseInt(capacityInput.value),
+      status: selectedRoom?.status || 'Disponible',
+      description: descriptionInput.value,
+      amenities: amenitiesInput.value.split(',').map(a => a.trim()),
+      images: cleanedImages
+    };
+
+    if (isEditing) {
+      setRooms(rooms.map(r => r.id === selectedRoom.id ? roomData : r));
+    } else {
+      setRooms([...rooms, roomData]);
+    }
+
+    setIsDialogOpen(false);
   };
 
   const handleDeleteRoom = (id: string) => {
@@ -241,12 +296,17 @@ const RoomsPage: React.FC = () => {
           <Card key={room.id} className="overflow-hidden hover:shadow-lg transition-shadow">
             <div className="relative h-48">
               <img
-                src={room.image}
+                src={room.images[0]}
                 alt={`Chambre ${room.number}`}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-3 right-3">
+              <div className="absolute top-3 right-3 flex flex-col gap-2 scale-90 origin-top-right">
                 {getStatusBadge(room.status)}
+                {room.images.length > 1 && (
+                  <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm self-end">
+                    +{room.images.length - 1} photo{room.images.length > 2 ? 's' : ''}
+                  </Badge>
+                )}
               </div>
             </div>
             <CardHeader>
@@ -375,12 +435,59 @@ const RoomsPage: React.FC = () => {
                 placeholder="WiFi, TV, Climatisation, Salle de bain privée"
               />
             </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label>Images de la chambre (URLs)</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAddImageField}
+                  className="h-8 text-emerald-600 border-emerald-200 hover:bg-emerald-50"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Ajouter une image
+                </Button>
+              </div>
+
+              <div className="grid gap-3">
+                {formImages.map((url, index) => (
+                  <div key={index} className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Input
+                        value={url}
+                        onChange={(e) => handleImageChange(index, e.target.value)}
+                        placeholder="https://images.unsplash.com/photo-..."
+                        className="pr-10"
+                      />
+                      {url && (
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded overflow-hidden border">
+                          <img src={url} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+                    {formImages.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemoveImageField(index)}
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 shrink-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               Annuler
             </Button>
-            <Button className="bg-emerald-600 hover:bg-emerald-700">
+            <Button onClick={handleSaveRoom} className="bg-emerald-600 hover:bg-emerald-700">
               {isEditing ? 'Enregistrer' : 'Ajouter'}
             </Button>
           </DialogFooter>

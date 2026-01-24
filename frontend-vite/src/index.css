@@ -10,22 +10,29 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 28 65% 25%; /* Earth Brown #6B4226 */
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
+    --secondary: 45 90% 50%; /* Ochre Yellow #F2A900 */
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 142 70% 30%; /* Savanna Green #1B5E20 */
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --ring: 28 65% 25%;
+    --radius: 1rem;
+
+    /* Custom Cultural Colors */
+    --earth: #5D4037;
+    --savanna: #2E7D32;
+    --laterite: #C62828;
+    --ochre: #FFB300;
+    --sand: #F5E6D3;
     
-    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
     line-height: 1.5;
     font-weight: 400;
     color-scheme: light;
