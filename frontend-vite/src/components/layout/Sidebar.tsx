@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -11,7 +11,6 @@ import {
   BookOpen,
   Shield,
   Map,
-  Settings,
   BarChart3,
   CheckCircle,
   MessageSquare,
@@ -24,10 +23,12 @@ import {
   QrCode,
   Ticket,
   Bed,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Newspaper,
+  X
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) => {
   const { user } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
@@ -35,6 +36,7 @@ const Sidebar = () => {
   const menuItems = useMemo(() => {
     const commonItems = [
       { href: '/dashboard', icon: Home, label: t('dashboard') },
+      { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
       { href: '/guides', icon: Users, label: t('guides') },
       { href: '/events', icon: Calendar, label: t('events') },
       { href: '/accommodation', icon: Building, label: 'Hébergement' },
@@ -56,13 +58,13 @@ const Sidebar = () => {
       ];
     }
 
-        if (user?.role === 'guide') {
-          return [
-            ...commonItems,
-            { href: '/guide/tours', icon: Compass, label: 'Mes Visites Guidées' },
-            { href: '/guide/bookings', icon: Calendar, label: 'Réservations' }
-          ];
-        }
+    if (user?.role === 'guide') {
+      return [
+        ...commonItems,
+        { href: '/guide/tours', icon: Compass, label: 'Mes Visites Guidées' },
+        { href: '/guide/bookings', icon: Calendar, label: 'Réservations' }
+      ];
+    }
 
     if (user?.role === 'organizer') {
       return [
@@ -77,6 +79,7 @@ const Sidebar = () => {
         { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
         { href: '/establishment/rooms', icon: Bed, label: 'Chambres' },
         { href: '/establishment/profile', icon: Building, label: 'Profil Hôtel' },
+        { href: '/establishment/create-post', icon: FileText, label: 'Créer une publication' },
         { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
         { href: '/history', icon: BookOpen, label: t('history') },
         { href: '/profile', icon: User, label: 'Mon Profil' }
@@ -89,6 +92,7 @@ const Sidebar = () => {
         { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
         { href: '/establishment/menu', icon: UtensilsCrossed, label: 'Menu' },
         { href: '/establishment/profile', icon: Building, label: 'Profil Restaurant' },
+        { href: '/establishment/create-post', icon: FileText, label: 'Créer une publication' },
         { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
         { href: '/history', icon: BookOpen, label: t('history') },
         { href: '/profile', icon: User, label: 'Mon Profil' }
@@ -117,21 +121,29 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="w-64 bg-white shadow-lg h-screen fixed left-0 top-0 z-30 overflow-y-auto">
-      <div className="p-6 border-b">
-        <h1 className="text-2xl font-bold text-orange-600">DiscoverSenegal</h1>
-        <p className="text-sm text-gray-500 mt-1">Plateforme de tourisme</p>
+    <div className={cn(
+      "w-64 bg-white shadow-lg h-screen fixed left-0 top-0 z-30 transition-transform duration-300 overflow-y-auto lg:translate-x-0",
+      isOpen ? "translate-x-0" : "-translate-x-full"
+    )}>
+      <div className="p-6 border-b flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-black text-[#6B4226] tracking-tighter">DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span></h1>
+          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-none mt-1">Plateforme de tourisme</p>
+        </div>
+        <button onClick={onClose} className="lg:hidden p-1 text-gray-400 hover:text-[#6B4226]">
+          <X size={20} />
+        </button>
       </div>
-      
+
       <nav className="mt-6">
         <div className="px-4 space-y-2">
           {menuItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.href;
-            const isAdminSection = item.isAdminSection;
-            const prevItem = menuItems[index - 1];
-            const showSeparator = isAdminSection && (!prevItem || !prevItem.isAdminSection);
-            
+            const isAdminSection = 'isAdminSection' in item ? item.isAdminSection : false;
+            const prevItem = index > 0 ? menuItems[index - 1] : null;
+            const showSeparator = isAdminSection && (!prevItem || !('isAdminSection' in prevItem) || !prevItem.isAdminSection);
+
             return (
               <div key={item.href}>
                 {showSeparator && (
@@ -141,8 +153,8 @@ const Sidebar = () => {
                   to={item.href}
                   className={cn(
                     'flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors',
-                    isActive 
-                      ? 'bg-orange-100 text-orange-700 font-medium' 
+                    isActive
+                      ? 'bg-orange-100 text-orange-700 font-medium'
                       : 'text-gray-600 hover:bg-gray-100',
                     isAdminSection && 'ml-2'
                   )}

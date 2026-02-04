@@ -10,13 +10,16 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 28 65% 25%; /* Earth Brown #6B4226 */
+    --primary: 28 65% 25%;
+    /* Earth Brown #6B4226 */
     --primary-foreground: 210 40% 98%;
-    --secondary: 45 90% 50%; /* Ochre Yellow #F2A900 */
+    --secondary: 45 90% 50%;
+    /* Ochre Yellow #F2A900 */
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 142 70% 30%; /* Savanna Green #1B5E20 */
+    --accent: 142 70% 30%;
+    /* Savanna Green #1B5E20 */
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -31,7 +34,7 @@
     --laterite: #C62828;
     --ochre: #FFB300;
     --sand: #F5E6D3;
-    
+
     font-family: 'Outfit', 'Inter', system-ui, sans-serif;
     line-height: 1.5;
     font-weight: 400;
@@ -69,14 +72,34 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
   }
+
   #root {
     width: 100%;
     min-height: 100vh;
   }
+}
+
+/* Custom Scrollbar for Comment Section */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #EBE3D5;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #F2A900;
 }

@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -11,22 +12,34 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user } = useAuth();
   const location = useLocation();
-  
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/';
-  
+
   if (!user || isAuthPage) {
-    return <div className="min-h-screen bg-gray-50">{children}</div>;
+    return <div className="min-h-screen bg-[#FFFDFB]">{children}</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar />
-      <Header />
-      <main className="ml-64 pt-16">
-        <div className="p-6">
+    <div className="min-h-screen bg-[#FFFDFB]">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Header onMenuClick={() => setIsSidebarOpen(true)} />
+      <main className={cn(
+        "transition-all duration-300 pt-16",
+        "lg:ml-64 ml-0"
+      )}>
+        <div className="p-4 sm:p-6 md:p-8">
           {children}
         </div>
       </main>
+
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden backdrop-blur-sm"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };

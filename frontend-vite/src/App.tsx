@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { Toaster } from 'sonner'
@@ -33,6 +32,9 @@ import MenuPage from '@/pages/establishment/MenuPage'
 import BookingsPage from '@/pages/establishment/BookingsPage'
 import EstablishmentProfilePage from '@/pages/establishment/ProfilePage'
 import ReviewsPage from '@/pages/establishment/ReviewsPage'
+import DiscoverFeedPage from '@/pages/feed/DiscoverFeedPage'
+import PublicEstablishmentProfilePage from '@/pages/establishment/EstablishmentProfilePage'
+import CreatePostPage from '@/pages/establishment/CreatePostPage'
 
 const App = () => {
   const { user, isLoading } = useAuth()
@@ -54,14 +56,24 @@ const App = () => {
         {/* Routes d'authentification */}
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/auth/register" element={<RegisterPage />} />
-        
+
         {/* Route racine */}
         <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
-        
+
         {/* Routes protégées avec Layout */}
         <Route path="/dashboard" element={
           <Layout>
             <DashboardPage />
+          </Layout>
+        } />
+        <Route path="/echos-senegal" element={
+          <Layout>
+            <DiscoverFeedPage />
+          </Layout>
+        } />
+        <Route path="/establishment/:id" element={
+          <Layout>
+            <PublicEstablishmentProfilePage />
           </Layout>
         } />
         <Route path="/notifications" element={
@@ -109,18 +121,18 @@ const App = () => {
             <TicketDetailsPage />
           </Layout>
         } />
-        
-            {/* Routes Admin */}
-            <Route path="/admin/validation" element={
-              <Layout>
-                <ValidationDashboard />
-              </Layout>
-            } />
-            <Route path="/admin/moderation" element={
-              <Layout>
-                <ModerationPage />
-              </Layout>
-            } />
+
+        {/* Routes Admin */}
+        <Route path="/admin/validation" element={
+          <Layout>
+            <ValidationDashboard />
+          </Layout>
+        } />
+        <Route path="/admin/moderation" element={
+          <Layout>
+            <ModerationPage />
+          </Layout>
+        } />
         <Route path="/admin/users" element={
           <Layout>
             <UsersPage />
@@ -136,14 +148,14 @@ const App = () => {
             <ArticlesPage />
           </Layout>
         } />
-        
+
         {/* Routes Organisateur */}
         <Route path="/organizer/events" element={
           <Layout>
             <OrganizerEventsPage />
           </Layout>
         } />
-        
+
         {/* Routes Guide */}
         <Route path="/guide/tours" element={
           <Layout>
@@ -155,7 +167,7 @@ const App = () => {
             <GuideBookingsPage />
           </Layout>
         } />
-        
+
         {/* Routes Sécurité */}
         <Route path="/security/dashboard" element={
           <Layout>
@@ -179,7 +191,7 @@ const App = () => {
             <SignalerPage />
           </Layout>
         } />
-        
+
         {/* Routes Établissement */}
         <Route path="/establishment/bookings" element={
           <Layout>
@@ -206,7 +218,12 @@ const App = () => {
             <ReviewsPage />
           </Layout>
         } />
-        
+        <Route path="/establishment/create-post" element={
+          <Layout>
+            <CreatePostPage />
+          </Layout>
+        } />
+
         {/* Route de fallback */}
         <Route path="*" element={
           <Layout>

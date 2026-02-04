@@ -5,20 +5,13 @@ import { Button } from '@/components/ui/button';
 import {
   ArrowRight,
   MapPin,
-  Music,
-  UtensilsCrossed,
   Heart,
-  Users,
   Star,
   Camera,
-  BookOpen,
   Drum,
-  Calendar,
   Sparkles,
   Palette,
   Compass,
-  Globe,
-  Sun,
   Award,
   ChevronLeft,
   ChevronRight,
@@ -27,13 +20,16 @@ import {
   ShieldCheck,
   Instagram,
   Facebook,
-  Twitter
+  Twitter,
+  X
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const LandingPage: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -51,16 +47,16 @@ const LandingPage: React.FC = () => {
   if (user) return null;
 
   return (
-    <div className="min-h-screen bg-[#FFFDFB] text-[#2D1B08] selection:bg-[#F2A900] selection:text-white">
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md py-3' : 'bg-transparent'
+    <div className="min-h-screen bg-[#FFFDFB] text-[#2D1B08] selection:bg-[#F2A900] selection:text-white overflow-x-hidden">
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 sm:px-6 py-3 sm:py-4 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md py-2 sm:py-3' : 'bg-transparent'
         }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-lg overflow-hidden border-2 border-[#F2A900] transform transition-transform group-hover:rotate-6 bg-white shrink-0 shadow-sm">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden border-2 border-[#F2A900] transform transition-transform group-hover:rotate-6 bg-white shrink-0 shadow-sm">
               <img src="/images/logo.jpeg" alt="Logo Discover Sénégal" className="w-full h-full object-contain p-1" />
             </div>
-            <span className={`text-xl font-black tracking-tighter transition-colors ${isScrolled ? 'text-[#2D1B08]' : 'text-white'
+            <span className={`text-base sm:text-xl font-black tracking-tighter transition-colors hidden xs:inline ${isScrolled ? 'text-[#2D1B08]' : 'text-white'
               }`}>
               DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span>
             </span>
@@ -80,8 +76,8 @@ const LandingPage: React.FC = () => {
             ))}
           </nav>
 
-          {/* Auth Buttons */}
-          <div className="flex items-center gap-4">
+          {/* Auth Buttons - Desktop */}
+          <div className="hidden md:flex items-center gap-4">
             <Link to="/auth/login">
               <span className={`text-sm font-black uppercase tracking-widest hover:text-[#F2A900] transition-colors ${isScrolled ? 'text-[#2D1B08]' : 'text-white'
                 }`}>
@@ -94,11 +90,61 @@ const LandingPage: React.FC = () => {
               </Button>
             </Link>
           </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden p-2 text-white"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <div className={cn("w-6 h-0.5 bg-current mb-1.5 transition-all", isScrolled ? "text-[#2D1B08]" : "text-white")}></div>
+            <div className={cn("w-6 h-0.5 bg-current mb-1.5 transition-all", isScrolled ? "text-[#2D1B08]" : "text-white")}></div>
+            <div className={cn("w-4 h-0.5 bg-current transition-all", isScrolled ? "text-[#2D1B08]" : "text-white")}></div>
+          </button>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-0 left-0 w-full bg-white shadow-2xl animate-in slide-in-from-top duration-300 z-50 rounded-b-[2rem]">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-8">
+                <span className="text-lg font-black tracking-tighter text-[#2D1B08]">
+                  DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span>
+                </span>
+                <button onClick={() => setIsMobileMenuOpen(false)} className="text-[#2D1B08] p-2">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <nav className="flex flex-col gap-6 mb-8">
+                {['Accueil', 'A propos', 'Explorer'].map((item) => (
+                  <a
+                    key={item}
+                    href={`#${item.toLowerCase().replace(' ', '-')}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-xl font-black uppercase tracking-widest text-[#2D1B08]/70 hover:text-[#F2A900]"
+                  >
+                    {item}
+                  </a>
+                ))}
+              </nav>
+              <div className="flex flex-col gap-4">
+                <Link to="/auth/login" className="w-full">
+                  <Button variant="outline" className="w-full border-[#2D1B08] text-[#2D1B08] py-6 font-black rounded-full">
+                    CONNEXION
+                  </Button>
+                </Link>
+                <Link to="/auth/register" className="w-full">
+                  <Button className="w-full bg-[#F2A900] text-white py-6 font-black rounded-full">
+                    S'INSCRIRE
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* 1. HERO SECTION - IMMERSIVE JOURNEY */}
-      <section id="accueil" className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Video or Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -111,35 +157,35 @@ const LandingPage: React.FC = () => {
           <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/az-subtle.png')]"></div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center text-white pt-24 md:pt-32">
-          <div className="inline-flex items-center gap-2 px-5 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-8 animate-fade-in-up">
-            <Sparkles className="h-4 w-4 text-[#F2A900]" />
-            <span className="text-sm font-bold tracking-widest uppercase">Bienvenue au pays de la Téranga</span>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center text-white pt-20 pb-20">
+          <div className="inline-flex items-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full mb-6 animate-fade-in-up">
+            <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-[#F2A900]" />
+            <span className="text-[10px] sm:text-sm font-bold tracking-widest uppercase">Bienvenue au pays de la Téranga</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-[0.9] tracking-tighter animate-title">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-[0.95] tracking-tighter animate-title">
             DÉCOUVREZ LE <br />
             <span className="text-[#F2A900]">SÉNÉGAL</span> <br />
             AUTREMENT
           </h1>
 
-          <p className="text-lg md:text-xl max-w-xl mx-auto font-medium text-white/90 mb-12 leading-relaxed animate-fade-in-up delay-300">
+          <p className="text-base sm:text-lg md:text-xl max-w-xl mx-auto font-medium text-white/90 mb-10 leading-relaxed animate-fade-in-up delay-300 px-4">
             Une immersion authentique au cœur du patrimoine, de la gastronomie
             et de l'hospitalité légendaire de l'Afrique de l'Ouest.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in-up delay-500">
-            <Link to="/auth/register">
-              <Button size="lg" className="bg-[#F2A900] hover:bg-[#D49400] text-white px-8 py-6 text-lg font-black rounded-full shadow-2xl transition-all transform hover:scale-105 group">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 animate-fade-in-up delay-500 px-4">
+            <Link to="/auth/register" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto bg-[#F2A900] hover:bg-[#D49400] text-white px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg font-black rounded-full shadow-2xl transition-all transform hover:scale-105 group">
                 COMMENCER LE VOYAGE
-                <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-2" />
+                <ArrowRight className="ml-2 sm:ml-3 h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:translate-x-2" />
               </Button>
             </Link>
-            <button className="flex items-center gap-4 text-white hover:text-[#F2A900] transition-colors font-bold text-base group">
-              <div className="w-14 h-14 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-[#F2A900] transition-all">
-                <Compass className="h-7 w-7" />
+            <button className="flex items-center gap-3 sm:gap-4 text-white hover:text-[#F2A900] transition-colors font-bold text-sm sm:text-base group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-[#F2A900] transition-all">
+                <Compass className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
-              Explorer les récits
+              <span className="hidden sm:inline">Explorer les récits</span>
             </button>
           </div>
         </div>
@@ -154,11 +200,11 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* 2. CULTURE & IDENTITY SECTION */}
-      <section id="a-propos" className="py-16 px-6 bg-[#FFFDFB] relative">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+      <section id="a-propos" className="py-12 sm:py-20 px-4 sm:px-6 bg-[#FFFDFB] relative">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 sm:gap-16 items-center">
           <div className="relative">
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#F2A900]/10 rounded-full -z-10 blur-3xl"></div>
-            <div className="rounded-3xl overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.1)] border border-[#EBE3D5]">
+            <div className="rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] sm:shadow-[0_40px_100px_rgba(0,0,0,0.1)] border border-[#EBE3D5]">
               <img
                 src="/images/teranga_welcome.png"
                 alt="L'accueil chaleureux du Sénégal"
@@ -166,16 +212,16 @@ const LandingPage: React.FC = () => {
               />
             </div>
             {/* Stat Overlays */}
-            <div className="absolute -bottom-10 -right-10 bg-[#6B4226] p-8 rounded-3xl text-white shadow-2xl max-w-[240px]">
-              <Heart className="h-10 w-10 text-[#F2A900] mb-4" />
-              <p className="text-lg font-bold leading-tight">"La Téranga n'est pas un mot, c'est notre âme."</p>
+            <div className="absolute -bottom-4 -right-2 sm:-bottom-6 sm:-right-4 md:-bottom-10 md:-right-10 bg-[#6B4226] p-3 sm:p-4 md:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl text-white shadow-2xl max-w-[160px] sm:max-w-[180px] md:max-w-[240px]">
+              <Heart className="h-6 w-6 sm:h-10 sm:w-10 text-[#F2A900] mb-2 sm:mb-4" />
+              <p className="text-sm sm:text-lg font-bold leading-tight">"La Téranga n'est pas un mot, c'est notre âme."</p>
             </div>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8 mt-12 lg:mt-0">
             <div>
-              <span className="text-[#F2A900] font-black tracking-[0.2em] uppercase text-xs">Héritage & Identité</span>
-              <h2 className="text-4xl md:text-5xl font-black mt-3 leading-tight">
+              <span className="text-[#F2A900] font-black tracking-[0.2em] uppercase text-[10px] sm:text-xs">Héritage & Identité</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mt-3 leading-tight">
                 L'âme d'un peuple, <br />
                 <span className="text-[#6B4226]">la force d'une terre</span>
               </h2>
@@ -287,25 +333,25 @@ const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[600px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 h-auto lg:h-[600px]">
             {/* Main Card */}
-            <div className="md:col-span-8 relative rounded-[1.5rem] overflow-hidden group cursor-pointer shadow-xl">
+            <div className="md:col-span-2 lg:col-span-8 relative rounded-[1.5rem] overflow-hidden group cursor-pointer shadow-xl min-h-[400px] lg:min-h-0">
               <img
                 src="/images/goree.jpeg"
                 alt="L'île de Gorée"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 p-8 text-white">
+              <div className="absolute bottom-0 left-0 p-6 sm:p-8 text-white">
                 <Badge label="Patrimoine UNESCO" color="#C62828" />
-                <h3 className="text-3xl font-black mt-3">L'île de Gorée</h3>
-                <p className="text-white/70 max-w-md mt-1 text-sm">Un sanctuaire d'histoire et de mémoire au large de Dakar.</p>
+                <h3 className="text-2xl sm:text-3xl font-black mt-3">L'île de Gorée</h3>
+                <p className="text-white/70 max-w-md mt-1 text-xs sm:text-sm">Un sanctuaire d'histoire et de mémoire au large de Dakar.</p>
               </div>
             </div>
 
             {/* Side Column */}
-            <div className="md:col-span-4 grid grid-rows-2 gap-6 h-full">
-              <div className="relative rounded-[1.5rem] overflow-hidden group cursor-pointer shadow-lg">
+            <div className="md:col-span-2 lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:grid-rows-2 gap-6 h-full">
+              <div className="relative rounded-[1.5rem] overflow-hidden group cursor-pointer shadow-lg min-h-[250px]">
                 <img
                   src="/images/lac_rose.jpeg"
                   alt="Le Lac Rose"
@@ -317,7 +363,7 @@ const LandingPage: React.FC = () => {
                   <p className="text-white/70 text-xs">Une merveille naturelle unique au monde.</p>
                 </div>
               </div>
-              <div className="relative rounded-[1.5rem] overflow-hidden group cursor-pointer shadow-lg">
+              <div className="relative rounded-[1.5rem] overflow-hidden group cursor-pointer shadow-lg min-h-[250px]">
                 <img
                   src="/images/falaise.jpeg"
                   alt="Dindefelo"
@@ -348,7 +394,7 @@ const LandingPage: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-black mt-3">Confort & <span className="text-[#F2A900]">Authenticité</span></h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <AccommodationCard
               image="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
               name="Lodge des Savanes"
@@ -372,68 +418,69 @@ const LandingPage: React.FC = () => {
             />
           </div>
 
-          <div className="mt-16 flex items-center justify-center gap-8 py-8 border-y border-[#EBE3D5]">
+          <div className="mt-12 sm:mt-16 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-6 sm:py-8 border-y border-[#EBE3D5]">
             <div className="flex items-center gap-2 opacity-60">
-              <ShieldCheck className="h-6 w-6 text-[#1B5E20]" />
-              <span className="font-bold text-sm tracking-widest uppercase">Réservation sécurisée</span>
+              <ShieldCheck className="h-5 w-5 sm:h-6 sm:w-6 text-[#1B5E20]" />
+              <span className="font-bold text-xs sm:text-sm tracking-widest uppercase">Réservation sécurisée</span>
             </div>
             <div className="flex items-center gap-2 opacity-60">
-              <Award className="h-6 w-6 text-[#F2A900]" />
-              <span className="font-bold text-sm tracking-widest uppercase">Labels Qualité Teranga</span>
+              <Award className="h-5 w-5 sm:h-6 sm:w-6 text-[#F2A900]" />
+              <span className="font-bold text-xs sm:text-sm tracking-widest uppercase hidden sm:inline">Labels Qualité Teranga</span>
+              <span className="font-bold text-xs sm:text-sm tracking-widest uppercase sm:hidden">Qualité</span>
             </div>
             <div className="flex items-center gap-2 opacity-60">
-              <CheckCircle2 className="h-6 w-6 text-[#1B5E20]" />
-              <span className="font-bold text-sm tracking-widest uppercase">Support 24/7 client</span>
+              <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 text-[#1B5E20]" />
+              <span className="font-bold text-xs sm:text-sm tracking-widest uppercase">Support 24/7</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* 6. GASTRONOMY SECTION - MOUTHWATERING */}
-      <section className="py-16 bg-[#2D1B08] text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#C62828]/10 rounded-full blur-[120px] -mr-[300px] -mt-[300px]"></div>
+      <section className="py-12 sm:py-16 bg-[#2D1B08] text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-[#C62828]/10 rounded-full blur-[120px] -mr-[200px] sm:-mr-[300px] -mt-[200px] sm:-mt-[300px]"></div>
 
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+          <div className="space-y-4 sm:space-y-6">
             <div>
-              <span className="text-[#F2A900] font-black tracking-[0.2em] uppercase text-xs">Saveurs du Sénégal</span>
-              <h2 className="text-4xl md:text-5xl font-black mt-3 leading-tight">
+              <span className="text-[#F2A900] font-black tracking-[0.2em] uppercase text-[10px] sm:text-xs">Saveurs du Sénégal</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mt-3 leading-tight">
                 L'art de la <br />
                 <span className="text-[#F2A900]">Gastronomie</span>
               </h2>
             </div>
-            <p className="text-lg text-white/70 leading-relaxed">
+            <p className="text-base sm:text-lg text-white/70 leading-relaxed">
               Le <strong>Thiéboudienne</strong>, le <strong>Yassa</strong>, le <strong>Mafé</strong>...
               Plongez dans un univers de saveurs épicées et de couleurs généreuses.
               Une cuisine reconnue mondialement pour sa convivialité et son authenticité.
             </p>
 
             <ul className="space-y-2">
-              <li className="flex items-center gap-4 text-base font-bold">
-                <div className="w-2 h-2 rounded-full bg-[#F2A900]"></div>
-                Restaurants sélectionnés pour leur authenticité
+              <li className="flex items-center gap-3 sm:gap-4 text-sm sm:text-base font-bold">
+                <div className="w-2 h-2 rounded-full bg-[#F2A900] shrink-0"></div>
+                <span>Restaurants sélectionnés pour leur authenticité</span>
               </li>
-              <li className="flex items-center gap-4 text-base font-bold">
-                <div className="w-2 h-2 rounded-full bg-[#F2A900]"></div>
-                Cours de cuisine chez l'habitant
+              <li className="flex items-center gap-3 sm:gap-4 text-sm sm:text-base font-bold">
+                <div className="w-2 h-2 rounded-full bg-[#F2A900] shrink-0"></div>
+                <span>Cours de cuisine chez l'habitant</span>
               </li>
-              <li className="flex items-center gap-4 text-base font-bold">
-                <div className="w-2 h-2 rounded-full bg-[#F2A900]"></div>
-                Découverte des produits du terroir (Bissap, Bouye)
+              <li className="flex items-center gap-3 sm:gap-4 text-sm sm:text-base font-bold">
+                <div className="w-2 h-2 rounded-full bg-[#F2A900] shrink-0"></div>
+                <span>Découverte des produits du terroir (Bissap, Bouye)</span>
               </li>
             </ul>
 
-            <Button className="bg-[#F2A900] hover:bg-[#D49400] text-white px-8 py-4 text-lg font-black rounded-full shadow-2xl transition-all border-none">
+            <Button className="w-full sm:w-auto bg-[#F2A900] hover:bg-[#D49400] text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-black rounded-full shadow-2xl transition-all border-none">
               EXPLORER LA CARTE GOURMANDE
             </Button>
           </div>
 
-          <div className="relative group">
-            <div className="absolute inset-0 bg-[#F2A900]/20 rounded-full blur-[80px] -z-10 group-hover:scale-125 transition-transform duration-1000"></div>
+          <div className="relative group mt-8 lg:mt-0">
+            <div className="absolute inset-0 bg-[#F2A900]/20 rounded-full blur-[60px] sm:blur-[80px] -z-10 group-hover:scale-125 transition-transform duration-1000"></div>
             <img
               src="/images/thieboudienne.png"
               alt="Thiéboudienne traditionnel"
-              className="w-full rounded-[2rem] shadow-[0_50px_100px_rgba(0,0,0,0.5)] transform translate-y-6 group-hover:translate-y-0 transition-transform duration-700"
+              className="w-full rounded-2xl sm:rounded-[2rem] shadow-[0_30px_60px_rgba(0,0,0,0.5)] sm:shadow-[0_50px_100px_rgba(0,0,0,0.5)] transform translate-y-3 sm:translate-y-6 group-hover:translate-y-0 transition-transform duration-700"
             />
           </div>
         </div>
@@ -450,7 +497,7 @@ const LandingPage: React.FC = () => {
             <Link to="#" className="text-[#1B5E20] font-black text-base underline-offset-8 decoration-4 hover:underline">Voir toutes les expériences</Link>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <ExperienceCard
               icon={<Drum className="h-8 w-8" />}
               title="Atelier de Percussion Sabar"
@@ -474,31 +521,33 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* 8. ART & CRAFT SECTION */}
-      <section className="py-16 bg-[#6B4226] text-white">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="grid grid-cols-2 gap-4">
-            <img src="/images/artisanat1.jpeg" className="rounded-2xl h-40 w-full object-cover mt-6" alt="Artisanat 1" />
-            <img src="/images/artisanat2.jpeg" className="rounded-2xl h-40 w-full object-cover" alt="Artisanat 2" />
-            <img src="/images/artisanat3.jpeg" className="rounded-2xl h-40 w-full object-cover" alt="Artisanat 3" />
-            <img src="/images/artisanat4.jpeg" className="rounded-2xl h-40 w-full object-cover -mt-6" alt="Artisanat 4" />
-          </div>
-
-          <div className="space-y-6">
-            <span className="text-[#F2A900] font-black tracking-[0.2em] uppercase text-xs">Créativité Africaine</span>
-            <h2 className="text-4xl md:text-5xl font-black">L'élégance du <br /> <span className="text-[#F2A900]">Fait Main</span></h2>
-            <p className="text-lg text-white/70 leading-relaxed">
+      <section className="py-12 sm:py-16 bg-[#6B4226] text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+          {/* Text Content - First on mobile, Second on desktop */}
+          <div className="space-y-4 sm:space-y-6 order-2 lg:order-1">
+            <span className="text-[#F2A900] font-black tracking-[0.2em] uppercase text-[10px] sm:text-xs">Créativité Africaine</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black">L'élégance du <br /> <span className="text-[#F2A900]">Fait Main</span></h2>
+            <p className="text-base sm:text-lg text-white/70 leading-relaxed">
               De la sculpture sur bois à la joaillerie fine, l'artisanat sénégalais
               allie savoir-faire ancestral et design contemporain. Découvrez des pièces
               uniques qui portent l'âme de nos créateurs.
             </p>
-            <div className="flex gap-4">
-              <Button size="lg" className="bg-white text-[#6B4226] hover:bg-[#F2A900] hover:text-white px-6 py-4 rounded-full font-black transition-all">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <Button size="lg" className="w-full sm:w-auto bg-white text-[#6B4226] hover:bg-[#F2A900] hover:text-white px-5 sm:px-6 py-3 sm:py-4 rounded-full font-black transition-all text-sm sm:text-base">
                 BOUTIQUE ARTISANALE
               </Button>
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-6 py-4 rounded-full font-black">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/10 px-5 sm:px-6 py-3 sm:py-4 rounded-full font-black text-sm sm:text-base">
                 RENCONTRER LES ARTISTES
               </Button>
             </div>
+          </div>
+
+          {/* Image Grid - Second on mobile, First on desktop */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 order-1 lg:order-2">
+            <img src="/images/artisanat1.jpeg" className="rounded-xl sm:rounded-2xl h-28 sm:h-32 md:h-40 w-full object-cover mt-3 sm:mt-4 md:mt-6" alt="Artisanat 1" />
+            <img src="/images/artisanat2.jpeg" className="rounded-xl sm:rounded-2xl h-28 sm:h-32 md:h-40 w-full object-cover" alt="Artisanat 2" />
+            <img src="/images/artisanat3.jpeg" className="rounded-xl sm:rounded-2xl h-28 sm:h-32 md:h-40 w-full object-cover" alt="Artisanat 3" />
+            <img src="/images/artisanat4.jpeg" className="rounded-xl sm:rounded-2xl h-28 sm:h-32 md:h-40 w-full object-cover -mt-3 sm:-mt-4 md:-mt-6" alt="Artisanat 4" />
           </div>
         </div>
       </section>
@@ -510,7 +559,7 @@ const LandingPage: React.FC = () => {
             <h2 className="text-3xl md:text-4xl font-black">Ils ont voyagé avec nous</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <TestimonialCard
               name="Sarah Lefebvre"
               origin="Paris, France"
@@ -523,12 +572,14 @@ const LandingPage: React.FC = () => {
               text="Redécouvrir mon pays d'origine avec cette plateforme a été un bonheur. L'organisation était impeccable."
               stars={5}
             />
-            <TestimonialCard
-              name="Amelia Jones"
-              origin="Londres, UK"
-              text="The food tour was incredible. I never thought I could cook the best thieboudienne myself!"
-              stars={5}
-            />
+            <div className="sm:col-span-2 lg:col-span-1">
+              <TestimonialCard
+                name="Amelia Jones"
+                origin="Londres, UK"
+                text="The food tour was incredible. I never thought I could cook the best thieboudienne myself!"
+                stars={5}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -564,7 +615,7 @@ const LandingPage: React.FC = () => {
       {/* FOOTER */}
       <footer className="bg-[#2D1B08] text-white pt-24 pb-12 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 md:gap-16 mb-12 sm:mb-16 md:mb-20">
             <div className="md:col-span-5 space-y-8">
               <h3 className="text-4xl font-black tracking-tighter">DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span></h3>
               <p className="text-white/50 text-lg max-w-sm">
@@ -664,7 +715,7 @@ const Badge = ({ label, color }: { label: string; color: string }) => (
 );
 
 const AccommodationCard = ({ image, name, location, rating, price }: any) => (
-  <div className="group cursor-pointer">
+  <Link to="/establishment/1" className="group cursor-pointer block">
     <div className="relative rounded-[1.5rem] overflow-hidden aspect-[4/3] mb-4 shadow-lg">
       <img src={image} alt={name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-md">
@@ -681,10 +732,10 @@ const AccommodationCard = ({ image, name, location, rating, price }: any) => (
         <MapPin className="h-3 w-3" /> {location}
       </p>
       <button className="w-full py-3 border-2 border-[#EBE3D5] rounded-xl font-black text-sm group-hover:bg-[#6B4226] group-hover:text-white group-hover:border-[#6B4226] transition-all">
-        RÉSERVER
+        VOIR LE PROFIL
       </button>
     </div>
-  </div>
+  </Link>
 );
 
 const ExperienceCard = ({ icon, title, description, tag }: any) => (

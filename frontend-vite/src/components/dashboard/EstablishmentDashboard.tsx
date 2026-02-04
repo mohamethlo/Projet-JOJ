@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Building2, 
-  Bed, 
-  UtensilsCrossed, 
-  Calendar, 
-  Users, 
-  Star, 
+import {
+  Building2,
+  Bed,
+  UtensilsCrossed,
+  Calendar,
+  Star,
   DollarSign,
   TrendingUp,
   Clock,
@@ -18,13 +17,7 @@ import {
   MessageSquare,
   Award,
   AlertCircle,
-  Home,
-  Coffee,
-  MapPin,
-  Phone,
-  Mail,
-  Globe,
-  Image as ImageIcon
+  FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -87,8 +80,6 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
         return <Building2 className="h-8 w-8" />;
       case 'restaurant':
         return <UtensilsCrossed className="h-8 w-8" />;
-      case 'auberge':
-        return <Home className="h-8 w-8" />;
       default:
         return <Building2 className="h-8 w-8" />;
     }
@@ -146,7 +137,7 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
             </div>
           </CardContent>
         </Card>
-        
+
         <Card className="hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">En attente</CardTitle>
@@ -160,7 +151,7 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
             </Button>
           </CardContent>
         </Card>
-        
+
         <Card className="hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Revenus ce mois</CardTitle>
@@ -186,7 +177,7 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
           <CardContent>
             <div className="text-3xl font-bold">{mockStats.occupancyRate}%</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {establishmentType === 'hotel' 
+              {establishmentType === 'hotel'
                 ? `${mockStats.occupiedRooms}/${mockStats.totalRooms} chambres occupées`
                 : `${mockStats.occupiedRooms}/${mockStats.totalRooms} tables occupées`}
             </p>
@@ -323,14 +314,13 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
             {mockRecentBookings.map((booking) => (
               <div key={booking.id} className="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 transition-colors">
                 <div className="flex items-center space-x-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                    establishmentType === 'hotel' ? 'bg-emerald-100' : 
-                    establishmentType === 'restaurant' ? 'bg-orange-100' : 
-                    'bg-blue-100'
-                  }`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${establishmentType === 'hotel' ? 'bg-emerald-100' :
+                    establishmentType === 'restaurant' ? 'bg-orange-100' :
+                      'bg-blue-100'
+                    }`}>
                     {establishmentType === 'hotel' ? <Bed className="h-6 w-6 text-emerald-600" /> :
-                     establishmentType === 'restaurant' ? <UtensilsCrossed className="h-6 w-6 text-orange-600" /> :
-                     <Home className="h-6 w-6 text-blue-600" />}
+                      establishmentType === 'restaurant' ? <UtensilsCrossed className="h-6 w-6 text-orange-600" /> :
+                        <Home className="h-6 w-6 text-blue-600" />}
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">{booking.guestName}</h4>
@@ -347,17 +337,17 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Badge 
+                  <Badge
                     variant={
-                      booking.status === 'Confirmée' 
-                        ? 'default' 
-                        : booking.status === 'En attente' 
-                        ? 'secondary' 
-                        : 'outline'
+                      booking.status === 'Confirmée'
+                        ? 'default'
+                        : booking.status === 'En attente'
+                          ? 'secondary'
+                          : 'outline'
                     }
                     className={
                       booking.status === 'Confirmée' ? 'bg-emerald-500 text-white' :
-                      booking.status === 'En attente' ? 'bg-amber-500 text-white' : ''
+                        booking.status === 'En attente' ? 'bg-amber-500 text-white' : ''
                     }
                   >
                     {booking.status}
@@ -422,6 +412,13 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
               <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
                 <Calendar className="mr-2 h-4 w-4" />
                 Toutes les réservations
+                <ArrowRight className="ml-auto h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/establishment/create-post">
+              <Button variant="outline" className="w-full justify-start bg-white hover:bg-[#F2A900]/10 border-[#F2A900] text-[#F2A900] font-black">
+                <FileText className="mr-2 h-4 w-4" />
+                Créer une publication
                 <ArrowRight className="ml-auto h-4 w-4" />
               </Button>
             </Link>
