@@ -44,7 +44,7 @@ const LoginPage: React.FC = () => {
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-10">
           <div className="w-16 h-16 mx-auto mb-4 rounded-xl overflow-hidden border-2 border-[#F2A900] transform rotate-3 shadow-md bg-white p-1">
-            <img src="/images/logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
+            <img src="/images/nouveau_logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-[#2D1B08] tracking-tighter mb-2">
             DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span>

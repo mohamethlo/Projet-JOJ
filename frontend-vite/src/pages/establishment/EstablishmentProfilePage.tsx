@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import { useNotifications } from '@/context/NotificationContext';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -27,8 +28,10 @@ import {
 
 const EstablishmentProfilePage: React.FC = () => {
     const { id } = useParams();
+    const { toggleFollow, isFollowing: checkFollowing } = useNotifications();
     const [activeTab, setActiveTab] = useState<'publications' | 'about' | 'reviews' | 'photos'>('publications');
-    const [isFollowing, setIsFollowing] = useState(false);
+
+    const isFollowing = id ? checkFollowing(id) : false;
 
     // Mock data - will be replaced with API call
     const establishment = {
@@ -197,10 +200,10 @@ const EstablishmentProfilePage: React.FC = () => {
                                 {/* Action Buttons */}
                                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                                     <Button
-                                        onClick={() => setIsFollowing(!isFollowing)}
+                                        onClick={() => id && toggleFollow(id)}
                                         className={`${isFollowing
-                                                ? 'bg-[#EBE3D5] text-[#2D1B08] hover:bg-[#EBE3D5]/80'
-                                                : 'bg-[#F2A900] hover:bg-[#D49400] text-white'
+                                            ? 'bg-[#EBE3D5] text-[#2D1B08] hover:bg-[#EBE3D5]/80'
+                                            : 'bg-[#F2A900] hover:bg-[#D49400] text-white'
                                             } font-black rounded-full px-4 sm:px-6 py-2.5 sm:py-3 text-sm transition-all`}
                                     >
                                         {isFollowing ? (
@@ -215,14 +218,16 @@ const EstablishmentProfilePage: React.FC = () => {
                                             </>
                                         )}
                                     </Button>
-                                    <Button
-                                        variant="outline"
-                                        className="border-[#6B4226] text-[#6B4226] hover:bg-[#6B4226] hover:text-white font-black rounded-full px-4 sm:px-6 py-2.5 sm:py-3 text-sm"
-                                    >
-                                        <Phone className="h-4 w-4 mr-1.5" />
-                                        <span className="hidden xs:inline">Contacter</span>
-                                        <span className="xs:hidden">Appel</span>
-                                    </Button>
+                                    <Link to="/messages?userId=u1" className="w-full sm:w-auto">
+                                        <Button
+                                            variant="outline"
+                                            className="w-full border-[#6B4226] text-[#6B4226] hover:bg-[#6B4226] hover:text-white font-black rounded-full px-4 sm:px-6 py-2.5 sm:py-3 text-sm"
+                                        >
+                                            <MessageSquare className="h-4 w-4 mr-1.5" />
+                                            <span className="hidden xs:inline">Contacter</span>
+                                            <span className="xs:hidden">Chat</span>
+                                        </Button>
+                                    </Link>
                                     <Button
                                         variant="outline"
                                         className="border-[#1B5E20] text-[#1B5E20] hover:bg-[#1B5E20] hover:text-white font-black rounded-full px-4 sm:px-6 py-2.5 sm:py-3 text-sm"

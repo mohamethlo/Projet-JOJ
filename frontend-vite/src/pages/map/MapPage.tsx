@@ -3,15 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { 
-  MapPin, 
-  Search, 
-  Filter, 
+import {
+  MapPin,
+  Search,
+  Filter,
   Navigation,
   Star,
   Phone,
   Clock,
-  Globe
+  Globe,
+  X,
+  Layers
 } from 'lucide-react';
 import { mockPlaces } from '@/lib/mockData';
 
@@ -31,75 +33,67 @@ const MapPage: React.FC = () => {
   const filteredPlaces = mockPlaces.filter(place => {
     const matchesType = selectedType === 'all' || place.type === selectedType;
     const matchesSearch = place.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         place.description.toLowerCase().includes(searchTerm.toLowerCase());
+      place.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesType && matchesSearch;
   });
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'restaurant':
-        return 'bg-orange-500';
-      case 'hotel':
-        return 'bg-blue-500';
-      case 'monument':
-        return 'bg-green-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
 
   return (
-    <div className="space-y-6 px-4 py-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="min-h-screen bg-[#FFFDFB] space-y-8 px-4 py-12">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Carte Interactive</h1>
-          <p className="text-gray-600 mt-1 text-sm sm:text-base">Explorez les lieux incontournables de Dakar</p>
+          <h1 className="text-3xl sm:text-4xl font-black text-[#2D1B08] uppercase tracking-tighter">Carte Interactive</h1>
+          <p className="text-[#5D4037] mt-1 text-sm sm:text-lg font-medium">Explorez les lieux incontournables de Dakar</p>
         </div>
-        <Badge className="bg-green-100 text-green-700 text-xs sm:text-sm w-fit">
+        <Badge className="bg-[#F2A900]/10 text-[#F2A900] border-[#F2A900]/20 text-xs sm:text-sm font-black uppercase tracking-widest px-4 py-1.5 shadow-sm">
           {filteredPlaces.length} lieu(x) trouvé(s)
         </Badge>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Sidebar */}
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1 space-y-6">
           {/* Search */}
-          <Card>
+          <Card className="border-2 border-[#EBE3D5] shadow-sm rounded-2xl overflow-hidden bg-white">
             <CardContent className="p-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <div className="relative group">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#F2A900] h-5 w-5 transition-transform group-focus-within:scale-110" />
                 <Input
                   placeholder="Rechercher un lieu..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-12 h-14 border-[#EBE3D5] focus:ring-[#F2A900] focus:border-[#F2A900] rounded-xl bg-[#FFFDFB] text-lg font-medium"
                 />
               </div>
             </CardContent>
           </Card>
 
           {/* Categories */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center">
-                <Filter className="mr-2 h-5 w-5" />
+          <Card className="border-2 border-[#EBE3D5] shadow-sm rounded-2xl overflow-hidden bg-white">
+            <CardHeader className="border-b border-[#EBE3D5] py-4">
+              <CardTitle className="text-lg font-black text-[#2D1B08] uppercase tracking-tighter flex items-center">
+                <Filter className="mr-3 h-5 w-5 text-[#F2A900]" />
                 Catégories
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0">
-              <div className="space-y-2">
+            <CardContent className="p-4">
+              <div className="space-y-1.5">
                 {placeTypes.map((type) => (
                   <Button
                     key={type.id}
                     variant={selectedType === type.id ? 'default' : 'ghost'}
-                    className="w-full justify-start"
+                    className={`w-full justify-start h-12 rounded-xl transition-all ${selectedType === type.id
+                      ? 'bg-[#F2A900] text-white shadow-lg hover:bg-[#D49400]'
+                      : 'text-[#5D4037] hover:bg-[#F2A900]/5 hover:text-[#2D1B08] font-black uppercase tracking-tighter text-xs'
+                      }`}
                     onClick={() => setSelectedType(type.id)}
                   >
-                    <span className="mr-2">{type.icon}</span>
-                    {type.label}
-                    <Badge variant="secondary" className="ml-auto">
-                      {type.id === 'all' ? filteredPlaces.length : 
-                       filteredPlaces.filter(p => p.type === type.id).length}
+                    <span className="mr-3 text-xl">{type.icon}</span>
+                    <span className={selectedType === type.id ? 'font-black uppercase tracking-tighter text-xs' : ''}>{type.label}</span>
+                    <Badge className={`ml-auto border-none font-black ${selectedType === type.id ? 'bg-white/20 text-white' : 'bg-[#FFFDFB] text-[#5D4037]/60'
+                      }`}>
+                      {type.id === 'all' ? filteredPlaces.length :
+                        filteredPlaces.filter(p => p.type === type.id).length}
                     </Badge>
                   </Button>
                 ))}
@@ -108,35 +102,36 @@ const MapPage: React.FC = () => {
           </Card>
 
           {/* Places List */}
-          <Card className="flex-1">
-            <CardHeader>
-              <CardTitle className="text-lg">Lieux</CardTitle>
+          <Card className="border-2 border-[#EBE3D5] shadow-sm rounded-2xl overflow-hidden bg-white flex flex-col">
+            <CardHeader className="border-b border-[#EBE3D5] py-4">
+              <CardTitle className="text-lg font-black text-[#2D1B08] uppercase tracking-tighter">Lieux à proximité</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="max-h-96 overflow-y-auto">
+              <div className="max-h-[500px] overflow-y-auto divide-y divide-[#EBE3D5]">
                 {filteredPlaces.map((place) => (
                   <div
                     key={place.id}
-                    className={`p-4 border-b cursor-pointer hover:bg-gray-50 ${
-                      selectedPlace?.id === place.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
-                    }`}
+                    className={`p-5 cursor-pointer transition-all duration-300 group ${selectedPlace?.id === place.id ? 'bg-[#1B5E20]/5 border-l-4 border-l-[#1B5E20]' : 'hover:bg-[#FFFDFB]'
+                      }`}
                     onClick={() => setSelectedPlace(place)}
                   >
-                    <div className="flex items-start space-x-3">
-                      <img 
-                        src={place.image} 
-                        alt={place.name}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium text-sm">{place.name}</h4>
-                        <div className="flex items-center mt-1">
-                          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400 mr-1" />
-                          <span className="text-xs text-gray-600">{place.rating}</span>
+                    <div className="flex items-start space-x-4">
+                      <div className="relative h-16 w-16 flex-shrink-0 rounded-xl overflow-hidden border-2 border-[#EBE3D5]">
+                        <img
+                          src={place.image}
+                          alt={place.name}
+                          className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-black text-sm text-[#2D1B08] uppercase tracking-tighter truncate group-hover:text-[#F2A900] transition-colors">{place.name}</h4>
+                        <div className="flex items-center mt-1.5">
+                          <Star className="h-3.5 w-3.5 fill-[#F2A900] text-[#F2A900] mr-1" />
+                          <span className="text-xs font-black text-[#2D1B08]">{place.rating}</span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1 flex items-center">
-                          <MapPin className="h-3 w-3 mr-1" />
-                          {place.address}
+                        <p className="text-[10px] text-[#5D4037]/60 font-bold uppercase tracking-tight mt-1.5 flex items-center">
+                          <MapPin className="h-3.5 w-3.5 mr-1 text-[#1B5E20]" />
+                          <span className="truncate">{place.address}</span>
                         </p>
                       </div>
                     </div>
@@ -149,85 +144,114 @@ const MapPage: React.FC = () => {
 
         {/* Map */}
         <div className="lg:col-span-2">
-          <Card className="h-[400px] sm:h-[500px] lg:h-[700px]">
+          <Card className="h-[500px] lg:h-[800px] border-4 border-white shadow-2xl rounded-[2.5rem] overflow-hidden relative group">
             <CardContent className="p-0 h-full">
-              {/* Mock Map - In real implementation, use Google Maps or Leaflet */}
-              <div className="w-full h-full bg-gradient-to-br from-blue-100 to-green-100 relative rounded-lg overflow-hidden">
-                <div className="absolute inset-0 bg-gray-200 opacity-50"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center p-8 bg-white rounded-lg shadow-lg">
-                    <MapPin className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                    <h3 className="text-lg font-medium mb-2">Carte Interactive</h3>
-                    <p className="text-gray-600 mb-4">
-                      Intégration avec Google Maps ou Leaflet à implementer
+              {/* Mock Map */}
+              <div className="w-full h-full bg-[#EBE3D5]/20 relative">
+                <div className="absolute inset-0 bg-[#2D1B08]/5 opacity-30"></div>
+                <div className="absolute inset-0 flex items-center justify-center p-10">
+                  <div className="text-center space-y-6 max-w-sm">
+                    <div className="w-24 h-24 bg-[#F2A900]/10 rounded-full flex items-center justify-center mx-auto animate-pulse">
+                      <Navigation className="h-10 w-10 text-[#F2A900]" />
+                    </div>
+                    <h3 className="text-2xl font-black text-[#2D1B08] uppercase tracking-tighter">Carte Interactive</h3>
+                    <p className="text-[#5D4037]/60 font-medium">
+                      Intégration de la cartographie haute définition en cours...
                     </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Button variant="outline" className="flex items-center">
-                        <Navigation className="mr-2 h-4 w-4" />
-                        Ma position
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <Button variant="outline" className="flex-1 border-[#EBE3D5] text-[#2D1B08] font-black uppercase tracking-tighter h-12 rounded-xl bg-white hover:bg-[#FFFDFB]">
+                        <Navigation className="mr-3 h-5 w-5 text-[#1B5E20]" />
+                        Position
                       </Button>
-                      <Button variant="outline" className="flex items-center">
-                        <Globe className="mr-2 h-4 w-4" />
-                        Vue satellite
+                      <Button variant="outline" className="flex-1 border-[#EBE3D5] text-[#2D1B08] font-black uppercase tracking-tighter h-12 rounded-xl bg-white hover:bg-[#FFFDFB]">
+                        <Globe className="mr-3 h-5 w-5 text-[#F2A900]" />
+                        Satellite
                       </Button>
                     </div>
                   </div>
                 </div>
 
-                {/* Mock markers */}
+                {/* Overlays / Contrôles de la carte */}
+                <div className="absolute top-6 right-6 space-y-3 z-10">
+                  <Button size="icon" className="bg-white text-[#2D1B08] hover:bg-[#FFFDFB] shadow-xl border-2 border-[#EBE3D5] h-12 w-12 rounded-xl">
+                    <Layers className="h-5 w-5" />
+                  </Button>
+                  <Button size="icon" className="bg-[#1B5E20] text-white hover:bg-[#144718] shadow-xl h-12 w-12 rounded-xl border-none">
+                    <Navigation className="h-5 w-5" />
+                  </Button>
+                </div>
+
+                {/* Markers */}
                 {filteredPlaces.slice(0, 5).map((place, index) => (
                   <div
                     key={place.id}
-                    className={`absolute w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer transform hover:scale-110 transition-transform ${getTypeColor(place.type)}`}
+                    className={`absolute w-10 h-10 rounded-2xl flex items-center justify-center text-white font-black shadow-lg cursor-pointer transform hover:scale-125 transition-all duration-300 ${selectedPlace?.id === place.id ? 'bg-[#1B5E20] ring-4 ring-white' : 'bg-[#F2A900]'
+                      }`}
                     style={{
-                      left: `${20 + index * 15}%`,
-                      top: `${30 + (index % 3) * 20}%`
+                      left: `${25 + index * 12}%`,
+                      top: `${35 + (index % 3) * 18}%`
                     }}
                     onClick={() => setSelectedPlace(place)}
                   >
-                    {index + 1}
+                    <MapPin className="h-5 w-5" />
                   </div>
                 ))}
               </div>
-              
+
               {/* Place Details Overlay */}
               {selectedPlace && (
-                <div className="absolute bottom-6 left-6 right-6">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="flex items-start space-x-4">
-                        <img 
-                          src={selectedPlace.image} 
-                          alt={selectedPlace.name}
-                          className="w-16 h-16 rounded-lg object-cover"
-                        />
-                        <div className="flex-1">
-                          <h3 className="font-semibold">{selectedPlace.name}</h3>
-                          <p className="text-sm text-gray-600 mt-1">{selectedPlace.description}</p>
-                          <div className="flex items-center mt-2 space-x-4">
+                <div className="absolute bottom-8 left-8 right-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
+                  <Card className="border-none shadow-2xl rounded-[2rem] overflow-hidden bg-white/95 backdrop-blur-md">
+                    <CardContent className="p-0">
+                      <div className="flex flex-col md:flex-row">
+                        <div className="md:w-48 h-48 md:h-auto relative">
+                          <img
+                            src={selectedPlace.image}
+                            alt={selectedPlace.name}
+                            className="w-full h-full object-cover"
+                          />
+                          <Badge className="absolute top-4 left-4 bg-[#F2A900] text-white border-none font-black text-[10px] uppercase tracking-widest px-3 py-1.5 shadow-lg">
+                            {selectedPlace.type}
+                          </Badge>
+                        </div>
+                        <div className="flex-1 p-8 relative">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setSelectedPlace(null as any)}
+                            className="absolute top-4 right-4 text-[#5D4037]/40 hover:text-[#2D1B08] transition-colors h-10 w-10 rounded-full"
+                          >
+                            <X className="h-5 w-5" />
+                          </Button>
+
+                          <h3 className="text-2xl font-black text-[#2D1B08] uppercase tracking-tighter mb-2 pr-10">{selectedPlace.name}</h3>
+                          <p className="text-[#5D4037] text-sm mb-6 leading-relaxed font-medium line-clamp-2">{selectedPlace.description}</p>
+
+                          <div className="flex flex-wrap items-center gap-6 mb-8 text-xs font-black uppercase tracking-widest text-[#5D4037]/70">
                             <div className="flex items-center">
-                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                              <span className="text-sm">{selectedPlace.rating}</span>
+                              <Star className="h-4 w-4 fill-[#F2A900] text-[#F2A900] mr-2" />
+                              <span className="text-[#2D1B08]">{selectedPlace.rating}</span>
                             </div>
-                            <div className="flex items-center text-sm text-gray-600">
-                              <MapPin className="h-4 w-4 mr-1" />
-                              {selectedPlace.address}
+                            <div className="flex items-center">
+                              <MapPin className="h-4 w-4 text-[#1B5E20] mr-2" />
+                              <span>{selectedPlace.address}</span>
                             </div>
-                            <div className="flex items-center text-sm text-gray-600">
-                              <Clock className="h-4 w-4 mr-1" />
-                              {selectedPlace.hours}
+                            <div className="flex items-center">
+                              <Clock className="h-4 w-4 text-[#F2A900] mr-2" />
+                              <span>{selectedPlace.hours}</span>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col space-y-2">
-                          <Button size="sm">
-                            <Navigation className="mr-2 h-4 w-4" />
-                            Itinéraire
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Phone className="mr-2 h-4 w-4" />
-                            Appeler
-                          </Button>
+
+                          <div className="flex gap-4">
+                            <Button className="flex-1 bg-[#1B5E20] hover:bg-[#144718] text-white font-black uppercase tracking-tighter rounded-xl h-12 shadow-lg shadow-emerald-900/10">
+                              <Navigation className="mr-3 h-5 w-5" />
+                              Direction
+                            </Button>
+                            <Button variant="outline" className="flex-1 border-[#EBE3D5] text-[#2D1B08] font-black uppercase tracking-tighter rounded-xl h-12 hover:bg-[#FFFDFB]">
+                              <Phone className="mr-3 h-5 w-5 text-[#F2A900]" />
+                              Contact
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -240,24 +264,19 @@ const MapPage: React.FC = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
         {[
-          { label: 'Restaurants', count: mockPlaces.filter(p => p.type === 'restaurant').length, color: 'orange' },
-          { label: 'Hôtels', count: mockPlaces.filter(p => p.type === 'hotel').length, color: 'blue' },
-          { label: 'Monuments', count: mockPlaces.filter(p => p.type === 'monument').length, color: 'green' },
-          { label: 'Total', count: mockPlaces.length, color: 'gray' }
+          { label: 'Restaurants', count: mockPlaces.filter(p => p.type === 'restaurant').length, color: '#F2A900' },
+          { label: 'Hôtels', count: mockPlaces.filter(p => p.type === 'hotel').length, color: '#1B5E20' },
+          { label: 'Monuments', count: mockPlaces.filter(p => p.type === 'monument').length, color: '#2D1B08' },
+          { label: 'Total Exploration', count: mockPlaces.length, color: '#F2A900' }
         ].map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-4 text-center">
-              <div className={`text-2xl font-bold ${
-                stat.color === 'orange' ? 'text-orange-600' :
-                stat.color === 'blue' ? 'text-blue-600' :
-                stat.color === 'green' ? 'text-green-600' :
-                'text-gray-600'
-              }`}>
+          <Card key={stat.label} className="border-2 border-[#EBE3D5] shadow-sm rounded-2xl overflow-hidden bg-white group hover:border-[#F2A900] transition-colors">
+            <CardContent className="p-6 text-center">
+              <div className="text-3xl font-black tracking-tighter mb-1" style={{ color: stat.color }}>
                 {stat.count}
               </div>
-              <p className="text-sm text-gray-600">{stat.label}</p>
+              <p className="text-[10px] font-black text-[#5D4037]/60 uppercase tracking-widest group-hover:text-[#5D4037] transition-colors">{stat.label}</p>
             </CardContent>
           </Card>
         ))}

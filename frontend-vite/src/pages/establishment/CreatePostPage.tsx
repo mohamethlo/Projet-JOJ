@@ -62,7 +62,11 @@ const CreatePostPage: React.FC = () => {
         setTimeout(() => {
             toast.success('Publication créée avec succès !');
             setIsSubmitting(false);
-            navigate('/establishment/profile');
+            if (user?.role === 'hotel' || user?.role === 'restaurant') {
+                navigate('/establishment/profile');
+            } else {
+                navigate('/echos-senegal');
+            }
         }, 1500);
     };
 

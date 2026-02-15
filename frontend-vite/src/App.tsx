@@ -34,7 +34,10 @@ import EstablishmentProfilePage from '@/pages/establishment/ProfilePage'
 import ReviewsPage from '@/pages/establishment/ReviewsPage'
 import DiscoverFeedPage from '@/pages/feed/DiscoverFeedPage'
 import PublicEstablishmentProfilePage from '@/pages/establishment/EstablishmentProfilePage'
-import CreatePostPage from '@/pages/establishment/CreatePostPage'
+import MessagesPage from '@/pages/messages/MessagesPage'
+import VideoFeedPage from '@/pages/videos/VideoFeedPage'
+
+import { FeedProvider } from '@/context/FeedContext'
 
 const App = () => {
   const { user, isLoading } = useAuth()
@@ -51,7 +54,7 @@ const App = () => {
   }
 
   return (
-    <>
+    <FeedProvider>
       <Routes>
         {/* Routes d'authentification */}
         <Route path="/auth/login" element={<LoginPage />} />
@@ -81,6 +84,12 @@ const App = () => {
             <NotificationsPage />
           </Layout>
         } />
+        <Route path="/messages" element={
+          <Layout>
+            <MessagesPage />
+          </Layout>
+        } />
+        <Route path="/videos" element={<VideoFeedPage />} />
         <Route path="/guides" element={
           <Layout>
             <GuidesPage />
@@ -218,11 +227,6 @@ const App = () => {
             <ReviewsPage />
           </Layout>
         } />
-        <Route path="/establishment/create-post" element={
-          <Layout>
-            <CreatePostPage />
-          </Layout>
-        } />
 
         {/* Route de fallback */}
         <Route path="*" element={
@@ -235,7 +239,7 @@ const App = () => {
         } />
       </Routes>
       <Toaster position="top-right" />
-    </>
+    </FeedProvider>
   )
 }
 

@@ -30,7 +30,7 @@ import {
 const ProfilePage: React.FC = () => {
   const { user } = useAuth();
   const [coverImage, setCoverImage] = useState('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1920&h=600&fit=crop');
-  const [profileImage, setProfileImage] = useState('/images/logo.jpeg');
+  const [profileImage, setProfileImage] = useState('/images/nouveau_logo.jpeg');
   const [name, setName] = useState('Le Djoloff Royal');
   const [category, setCategory] = useState('Restaurant');
   const [tagline, setTagline] = useState('Saveurs authentiques du Sénégal dans un cadre royal');

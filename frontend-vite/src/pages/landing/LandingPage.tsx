@@ -21,127 +21,25 @@ import {
   Instagram,
   Facebook,
   Twitter,
-  X
+  Calendar,
+  MessageCircle,
+  Share2
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import Header from '@/components/layout/Header';
+import { Card, CardContent } from '@/components/ui/card';
 
 const LandingPage: React.FC = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
-    }
-
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [user, navigate]);
+  // Logic for scroll handled inside Header now, but we might keep some state if needed 
+  // for the rest of the page. Header handles its own transparency logic based on scroll.
 
   if (user) return null;
 
   return (
-    <div className="min-h-screen bg-[#FFFDFB] text-[#2D1B08] selection:bg-[#F2A900] selection:text-white overflow-x-hidden">
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 sm:px-6 py-3 sm:py-4 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md py-2 sm:py-3' : 'bg-transparent'
-        }`}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden border-2 border-[#F2A900] transform transition-transform group-hover:rotate-6 bg-white shrink-0 shadow-sm">
-              <img src="/images/logo.jpeg" alt="Logo Discover Sénégal" className="w-full h-full object-contain p-1" />
-            </div>
-            <span className={`text-base sm:text-xl font-black tracking-tighter transition-colors hidden xs:inline ${isScrolled ? 'text-[#2D1B08]' : 'text-white'
-              }`}>
-              DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span>
-            </span>
-          </Link>
-
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            {['Accueil', 'A propos', 'Explorer'].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase().replace(' ', '-')}`}
-                className={`text-sm font-black uppercase tracking-widest transition-colors hover:text-[#F2A900] ${isScrolled ? 'text-[#2D1B08]/70' : 'text-white/80'
-                  }`}
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
-
-          {/* Auth Buttons - Desktop */}
-          <div className="hidden md:flex items-center gap-4">
-            <Link to="/auth/login">
-              <span className={`text-sm font-black uppercase tracking-widest hover:text-[#F2A900] transition-colors ${isScrolled ? 'text-[#2D1B08]' : 'text-white'
-                }`}>
-                Connexion
-              </span>
-            </Link>
-            <Link to="/auth/register">
-              <Button size="sm" className="bg-[#F2A900] hover:bg-[#D49400] text-white font-black rounded-full px-6">
-                S'INSCRIRE
-              </Button>
-            </Link>
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <button
-            className="md:hidden p-2 text-white"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <div className={cn("w-6 h-0.5 bg-current mb-1.5 transition-all", isScrolled ? "text-[#2D1B08]" : "text-white")}></div>
-            <div className={cn("w-6 h-0.5 bg-current mb-1.5 transition-all", isScrolled ? "text-[#2D1B08]" : "text-white")}></div>
-            <div className={cn("w-4 h-0.5 bg-current transition-all", isScrolled ? "text-[#2D1B08]" : "text-white")}></div>
-          </button>
-        </div>
-
-        {/* Mobile Menu Overlay */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-0 left-0 w-full bg-white shadow-2xl animate-in slide-in-from-top duration-300 z-50 rounded-b-[2rem]">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-8">
-                <span className="text-lg font-black tracking-tighter text-[#2D1B08]">
-                  DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span>
-                </span>
-                <button onClick={() => setIsMobileMenuOpen(false)} className="text-[#2D1B08] p-2">
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-              <nav className="flex flex-col gap-6 mb-8">
-                {['Accueil', 'A propos', 'Explorer'].map((item) => (
-                  <a
-                    key={item}
-                    href={`#${item.toLowerCase().replace(' ', '-')}`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-xl font-black uppercase tracking-widest text-[#2D1B08]/70 hover:text-[#F2A900]"
-                  >
-                    {item}
-                  </a>
-                ))}
-              </nav>
-              <div className="flex flex-col gap-4">
-                <Link to="/auth/login" className="w-full">
-                  <Button variant="outline" className="w-full border-[#2D1B08] text-[#2D1B08] py-6 font-black rounded-full">
-                    CONNEXION
-                  </Button>
-                </Link>
-                <Link to="/auth/register" className="w-full">
-                  <Button className="w-full bg-[#F2A900] text-white py-6 font-black rounded-full">
-                    S'INSCRIRE
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
+    <div className="min-h-screen bg-[#FFFDFB] text-[#2D1B08] selection:bg-[#F2A900] selection:text-white overflow-x-hidden pt-[110px] md:pt-[120px]">
+      <Header onMenuClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
 
       {/* 1. HERO SECTION - IMMERSIVE JOURNEY */}
       <section id="accueil" className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -436,6 +334,111 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
+      {/* NEW: FEATURED GUIDES SECTION */}
+      <section className="py-24 bg-[#FFFDFB]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16 space-y-4">
+            <span className="text-[#F2A900] font-black tracking-[0.2em] uppercase text-xs">Ambassadeurs de la Téranga</span>
+            <h2 className="text-3xl md:text-5xl font-black text-[#2D1B08] uppercase tracking-tighter">Guides <span className="text-[#6B4226]">Vedettes</span></h2>
+            <p className="text-[#5D4037]/60 max-w-2xl mx-auto font-medium">
+              Rencontrez nos experts locaux passionnés, notés par des voyageurs du monde entier pour leur savoir et leur hospitalité.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <FeaturedGuideCard
+              name="Amadou Diallo"
+              avatar="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=300"
+              specialty="Histoire & Culture"
+              rating={4.9}
+              description="Spécialiste de l'histoire coloniale et des recoins secrets de Dakar. Plus de 200 expériences partagées."
+            />
+            <FeaturedGuideCard
+              name="Aïcha Diop"
+              avatar="https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=300"
+              specialty="Art & Photographie"
+              rating={4.9}
+              description="Artiste passionnée, je vous guide vers les plus belles lumières du Sénégal pour vos souvenirs photos."
+            />
+            <FeaturedGuideCard
+              name="Mariama Fall"
+              avatar="https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=300"
+              specialty="Spiritualité & Traditions"
+              rating={4.8}
+              description="Immersion au cœur des traditions mourides et de la sérénité du Sénégal spirituel."
+            />
+          </div>
+
+          <div className="mt-16 text-center">
+            <Link to="/guides">
+              <Button variant="outline" className="border-2 border-[#1B5E20] text-[#1B5E20] hover:bg-[#1B5E20] hover:text-white px-10 py-6 rounded-full font-black uppercase tracking-widest text-sm transition-all shadow-lg hover:shadow-emerald-900/20">
+                Découvrir tous nos guides
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. LATEST STORIES FROM SENEGAL */}
+      <section className="py-24 bg-[#EBE3D5]/10 relative overflow-hidden">
+        {/* Abstract background shape */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#F2A900]/5 rounded-full blur-3xl -z-10"></div>
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#6B4226]/5 rounded-full blur-3xl -z-10"></div>
+
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+            <div className="max-w-2xl text-left">
+              <span className="text-[#6B4226] font-black tracking-[0.2em] uppercase text-xs">Échos du Teranga</span>
+              <h2 className="text-3xl md:text-5xl font-black text-[#2D1B08] mt-4 uppercase tracking-tighter leading-none">
+                Derniers <span className="text-[#F2A900]">Récits</span> <br />
+                <span className="text-[#5D4037]/20">du Sénégal</span>
+              </h2>
+              <p className="text-[#5D4037]/60 mt-6 font-medium text-lg leading-relaxed max-w-xl">
+                Plongez dans le quotidien vibrant de nos hôtes, restaurateurs et guides locaux passionnés.
+              </p>
+            </div>
+            <Link to="/echos-senegal" className="mb-2">
+              <Button variant="outline" className="group border-2 border-[#6B4226] text-[#6B4226] hover:bg-[#6B4226] hover:text-white px-8 py-6 rounded-full font-black transition-all">
+                DÉCOUVRIR LE FLUX <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-2" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+            <LatestStoryCard
+              image="/images/hero_senegal.png"
+              author="Terrou-Bi Resort"
+              role="Hôtel Premium"
+              date="Il y a 2h"
+              excerpt="Le coucher de soleil sur l'Atlantique n'a jamais été aussi beau. Venez vivre un moment d'exception sur notre terrasse privée. La Teranga n'est pas qu'un mot, c'est une expérience..."
+              category="Culture"
+              likes={342}
+              comments={24}
+            />
+            <LatestStoryCard
+              image="/images/thieboudienne.png"
+              author="La Fourchette"
+              role="Restaurant"
+              date="Hier"
+              excerpt="Notre Chef revisite aujourd'hui le Thiéboudienne avec des produits locaux fraîchement pêchés. Une fusion entre tradition et modernité qui ravira vos papilles..."
+              category="Promotion"
+              likes={890}
+              comments={56}
+            />
+            <LatestStoryCard
+              image="/images/case1.webp"
+              author="Amadou, Guide National"
+              role="Guide Certifié"
+              date="Il y a 5h"
+              excerpt="Aujourd'hui, nous explorons les merveilles de la Casamance. Entre mangroves et traditions ancestrales, chaque pas est un voyage dans le temps. Les cases à impluvium nous racontent..."
+              category="Histoire"
+              likes={156}
+              comments={12}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* 6. GASTRONOMY SECTION - MOUTHWATERING */}
       <section className="py-12 sm:py-16 bg-[#2D1B08] text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-[#C62828]/10 rounded-full blur-[120px] -mr-[200px] sm:-mr-[300px] -mt-[200px] sm:-mt-[300px]"></div>
@@ -521,7 +524,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* 8. ART & CRAFT SECTION */}
-      <section className="py-12 sm:py-16 bg-[#6B4226] text-white">
+      <section id="artisanat" className="py-12 sm:py-16 bg-[#6B4226] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Text Content - First on mobile, Second on desktop */}
           <div className="space-y-4 sm:space-y-6 order-2 lg:order-1">
@@ -703,6 +706,60 @@ const LandingPage: React.FC = () => {
   );
 };
 
+const LatestStoryCard = ({ image, author, role, date, excerpt, category, likes, comments }: any) => (
+  <Link to="/echos-senegal" className="group block h-full">
+    <Card className="border-2 border-[#EBE3D5] bg-white rounded-[2.5rem] overflow-hidden hover:shadow-[0_40px_80px_rgba(0,0,0,0.1)] transition-all duration-700 hover:-translate-y-3 h-full flex flex-col group/card border-b-8 hover:border-b-[#F2A900]">
+      <div className="relative h-72 overflow-hidden">
+        <img src={image} alt={author} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2D1B08]/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+        <div className="absolute top-6 left-6">
+          <span className="px-5 py-2 bg-white/90 backdrop-blur-md text-[#2D1B08] text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-xl">
+            {category}
+          </span>
+        </div>
+        <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between text-white drop-shadow-lg">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <Heart size={14} className="fill-[#F2A900] text-[#F2A900]" />
+              <span className="text-xs font-black">{likes}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <MessageCircle size={14} className="text-white" />
+              <span className="text-xs font-black">{comments}</span>
+            </div>
+          </div>
+          <Share2 size={14} className="text-white hover:text-[#F2A900] transition-colors" />
+        </div>
+      </div>
+      <CardContent className="p-8 sm:p-10 flex-1 flex flex-col text-left">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#F2A900] rotate-3 group-hover/card:rotate-0 transition-transform duration-500 shadow-lg">
+            <img src={image} className="w-full h-full object-cover scale-125" alt={author} />
+          </div>
+          <div>
+            <h4 className="font-black text-[#2D1B08] text-lg leading-tight mb-1 group-hover:text-[#F2A900] transition-colors">{author}</h4>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#1B5E20] animate-pulse"></span>
+              <p className="text-[10px] text-[#5D4037]/60 font-black uppercase tracking-widest">{role}</p>
+            </div>
+          </div>
+        </div>
+        <p className="text-[#5D4037] text-base font-medium leading-[1.8] mb-8 flex-1 line-clamp-3 italic opacity-80">
+          "{excerpt}"
+        </p>
+        <div className="flex items-center justify-between pt-8 border-t-2 border-[#EBE3D5]/30 mt-auto">
+          <span className="flex items-center gap-2.5 text-[11px] text-[#5D4037]/40 font-black uppercase tracking-widest">
+            <Calendar size={14} className="text-[#F2A900]" /> {date}
+          </span>
+          <div className="flex items-center gap-2 text-[#F2A900] font-black text-[11px] uppercase tracking-[0.2em] group-hover:gap-4 transition-all duration-300">
+            LIRE PLUS <ArrowRight size={14} />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </Link>
+);
+
 // --- SUB-COMPONENTS ---
 
 const Badge = ({ label, color }: { label: string; color: string }) => (
@@ -715,7 +772,7 @@ const Badge = ({ label, color }: { label: string; color: string }) => (
 );
 
 const AccommodationCard = ({ image, name, location, rating, price }: any) => (
-  <Link to="/establishment/1" className="group cursor-pointer block">
+  <Link to="/accommodation" className="group cursor-pointer block">
     <div className="relative rounded-[1.5rem] overflow-hidden aspect-[4/3] mb-4 shadow-lg">
       <img src={image} alt={name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1 shadow-md">
@@ -732,10 +789,48 @@ const AccommodationCard = ({ image, name, location, rating, price }: any) => (
         <MapPin className="h-3 w-3" /> {location}
       </p>
       <button className="w-full py-3 border-2 border-[#EBE3D5] rounded-xl font-black text-sm group-hover:bg-[#6B4226] group-hover:text-white group-hover:border-[#6B4226] transition-all">
-        VOIR LE PROFIL
+        RÉSERVER MAINTENANT
       </button>
     </div>
   </Link>
+);
+
+const FeaturedGuideCard = ({ name, avatar, specialty, rating, description }: any) => (
+  <div className="bg-white p-8 rounded-[3rem] border-2 border-[#EBE3D5] hover:border-[#F2A900] transition-all group shadow-sm hover:shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+    <div className="absolute top-0 right-0 w-24 h-24 bg-[#F2A900]/5 rounded-bl-[4rem] transition-colors group-hover:bg-[#F2A900]/10"></div>
+
+    <div className="relative mb-8">
+      <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#F2A900] shadow-xl">
+        <img src={avatar} alt={name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+      </div>
+      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#1B5E20] text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg whitespace-nowrap">
+        Guide Certifié
+      </div>
+    </div>
+
+    <div className="space-y-3 mb-6">
+      <div className="flex items-center justify-center gap-1.5 text-[#F2A900]">
+        {[...Array(5)].map((_, i) => (
+          <Star key={i} className={`h-4 w-4 ${i < Math.floor(rating) ? 'fill-current' : 'opacity-20'}`} />
+        ))}
+        <span className="text-[#2D1B08] font-black text-sm ml-1.5">{rating}</span>
+      </div>
+      <h3 className="text-2xl font-black text-[#2D1B08] uppercase tracking-tighter leading-none">{name}</h3>
+      <div className="bg-[#6B4226]/5 px-3 py-1 rounded-full inline-block">
+        <span className="text-[#6B4226] font-black text-[10px] uppercase tracking-widest">{specialty}</span>
+      </div>
+    </div>
+
+    <p className="text-[#5D4037]/70 text-sm font-medium leading-relaxed mb-8 italic line-clamp-3">
+      "{description}"
+    </p>
+
+    <Link to="/guides" className="w-full">
+      <Button className="w-full bg-[#2D1B08] hover:bg-black text-white font-black rounded-2xl py-6 transition-all uppercase tracking-[0.2em] text-[10px] shadow-lg group-hover:shadow-xl group-hover:-translate-y-1">
+        Consulter Profil
+      </Button>
+    </Link>
+  </div>
 );
 
 const ExperienceCard = ({ icon, title, description, tag }: any) => (

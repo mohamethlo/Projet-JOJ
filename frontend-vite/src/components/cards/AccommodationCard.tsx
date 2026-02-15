@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Star, 
-  MapPin, 
-  Calendar, 
-  Heart, 
+import {
+  Star,
+  MapPin,
+  Calendar,
+  Heart,
   Eye,
   Building,
   Utensils,
@@ -117,87 +117,90 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
   if (viewMode === 'list') {
     return (
       <>
-        <Card className="hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-          <div className="flex">
-            <div className="relative w-64 h-48 flex-shrink-0">
-              <img 
-                src={accommodation.image} 
+        <Card className="hover:shadow-xl transition-all duration-300 overflow-hidden border-[#EBE3D5] bg-white group">
+          <div className="flex flex-col md:flex-row">
+            <div className="relative w-full md:w-80 h-64 md:h-auto flex-shrink-0">
+              <img
+                src={accommodation.image}
                 alt={accommodation.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               {accommodation.featured && (
-                <Badge className="absolute top-2 left-2 bg-orange-500 text-white">
+                <Badge className="absolute top-4 left-4 bg-[#F2A900] text-white font-black uppercase tracking-tighter shadow-lg border-none px-3 py-1">
                   Recommandé
                 </Badge>
               )}
               <Button
                 size="sm"
                 variant="ghost"
-                className="absolute top-2 right-2 h-8 w-8 p-0 rounded-full bg-white shadow-md hover:bg-gray-50"
+                className="absolute top-4 right-4 h-10 w-10 p-0 rounded-full bg-white/90 backdrop-blur-sm shadow-md hover:bg-white"
                 onClick={handleFavorite}
               >
-                <Heart className={`h-4 w-4 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+                <Heart className={`h-5 w-5 ${isFavorited ? 'fill-[#E11D48] text-[#E11D48]' : 'text-[#5D4037]'}`} />
               </Button>
             </div>
-            
-            <CardContent className="p-6 flex-1">
-              <div className="flex justify-between items-start mb-3">
-                <div>
-                  <h3 className="font-bold text-xl text-gray-900 mb-1">{accommodation.name}</h3>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
-                    {getTypeIcon(accommodation.type)}
-                    <span>{accommodation.type}</span>
-                    <span>•</span>
-                    <MapPin className="h-4 w-4" />
-                    <span>{accommodation.location}</span>
-                  </div>
-                  <div className="flex items-center space-x-1 text-sm">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-semibold">{accommodation.rating}</span>
-                    <span className="text-gray-500">({accommodation.reviews} avis)</span>
+
+            <CardContent className="p-6 md:p-8 flex-1 flex flex-col">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex-1">
+                  <h3 className="font-black text-2xl text-[#2D1B08] mb-2 uppercase tracking-tighter group-hover:text-[#F2A900] transition-colors">{accommodation.name}</h3>
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-[#5D4037] font-bold">
+                    <div className="flex items-center gap-1.5 bg-[#F2A900]/10 px-2 py-1 rounded-md text-[#F2A900]">
+                      {getTypeIcon(accommodation.type)}
+                      <span className="uppercase text-[10px] tracking-widest">{accommodation.type}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <MapPin className="h-4 w-4 text-[#1B5E20]" />
+                      <span>{accommodation.location}</span>
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="font-bold text-xl text-blue-600">{accommodation.price}</div>
-                  <div className="text-xs text-gray-500">
+                  <div className="font-black text-2xl text-[#F2A900] tracking-tighter">{accommodation.price}</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60">
                     {accommodation.type === 'Restaurant' ? 'par personne' : 'par nuit'}
                   </div>
                 </div>
               </div>
-              
-              <p className="text-gray-600 mb-4 line-clamp-2">{accommodation.description}</p>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex flex-wrap gap-1">
+
+              <div className="flex items-center space-x-1 mb-4">
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} className={`h-4 w-4 ${s <= Math.floor(accommodation.rating) ? 'fill-[#F2A900] text-[#F2A900]' : 'text-[#EBE3D5]'}`} />
+                  ))}
+                </div>
+                <span className="font-black text-[#2D1B08] ml-2">{accommodation.rating}</span>
+                <span className="text-xs font-bold text-[#5D4037]/60">({accommodation.reviews} avis)</span>
+              </div>
+
+              <p className="text-[#5D4037] mb-6 line-clamp-2 font-medium leading-relaxed">{accommodation.description}</p>
+
+              <div className="mt-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-6 border-t border-[#EBE3D5]">
+                <div className="flex flex-wrap gap-2">
                   {accommodation.amenities.slice(0, 4).map((amenity, index) => (
-                    <Badge key={index} variant="outline" className="text-xs flex items-center space-x-1">
+                    <Badge key={index} variant="outline" className="border-[#EBE3D5] text-[#5D4037] bg-[#FFFDFB] font-bold text-[10px] px-2 py-0.5">
                       {getAmenityIcon(amenity)}
-                      <span>{amenity}</span>
+                      <span className="ml-1.5">{amenity}</span>
                     </Badge>
                   ))}
-                  {accommodation.amenities.length > 4 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{accommodation.amenities.length - 4}
-                    </Badge>
-                  )}
                 </div>
-                
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
+
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    variant="outline"
                     size="sm"
-                    className="hover:bg-gray-50"
+                    className="border-[#F2A900] text-[#F2A900] hover:bg-[#F2A900]/10 font-black uppercase tracking-tighter px-6 rounded-lg h-11"
                     onClick={handleViewDetails}
                   >
-                    <Eye className="h-4 w-4 mr-1" />
+                    <Eye className="h-4 w-4 mr-2" />
                     Détails
                   </Button>
-                  <Button 
+                  <Button
                     onClick={handleBooking}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    className="bg-[#1B5E20] hover:bg-[#144718] text-white font-black uppercase tracking-tighter px-6 rounded-lg h-11 shadow-md shadow-emerald-900/10"
                     size="sm"
                   >
-                    <Calendar className="h-4 w-4 mr-1" />
+                    <Calendar className="h-4 w-4 mr-2" />
                     Réserver
                   </Button>
                   {canLeaveReviewForAccommodation && (
@@ -205,72 +208,14 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
                       variant="outline"
                       size="sm"
                       onClick={handleReview}
-                      className="text-yellow-600 border-yellow-600 hover:bg-yellow-50"
+                      className="border-[#EBE3D5] text-[#5D4037] hover:bg-[#EBE3D5]/20 font-black uppercase tracking-tighter px-4 rounded-lg h-11"
                     >
-                      <Star className="h-4 w-4 mr-1" />
+                      <Star className="h-4 w-4 mr-2 text-[#F2A900]" />
                       Avis
                     </Button>
                   )}
                 </div>
               </div>
-              
-              {/* Section des avis pour le mode liste */}
-              {reviewStats.totalReviews > 0 && (
-                <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex items-center space-x-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-3 w-3 ${
-                              star <= Math.round(reviewStats.averageRating)
-                                ? 'text-yellow-400 fill-current'
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm font-semibold">{reviewStats.averageRating.toFixed(1)}</span>
-                      <span className="text-xs text-gray-500">({reviewStats.totalReviews} avis)</span>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleViewReviews}
-                      className="text-xs text-blue-600 hover:text-blue-700 p-1 h-auto"
-                    >
-                      Voir tous
-                    </Button>
-                  </div>
-                  
-                  {/* Avis récents */}
-                  {recentReviews.length > 0 && (
-                    <div className="space-y-2">
-                      {recentReviews.map((review) => (
-                        <div key={review.id} className="text-xs">
-                          <div className="flex items-center space-x-1 mb-1">
-                            <span className="font-medium">{review.author.name}</span>
-                            <div className="flex items-center space-x-1">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                  key={star}
-                                  className={`h-2 w-2 ${
-                                    star <= review.rating
-                                      ? 'text-yellow-400 fill-current'
-                                      : 'text-gray-300'
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                          <p className="text-gray-600 line-clamp-2">{review.content}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
             </CardContent>
           </div>
         </Card>
@@ -309,158 +254,94 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
 
   return (
     <>
-      <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden">
-        <div className="relative h-48">
-          <img 
-            src={accommodation.image} 
+      <Card className="hover:shadow-2xl transition-all duration-500 cursor-pointer group overflow-hidden border-2 border-[#EBE3D5] hover:border-[#F2A900] bg-white flex flex-col h-full rounded-2xl">
+        <div className="relative h-64 overflow-hidden">
+          <img
+            src={accommodation.image}
             alt={accommodation.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+
           {accommodation.featured && (
-            <Badge className="absolute top-3 left-3 bg-orange-500 text-white">
+            <Badge className="absolute top-4 left-4 bg-[#F2A900] text-white font-black uppercase tracking-tighter border-none px-3 py-1 shadow-lg">
               Recommandé
             </Badge>
           )}
+
           <Button
             size="sm"
             variant="ghost"
-            className="absolute top-3 right-3 h-8 w-8 p-0 rounded-full bg-white shadow-md hover:bg-gray-50"
+            className="absolute top-4 right-4 h-10 w-10 p-0 rounded-full bg-white/90 backdrop-blur-sm shadow-md hover:bg-white transition-all transform hover:scale-110"
             onClick={handleFavorite}
           >
-            <Heart className={`h-4 w-4 ${isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+            <Heart className={`h-5 w-5 ${isFavorited ? 'fill-[#E11D48] text-[#E11D48]' : 'text-[#5D4037]'}`} />
           </Button>
-        </div>
-        
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between mb-2">
-            <div>
-              <h3 className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
-                {accommodation.name}
-              </h3>
-              <div className="flex items-center space-x-2 text-sm text-gray-600 mt-1">
-                {getTypeIcon(accommodation.type)}
-                <span>{accommodation.type}</span>
-                <span>•</span>
-                <MapPin className="h-3 w-3" />
-                <span className="line-clamp-1">{accommodation.location}</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-1 text-sm">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="font-semibold">{accommodation.rating}</span>
+
+          <div className="absolute bottom-4 left-4 text-white">
+            <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-2 py-1 rounded-md mb-2">
+              <span className="text-[#F2A900]">{getTypeIcon(accommodation.type)}</span>
+              <span className="uppercase text-[9px] font-black tracking-[0.2em]">{accommodation.type}</span>
             </div>
           </div>
-          
-          <p className="text-gray-600 text-sm mb-3 line-clamp-2">{accommodation.description}</p>
-          
-          <div className="flex flex-wrap gap-1 mb-3">
+        </div>
+
+        <CardContent className="p-6 flex flex-col flex-1">
+          <div className="flex items-start justify-between mb-3">
+            <h3 className="font-black text-xl text-[#2D1B08] group-hover:text-[#F2A900] transition-colors line-clamp-1 uppercase tracking-tighter">
+              {accommodation.name}
+            </h3>
+            <div className="flex items-center gap-1 bg-[#F2A900]/10 px-2 py-1 rounded text-[#F2A900] font-black text-sm">
+              <Star className="h-3 w-3 fill-current" />
+              <span>{accommodation.rating}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-bold text-[#5D4037]/70 mb-4">
+            <MapPin className="h-3.5 w-3.5 text-[#1B5E20]" />
+            <span className="uppercase tracking-wide">{accommodation.location}</span>
+          </div>
+
+          <p className="text-[#5D4037] text-sm mb-6 line-clamp-2 font-medium leading-relaxed">{accommodation.description}</p>
+
+          <div className="flex flex-wrap gap-1.5 mb-6">
             {accommodation.amenities.slice(0, 3).map((amenity, index) => (
-              <Badge key={index} variant="outline" className="text-xs flex items-center space-x-1">
+              <Badge key={index} variant="outline" className="border-[#EBE3D5] text-[#5D4037]/80 bg-[#FFFDFB] font-bold text-[9px] px-2 py-0.5">
                 {getAmenityIcon(amenity)}
-                <span>{amenity}</span>
+                <span className="ml-1 uppercase tracking-tight">{amenity}</span>
               </Badge>
             ))}
             {accommodation.amenities.length > 3 && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="border-[#EBE3D5] text-[#5D4037]/60 font-black text-[9px]">
                 +{accommodation.amenities.length - 3}
               </Badge>
             )}
           </div>
-          
-          {/* Section des avis pour le mode grille */}
-          {reviewStats.totalReviews > 0 && (
-            <div className="mb-3 p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={`h-3 w-3 ${
-                          star <= Math.round(reviewStats.averageRating)
-                            ? 'text-yellow-400 fill-current'
-                            : 'text-gray-300'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm font-semibold">{reviewStats.averageRating.toFixed(1)}</span>
-                  <span className="text-xs text-gray-500">({reviewStats.totalReviews} avis)</span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleViewReviews}
-                  className="text-xs text-blue-600 hover:text-blue-700 p-1 h-auto"
-                >
-                  Voir tous
-                </Button>
-              </div>
-              
-              {/* Avis récents */}
-              {recentReviews.length > 0 && (
-                <div className="space-y-2">
-                  {recentReviews.map((review) => (
-                    <div key={review.id} className="text-xs">
-                      <div className="flex items-center space-x-1 mb-1">
-                        <span className="font-medium">{review.author.name}</span>
-                        <div className="flex items-center space-x-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className={`h-2 w-2 ${
-                                star <= review.rating
-                                  ? 'text-yellow-400 fill-current'
-                                  : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-gray-600 line-clamp-2">{review.content}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="font-bold text-lg text-blue-600">{accommodation.price}</span>
-              <div className="text-xs text-gray-500">
+
+          <div className="mt-auto border-t border-[#EBE3D5]/50 pt-4 flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="font-black text-2xl text-[#2D1B08] tracking-tighter leading-none">{accommodation.price}</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.1em] text-[#5D4037]/60 mt-1">
                 {accommodation.type === 'Restaurant' ? 'par personne' : 'par nuit'}
-              </div>
+              </span>
             </div>
-            <div className="flex flex-col gap-2">
-              <Button 
-                variant="outline" 
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
                 size="sm"
-                className="hover:bg-gray-50 w-full"
+                className="border-[#EBE3D5] text-[#5D4037] hover:bg-[#EBE3D5]/20 font-black uppercase tracking-tighter px-4 rounded-lg h-10"
                 onClick={handleViewDetails}
               >
-                <Eye className="h-4 w-4 mr-1" />
-                Détails
+                <Eye className="h-4 w-4" />
               </Button>
-              <Button 
+              <Button
                 onClick={handleBooking}
-                className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+                className="bg-[#F2A900] hover:bg-[#D49400] text-white font-black uppercase tracking-tighter px-4 rounded-lg h-10 shadow-lg shadow-orange-900/10"
                 size="sm"
               >
-                <Calendar className="h-4 w-4 mr-1" />
                 Réserver
               </Button>
-              {canLeaveReviewForAccommodation && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleReview}
-                  className="text-yellow-600 border-yellow-600 hover:bg-yellow-50 w-full"
-                >
-                  <Star className="h-4 w-4 mr-1" />
-                  Avis
-                </Button>
-              )}
             </div>
           </div>
         </CardContent>

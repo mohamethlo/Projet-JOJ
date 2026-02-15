@@ -17,7 +17,8 @@ import {
   MessageSquare,
   Award,
   AlertCircle,
-  FileText
+  FileText,
+  Home
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -419,6 +420,13 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
               <Button variant="outline" className="w-full justify-start bg-white hover:bg-[#F2A900]/10 border-[#F2A900] text-[#F2A900] font-black">
                 <FileText className="mr-2 h-4 w-4" />
                 Créer une publication
+                <ArrowRight className="ml-auto h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/messages">
+              <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Messagerie
                 <ArrowRight className="ml-auto h-4 w-4" />
               </Button>
             </Link>

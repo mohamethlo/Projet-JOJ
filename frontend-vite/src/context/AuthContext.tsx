@@ -43,12 +43,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Simulate loading user from localStorage or API
     const savedUser = localStorage.getItem('discoversenegal_user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      const parsed = JSON.parse(savedUser);
+      // Migration: Change 'test' to a more valid name if needed
+      if (parsed.name.toLowerCase() === 'test') {
+        const role = parsed.role;
+        if (role === 'admin') parsed.name = 'Administrateur';
+        else if (role === 'guide') parsed.name = 'Amadou Sarr';
+        else if (role === 'hotel') parsed.name = 'Terrou-Bi Resort';
+        else if (role === 'restaurant') parsed.name = 'La Fourchette';
+        else parsed.name = 'Voyageur';
+        localStorage.setItem('discoversenegal_user', JSON.stringify(parsed));
+      }
+      setUser(parsed);
     }
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, _password: string) => {
     setIsLoading(true);
     try {
       // Mock login - replace with actual API call
@@ -62,10 +73,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       else if (email.includes('restaurant')) role = 'restaurant';
       else if (email.includes('hotel') || email.includes('auberge')) role = 'hotel';
 
+      const nameFromEmail = email.split('@')[0];
+      let name = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
+
+      // Noms plus réalistes pour les tests
+      if (nameFromEmail.toLowerCase() === 'test') {
+        if (role === 'admin') name = 'Administrateur';
+        else if (role === 'guide') name = 'Amadou Sarr';
+        else if (role === 'hotel') name = 'Terrou-Bi Resort';
+        else if (role === 'restaurant') name = 'La Fourchette';
+        else name = 'Voyageur';
+      }
+
       const mockUser: User = {
         id: '1',
         email,
-        name: email.split('@')[0],
+        name: name,
         role,
         avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
         languages: ['français', 'english'],
@@ -74,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         bio: 'Passionné par la culture sénégalaise et l\'accueil des visiteurs. J\'aime partager les richesses de mon pays.',
         isVerified: true
       };
-      
+
       setUser(mockUser);
       localStorage.setItem('discoversenegal_user', JSON.stringify(mockUser));
     } catch (error) {
@@ -100,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         bio: userData.bio || '',
         isVerified: false
       };
-      
+
       setUser(newUser);
       localStorage.setItem('discoversenegal_user', JSON.stringify(newUser));
     } catch (error) {
@@ -117,7 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfile = async (userData: Partial<User>) => {
     if (!user) return;
-    
+
     const updatedUser = { ...user, ...userData };
     setUser(updatedUser);
     localStorage.setItem('discoversenegal_user', JSON.stringify(updatedUser));

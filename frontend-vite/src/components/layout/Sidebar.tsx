@@ -25,7 +25,9 @@ import {
   Bed,
   UtensilsCrossed,
   Newspaper,
-  X
+  X,
+  MessageCircle,
+  Video
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) => {
@@ -37,6 +39,8 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
     const commonItems = [
       { href: '/dashboard', icon: Home, label: t('dashboard') },
       { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
+      { href: '/videos', icon: Video, label: 'Vidéos' },
+      { href: '/messages', icon: MessageCircle, label: 'Messages' },
       { href: '/guides', icon: Users, label: t('guides') },
       { href: '/events', icon: Calendar, label: t('events') },
       { href: '/accommodation', icon: Building, label: 'Hébergement' },
@@ -76,10 +80,11 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
     if (user?.role === 'hotel') {
       return [
         { href: '/dashboard', icon: Home, label: t('dashboard') },
+        { href: '/messages', icon: MessageCircle, label: 'Messages' },
+        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
         { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
         { href: '/establishment/rooms', icon: Bed, label: 'Chambres' },
         { href: '/establishment/profile', icon: Building, label: 'Profil Hôtel' },
-        { href: '/establishment/create-post', icon: FileText, label: 'Créer une publication' },
         { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
         { href: '/history', icon: BookOpen, label: t('history') },
         { href: '/profile', icon: User, label: 'Mon Profil' }
@@ -89,10 +94,11 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
     if (user?.role === 'restaurant') {
       return [
         { href: '/dashboard', icon: Home, label: t('dashboard') },
+        { href: '/messages', icon: MessageCircle, label: 'Messages' },
+        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
         { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
         { href: '/establishment/menu', icon: UtensilsCrossed, label: 'Menu' },
         { href: '/establishment/profile', icon: Building, label: 'Profil Restaurant' },
-        { href: '/establishment/create-post', icon: FileText, label: 'Créer une publication' },
         { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
         { href: '/history', icon: BookOpen, label: t('history') },
         { href: '/profile', icon: User, label: 'Mon Profil' }
@@ -103,6 +109,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
     if (user?.role === 'security') {
       return [
         { href: '/security/dashboard', icon: Home, label: 'Dashboard' },
+        { href: '/videos', icon: Video, label: 'Vidéos' },
         { href: '/guides', icon: Users, label: t('guides') },
         { href: '/accommodation', icon: Building, label: 'Hébergement' },
         { href: '/security/reports', icon: Shield, label: 'Signalements' },
@@ -151,6 +158,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
                 )}
                 <Link
                   to={item.href}
+                  onClick={onClose}
                   className={cn(
                     'flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors',
                     isActive
