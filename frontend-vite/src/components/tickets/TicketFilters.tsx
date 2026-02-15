@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 
 interface TicketFiltersProps {
-  filters: ITicketFilters;
+  filters: Partial<ITicketFilters>;
   onFilterChange: (filters: Partial<ITicketFilters>) => void;
 }
 
@@ -51,14 +51,14 @@ export const TicketFilters = ({ filters, onFilterChange }: TicketFiltersProps) =
   };
 
   const resetFilters = () => {
-    const resetFilters = {
+    const resetFilters: Partial<ITicketFilters> = {
       type: 'all',
       status: 'all',
       dateRange: { from: null, to: null },
       search: '',
     };
     setLocalFilters(resetFilters);
-    onFilterChange(resetFilters);
+    onFilterChange(resetFilters as any);
   };
 
   return (
@@ -147,14 +147,14 @@ export const TicketFilters = ({ filters, onFilterChange }: TicketFiltersProps) =
       </div>
 
       <div className="flex space-x-2 pt-2">
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           onClick={resetFilters}
           className="flex-1"
         >
           Réinitialiser
         </Button>
-        <Button 
+        <Button
           onClick={applyFilters}
           className="flex-1"
         >

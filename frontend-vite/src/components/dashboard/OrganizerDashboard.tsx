@@ -2,11 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Calendar, 
-  Users, 
-  Star, 
-  MapPin, 
+import {
+  Calendar,
+  Users,
+  Star,
   TrendingUp,
   Clock,
   CheckCircle,
@@ -87,7 +86,7 @@ const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">+1 cette semaine</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Participants total</CardTitle>
@@ -98,7 +97,7 @@ const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">+45 ce mois</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Note moyenne</CardTitle>
@@ -244,13 +243,13 @@ const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({ user }) => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Badge 
+                  <Badge
                     variant={
-                      event.status === 'Actif' 
-                        ? 'default' 
-                        : event.status === 'En attente' 
-                        ? 'secondary' 
-                        : 'outline'
+                      event.status === 'Actif'
+                        ? 'default'
+                        : event.status === 'En attente'
+                          ? 'secondary'
+                          : 'outline'
                     }
                   >
                     {event.status}

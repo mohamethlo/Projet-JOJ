@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
+import {
+  CheckCircle,
+  XCircle,
+  Clock,
   AlertTriangle,
   Calendar,
   Users,
   MapPin,
   Eye,
-  MessageSquare,
-  BarChart3,
-  TrendingUp,
-  Activity,
   Filter,
   Search
 } from 'lucide-react';
@@ -115,7 +110,6 @@ const ValidationDashboard: React.FC = () => {
   const [pendingContent, setPendingContent] = useState(mockPendingContent);
   const [selectedType, setSelectedType] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('all');
-  const [activeTab, setActiveTab] = useState('pending');
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedContent, setSelectedContent] = useState<any>(null);
 
@@ -124,12 +118,12 @@ const ValidationDashboard: React.FC = () => {
     const now = new Date();
     const autoPublishDate = new Date(autoPublishAt);
     const diffMs = autoPublishDate.getTime() - now.getTime();
-    
+
     if (diffMs <= 0) return 'Expiré';
-    
+
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (diffHours > 24) {
       const days = Math.floor(diffHours / 24);
       return `${days}j ${diffHours % 24}h`;
@@ -146,7 +140,7 @@ const ValidationDashboard: React.FC = () => {
     const autoPublishDate = new Date(autoPublishAt);
     const diffMs = autoPublishDate.getTime() - now.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
-    
+
     if (diffHours <= 6) return 'high';
     if (diffHours <= 24) return 'medium';
     return 'low';
@@ -164,11 +158,11 @@ const ValidationDashboard: React.FC = () => {
     const priorityOrder = { high: 3, medium: 2, low: 1 };
     const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder];
     const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder];
-    
+
     if (aPriority !== bPriority) {
       return bPriority - aPriority;
     }
-    
+
     // Si même priorité, trier par temps restant
     const aTime = new Date(a.autoPublishAt).getTime();
     const bTime = new Date(b.autoPublishAt).getTime();
@@ -182,11 +176,11 @@ const ValidationDashboard: React.FC = () => {
         `Êtes-vous sûr de vouloir approuver "${content.title}" ?\n\n` +
         `Ce contenu sera immédiatement publié et visible par tous les utilisateurs.`
       );
-      
+
       if (confirmed) {
         try {
           setPendingContent(prev => prev.filter(c => c.id !== contentId));
-          
+
           toast.success('Contenu approuvé avec succès', {
             description: `"${content.title}" a été approuvé et publié.`
           });
@@ -211,11 +205,11 @@ const ValidationDashboard: React.FC = () => {
         `Veuillez indiquer la raison du rejet pour "${content.title}" :\n\n` +
         `Cette information sera transmise à l'organisateur/guide.`
       );
-      
+
       if (reason && reason.trim()) {
         try {
           setPendingContent(prev => prev.filter(c => c.id !== contentId));
-          
+
           toast.success('Contenu rejeté avec succès', {
             description: `"${content.title}" a été rejeté. L'organisateur/guide a été notifié.`
           });
@@ -233,8 +227,6 @@ const ValidationDashboard: React.FC = () => {
   const eventsPending = pendingContent.filter(c => c.type === 'event').length;
   const toursPending = pendingContent.filter(c => c.type === 'tour').length;
   const highPriority = pendingContent.filter(c => c.priority === 'high').length;
-  const mediumPriority = pendingContent.filter(c => c.priority === 'medium').length;
-  const lowPriority = pendingContent.filter(c => c.priority === 'low').length;
   const expiringSoon = pendingContent.filter(c => {
     const timeLeft = getTimeUntilAutoPublish(c.autoPublishAt);
     return timeLeft !== 'Expiré' && (timeLeft.includes('h') || timeLeft.includes('m'));
@@ -340,8 +332,8 @@ const ValidationDashboard: React.FC = () => {
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center space-x-2">
                 <Filter className="h-4 w-4 text-gray-500" />
-                <select 
-                  value={selectedType} 
+                <select
+                  value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded-md text-sm"
                 >
@@ -350,10 +342,10 @@ const ValidationDashboard: React.FC = () => {
                   <option value="tour">Visites guidées</option>
                 </select>
               </div>
-              
+
               <div className="flex items-center space-x-2">
-                <select 
-                  value={selectedPriority} 
+                <select
+                  value={selectedPriority}
                   onChange={(e) => setSelectedPriority(e.target.value)}
                   className="px-3 py-2 border border-gray-300 rounded-md text-sm"
                 >
@@ -363,7 +355,7 @@ const ValidationDashboard: React.FC = () => {
                   <option value="low">Priorité basse</option>
                 </select>
               </div>
-              
+
               <div className="flex items-center text-sm text-gray-600">
                 <Search className="h-4 w-4 mr-2" />
                 {sortedContent.length} contenu(s) trouvé(s)
@@ -381,13 +373,13 @@ const ValidationDashboard: React.FC = () => {
                   <div className="flex items-start space-x-6">
                     {/* Image */}
                     <div className="w-32 h-24 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                      <img 
-                        src={content.image} 
+                      <img
+                        src={content.image}
                         alt={content.title}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    
+
                     {/* Contenu */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
@@ -396,24 +388,24 @@ const ValidationDashboard: React.FC = () => {
                             <Badge variant={content.type === 'event' ? 'default' : 'secondary'}>
                               {content.type === 'event' ? 'Événement' : 'Visite guidée'}
                             </Badge>
-                            <Badge 
+                            <Badge
                               variant={
-                                content.priority === 'high' ? 'destructive' : 
-                                content.priority === 'medium' ? 'outline' : 'secondary'
+                                content.priority === 'high' ? 'destructive' :
+                                  content.priority === 'medium' ? 'outline' : 'secondary'
                               }
                             >
-                              {content.priority === 'high' ? 'Priorité haute' : 
-                               content.priority === 'medium' ? 'Priorité moyenne' : 'Priorité basse'}
+                              {content.priority === 'high' ? 'Priorité haute' :
+                                content.priority === 'medium' ? 'Priorité moyenne' : 'Priorité basse'}
                             </Badge>
                             <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-300">
                               <Clock className="h-3 w-3 mr-1" />
                               {getTimeUntilAutoPublish(content.autoPublishAt)}
                             </Badge>
                           </div>
-                          
+
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">{content.title}</h3>
                           <p className="text-gray-600 text-sm mb-3 line-clamp-2">{content.description}</p>
-                          
+
                           <div className="flex items-center space-x-4 text-sm text-gray-500">
                             <div className="flex items-center">
                               <MapPin className="h-4 w-4 mr-1" />
@@ -436,15 +428,15 @@ const ValidationDashboard: React.FC = () => {
                               <span className="font-medium">{content.price}</span>
                             </div>
                           </div>
-                          
+
                           <div className="mt-3 text-xs text-gray-500">
                             Soumis par {content.type === 'event' ? content.organizer : content.guide} le {new Date(content.submittedAt).toLocaleDateString('fr-FR')} à {new Date(content.submittedAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </div>
-                        
+
                         {/* Actions */}
                         <div className="flex flex-col space-y-2 ml-4">
-                          <Button 
+                          <Button
                             onClick={() => handleViewDetails(content)}
                             variant="outline"
                             size="sm"
@@ -453,7 +445,7 @@ const ValidationDashboard: React.FC = () => {
                             <Eye className="h-4 w-4 mr-2" />
                             Voir
                           </Button>
-                          <Button 
+                          <Button
                             onClick={() => handleApprove(content.id)}
                             className="bg-green-600 hover:bg-green-700 text-white"
                             size="sm"
@@ -461,7 +453,7 @@ const ValidationDashboard: React.FC = () => {
                             <CheckCircle className="h-4 w-4 mr-2" />
                             Approuver
                           </Button>
-                          <Button 
+                          <Button
                             onClick={() => handleReject(content.id)}
                             variant="destructive"
                             size="sm"
@@ -497,17 +489,17 @@ const ValidationDashboard: React.FC = () => {
                   <span>Détails du contenu - {selectedContent.title}</span>
                 </DialogTitle>
               </DialogHeader>
-              
+
               <div className="space-y-6">
                 {/* Image principale */}
                 <div className="w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
-                  <img 
-                    src={selectedContent.image} 
+                  <img
+                    src={selectedContent.image}
                     alt={selectedContent.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                
+
                 {/* Informations principales */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
@@ -515,24 +507,24 @@ const ValidationDashboard: React.FC = () => {
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">{selectedContent.title}</h3>
                       <p className="text-gray-600">{selectedContent.description}</p>
                     </div>
-                    
+
                     <div className="flex flex-wrap gap-2">
                       <Badge variant={selectedContent.type === 'event' ? 'default' : 'secondary'}>
                         {selectedContent.type === 'event' ? 'Événement' : 'Visite guidée'}
                       </Badge>
                       <Badge variant="outline">{selectedContent.category}</Badge>
-                      <Badge 
+                      <Badge
                         variant={
-                          selectedContent.priority === 'high' ? 'destructive' : 
-                          selectedContent.priority === 'medium' ? 'outline' : 'secondary'
+                          selectedContent.priority === 'high' ? 'destructive' :
+                            selectedContent.priority === 'medium' ? 'outline' : 'secondary'
                         }
                       >
-                        {selectedContent.priority === 'high' ? 'Priorité haute' : 
-                         selectedContent.priority === 'medium' ? 'Priorité moyenne' : 'Priorité basse'}
+                        {selectedContent.priority === 'high' ? 'Priorité haute' :
+                          selectedContent.priority === 'medium' ? 'Priorité moyenne' : 'Priorité basse'}
                       </Badge>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="bg-gray-50 p-4 rounded-lg">
                       <h4 className="font-semibold text-gray-900 mb-3">Informations de soumission</h4>
@@ -565,7 +557,7 @@ const ValidationDashboard: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Détails spécifiques selon le type */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
@@ -614,7 +606,7 @@ const ValidationDashboard: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h4 className="font-semibold text-gray-900">Statistiques de performance</h4>
                     <div className="bg-blue-50 p-4 rounded-lg">
@@ -627,8 +619,8 @@ const ValidationDashboard: React.FC = () => {
                         </div>
                         <div className="text-center">
                           <div className="text-2xl font-bold text-green-600">
-                            {selectedContent.type === 'event' ? 
-                              selectedContent.capacity : 
+                            {selectedContent.type === 'event' ?
+                              selectedContent.capacity :
                               selectedContent.maxGroupSize
                             }
                           </div>
@@ -640,7 +632,7 @@ const ValidationDashboard: React.FC = () => {
                       {selectedContent.type === 'event' && (
                         <div className="mt-4 text-center">
                           <div className="text-sm text-gray-600">
-                            Taux d'occupation estimé : 
+                            Taux d'occupation estimé :
                             <span className="font-medium text-blue-600 ml-1">
                               {((selectedContent.estimatedParticipants / selectedContent.capacity) * 100).toFixed(1)}%
                             </span>
@@ -650,12 +642,12 @@ const ValidationDashboard: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Informations détaillées */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <h4 className="font-semibold text-gray-900">Informations détaillées</h4>
-                    
+
                     {selectedContent.tags && (
                       <div>
                         <h5 className="text-sm font-medium text-gray-700 mb-2">Tags</h5>
@@ -668,7 +660,7 @@ const ValidationDashboard: React.FC = () => {
                         </div>
                       </div>
                     )}
-                    
+
                     {selectedContent.requirements && (
                       <div>
                         <h5 className="text-sm font-medium text-gray-700 mb-2">Exigences</h5>
@@ -682,7 +674,7 @@ const ValidationDashboard: React.FC = () => {
                         </ul>
                       </div>
                     )}
-                    
+
                     {selectedContent.specialties && (
                       <div>
                         <h5 className="text-sm font-medium text-gray-700 mb-2">Spécialités</h5>
@@ -696,7 +688,7 @@ const ValidationDashboard: React.FC = () => {
                         </ul>
                       </div>
                     )}
-                    
+
                     {selectedContent.languages && (
                       <div>
                         <h5 className="text-sm font-medium text-gray-700 mb-2">Langues parlées</h5>
@@ -710,10 +702,10 @@ const ValidationDashboard: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h4 className="font-semibold text-gray-900">Contact et informations</h4>
-                    
+
                     {selectedContent.contactInfo && (
                       <div className="bg-gray-50 p-3 rounded-lg">
                         <div className="space-y-2 text-sm">
@@ -728,7 +720,7 @@ const ValidationDashboard: React.FC = () => {
                         </div>
                       </div>
                     )}
-                    
+
                     {selectedContent.includedItems && (
                       <div>
                         <h5 className="text-sm font-medium text-gray-700 mb-2">Inclus dans le prix</h5>
@@ -742,7 +734,7 @@ const ValidationDashboard: React.FC = () => {
                         </ul>
                       </div>
                     )}
-                    
+
                     {selectedContent.additionalInfo && (
                       <div>
                         <h5 className="text-sm font-medium text-gray-700 mb-2">Informations supplémentaires</h5>
@@ -751,7 +743,7 @@ const ValidationDashboard: React.FC = () => {
                     )}
                   </div>
                 </div>
-                
+
                 {/* Informations importantes */}
                 <div className="bg-yellow-50 p-4 rounded-lg">
                   <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
@@ -766,16 +758,16 @@ const ValidationDashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <DialogFooter className="flex justify-between">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setIsDetailsModalOpen(false)}
                 >
                   Fermer
                 </Button>
                 <div className="flex space-x-2">
-                  <Button 
+                  <Button
                     onClick={() => {
                       setIsDetailsModalOpen(false);
                       handleApprove(selectedContent.id);
@@ -785,7 +777,7 @@ const ValidationDashboard: React.FC = () => {
                     <CheckCircle className="h-4 w-4 mr-2" />
                     Approuver
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => {
                       setIsDetailsModalOpen(false);
                       handleReject(selectedContent.id);

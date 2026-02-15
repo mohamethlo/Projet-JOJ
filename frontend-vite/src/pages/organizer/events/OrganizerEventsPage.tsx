@@ -6,29 +6,25 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Calendar, 
-  Plus, 
-  Search, 
-  Filter, 
-  Eye, 
-  Edit, 
-  Trash2, 
-  Users, 
-  MapPin, 
+import {
+  Calendar,
+  Plus,
+  Search,
+  Filter,
+  Eye,
+  Edit,
+  Trash2,
+  Users,
+  MapPin,
   Clock,
   BarChart3,
   TrendingUp,
   Activity,
   CheckCircle,
   XCircle,
-  AlertTriangle,
   Image as ImageIcon,
-  Star,
   Heart,
-  Share2,
-  Download,
-  MoreVertical
+  Share2
 } from 'lucide-react';
 import { EventDetailsModal, EventEditModal } from '@/components/modals';
 import { toast } from 'sonner';
@@ -221,7 +217,7 @@ const OrganizerEventsPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [activeTab, setActiveTab] = useState('list');
   const [events, setEvents] = useState(mockOrganizerEvents);
-  
+
   // Données mock pour les événements supprimés
   const mockDeletedEvents = [
     {
@@ -305,12 +301,12 @@ const OrganizerEventsPage: React.FC = () => {
     const now = new Date();
     const autoPublishDate = new Date(autoPublishAt);
     const diffMs = autoPublishDate.getTime() - now.getTime();
-    
+
     if (diffMs <= 0) return 'Expiré';
-    
+
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (diffHours > 24) {
       const days = Math.floor(diffHours / 24);
       return `${days}j ${diffHours % 24}h`;
@@ -323,11 +319,11 @@ const OrganizerEventsPage: React.FC = () => {
 
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         event.location.toLowerCase().includes(searchTerm.toLowerCase());
+      event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === '' || selectedCategory === 'Tous' || event.category === selectedCategory;
     const matchesStatus = selectedStatus === '' || selectedStatus === 'Tous' || event.status === selectedStatus;
-    
+
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -347,7 +343,7 @@ const OrganizerEventsPage: React.FC = () => {
       setSelectedEvent(null);
       setEditMode('create');
       setIsEditModalOpen(true);
-      
+
       toast.info('Création d\'événement', {
         description: 'Formulaire de création d\'événement ouvert.'
       });
@@ -363,7 +359,7 @@ const OrganizerEventsPage: React.FC = () => {
       if (editMode === 'create') {
         const now = new Date();
         const autoPublishAt = new Date(now.getTime() + 48 * 60 * 60 * 1000); // +48h
-        
+
         const newEvent = {
           ...eventData,
           id: Date.now().toString(),
@@ -382,15 +378,15 @@ const OrganizerEventsPage: React.FC = () => {
           validatedAt: null
         };
         setEvents(prev => [...prev, newEvent]);
-        
+
         toast.success('Événement soumis avec succès', {
           description: `L'événement "${eventData.title}" a été soumis pour validation. Publication automatique dans 48h.`
         });
       } else {
-        setEvents(prev => prev.map(event => 
+        setEvents(prev => prev.map(event =>
           event.id === eventData.id ? { ...event, ...eventData, updatedAt: new Date().toISOString().split('T')[0] } : event
         ));
-        
+
         toast.success('Événement modifié avec succès', {
           description: `L'événement "${eventData.title}" a été modifié avec succès.`
         });
@@ -410,7 +406,7 @@ const OrganizerEventsPage: React.FC = () => {
         `Cet événement sera déplacé vers la corbeille et pourra être restauré plus tard.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
           const deletedEvent = {
@@ -420,7 +416,7 @@ const OrganizerEventsPage: React.FC = () => {
           };
           setDeletedEvents(prev => [...prev, deletedEvent]);
           setEvents(prev => prev.filter(e => e.id !== eventId));
-          
+
           toast.success('Événement supprimé avec succès', {
             description: `L'événement "${eventToDelete.title}" a été déplacé vers la corbeille.`
           });
@@ -441,24 +437,24 @@ const OrganizerEventsPage: React.FC = () => {
         `L'événement sera publié automatiquement dans 48h si non validé par l'admin.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
           const now = new Date();
           const autoPublishAt = new Date(now.getTime() + 48 * 60 * 60 * 1000); // +48h
-          
-          setEvents(prev => prev.map(e => 
-            e.id === eventId ? { 
-              ...e, 
+
+          setEvents(prev => prev.map(e =>
+            e.id === eventId ? {
+              ...e,
               status: 'En attente',
               submittedAt: now.toISOString(),
               autoPublishAt: autoPublishAt.toISOString(),
               validatedBy: null,
               validatedAt: null,
-              updatedAt: new Date().toISOString().split('T')[0] 
+              updatedAt: new Date().toISOString().split('T')[0]
             } : e
           ));
-          
+
           toast.success('Événement soumis avec succès', {
             description: `L'événement "${event.title}" a été soumis pour validation. Publication automatique dans 48h.`
           });
@@ -479,21 +475,21 @@ const OrganizerEventsPage: React.FC = () => {
         `L'événement retournera au statut "Brouillon".\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
-          setEvents(prev => prev.map(e => 
-            e.id === eventId ? { 
-              ...e, 
+          setEvents(prev => prev.map(e =>
+            e.id === eventId ? {
+              ...e,
               status: 'Brouillon',
-              submittedAt: null,
-              autoPublishAt: null,
+              submittedAt: '',
+              autoPublishAt: '',
               validatedBy: null,
               validatedAt: null,
-              updatedAt: new Date().toISOString().split('T')[0] 
+              updatedAt: new Date().toISOString().split('T')[0]
             } : e
           ));
-          
+
           toast.success('Soumission annulée avec succès', {
             description: `L'événement "${event.title}" est maintenant en brouillon.`
           });
@@ -514,13 +510,13 @@ const OrganizerEventsPage: React.FC = () => {
         `L'événement sera marqué comme annulé et ne sera plus visible.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
-          setEvents(prev => prev.map(e => 
+          setEvents(prev => prev.map(e =>
             e.id === eventId ? { ...e, status: 'Annulé', updatedAt: new Date().toISOString().split('T')[0] } : e
           ));
-          
+
           toast.success('Événement annulé avec succès', {
             description: `L'événement "${event.title}" a été annulé.`
           });
@@ -541,13 +537,13 @@ const OrganizerEventsPage: React.FC = () => {
         `Cet événement sera remis dans la liste des événements actifs.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
-          const { deletedAt, deletedBy, ...restoredEvent } = eventToRestore;
+          const { deletedAt, deletedBy, ...restoredEvent } = eventToRestore as any;
           setEvents(prev => [...prev, restoredEvent]);
           setDeletedEvents(prev => prev.filter(e => e.id !== eventId));
-          
+
           toast.success('Événement restauré avec succès', {
             description: `L'événement "${eventToRestore.title}" a été restauré et est maintenant actif.`
           });
@@ -570,17 +566,17 @@ const OrganizerEventsPage: React.FC = () => {
         `Êtes-vous absolument sûr de vouloir continuer ?\n\n` +
         `Tapez "SUPPRIMER" dans la prochaine boîte de dialogue pour confirmer.`
       );
-      
+
       if (confirmed) {
         const doubleConfirm = window.prompt(
           `Pour confirmer la suppression définitive, tapez exactement : SUPPRIMER\n\n` +
           `Événement à supprimer : "${eventToDelete.title}"`
         );
-        
+
         if (doubleConfirm === 'SUPPRIMER') {
           try {
             setDeletedEvents(prev => prev.filter(e => e.id !== eventId));
-            
+
             toast.success('Événement supprimé définitivement', {
               description: `L'événement "${eventToDelete.title}" a été supprimé définitivement.`
             });
@@ -721,26 +717,26 @@ const OrganizerEventsPage: React.FC = () => {
                   {/* Image de l'événement */}
                   {event.image && (
                     <div className="w-full h-48 bg-gray-200 overflow-hidden relative">
-                      <img 
-                        src={event.image} 
+                      <img
+                        src={event.image}
                         alt={event.title}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                       {/* Badge de statut */}
                       <div className="absolute top-3 right-3">
-                        <Badge 
+                        <Badge
                           variant={
-                            event.status === 'Publié' ? 'default' : 
-                            event.status === 'Auto-publié' ? 'secondary' :
-                            event.status === 'En attente' ? 'outline' : 
-                            event.status === 'Brouillon' ? 'secondary' :
-                            event.status === 'Rejeté' ? 'destructive' : 'destructive'
+                            event.status === 'Publié' ? 'default' :
+                              event.status === 'Auto-publié' ? 'secondary' :
+                                event.status === 'En attente' ? 'outline' :
+                                  event.status === 'Brouillon' ? 'secondary' :
+                                    event.status === 'Rejeté' ? 'destructive' : 'destructive'
                           }
                         >
                           {event.status}
                         </Badge>
                       </div>
-                      
+
                       {/* Compte à rebours pour les événements en attente */}
                       {event.status === 'En attente' && event.autoPublishAt && (
                         <div className="absolute top-3 left-3">
@@ -761,14 +757,14 @@ const OrganizerEventsPage: React.FC = () => {
                       )}
                     </div>
                   )}
-                  
+
                   <CardContent className="p-6">
                     <div className="space-y-3">
                       <div className="flex items-center space-x-2 mb-2">
                         <Badge variant="outline" className="text-xs">{event.category}</Badge>
                         <Badge variant="outline" className="text-xs">{event.type}</Badge>
                       </div>
-                      
+
                       <div>
                         <h3 className="font-semibold text-lg mb-1 line-clamp-1">{event.title}</h3>
                         <p className="text-gray-600 text-sm mb-2 line-clamp-2">{event.description}</p>
@@ -804,7 +800,7 @@ const OrganizerEventsPage: React.FC = () => {
                           </div>
                         </div>
                       )}
-                      
+
                       {event.status === 'Auto-publié' && (
                         <div className="bg-orange-50 p-2 rounded-lg">
                           <div className="text-xs text-orange-700">
@@ -815,7 +811,7 @@ const OrganizerEventsPage: React.FC = () => {
                           </div>
                         </div>
                       )}
-                      
+
                       {event.status === 'En attente' && (
                         <div className="bg-blue-50 p-2 rounded-lg">
                           <div className="text-xs text-blue-700">
@@ -848,17 +844,17 @@ const OrganizerEventsPage: React.FC = () => {
                       </div>
 
                       <div className="grid grid-cols-2 gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleViewEvent(event)}
                         >
                           <Eye className="h-3 w-3 mr-1" />
                           Voir
                         </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleEditEvent(event)}
                         >
                           <Edit className="h-3 w-3 mr-1" />
@@ -868,9 +864,9 @@ const OrganizerEventsPage: React.FC = () => {
 
                       <div className="grid grid-cols-3 gap-1">
                         {event.status === 'Brouillon' && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-blue-500 text-blue-600 hover:bg-blue-50"
                             onClick={() => handleSubmitEvent(event.id)}
                           >
@@ -878,11 +874,11 @@ const OrganizerEventsPage: React.FC = () => {
                             Soumettre
                           </Button>
                         )}
-                        
+
                         {event.status === 'En attente' && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-orange-500 text-orange-600 hover:bg-orange-50"
                             onClick={() => handleCancelSubmission(event.id)}
                           >
@@ -890,11 +886,11 @@ const OrganizerEventsPage: React.FC = () => {
                             Annuler
                           </Button>
                         )}
-                        
+
                         {(event.status === 'Publié' || event.status === 'Auto-publié') && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-orange-500 text-orange-600 hover:bg-orange-50"
                             onClick={() => handleCancelEvent(event.id)}
                           >
@@ -902,10 +898,10 @@ const OrganizerEventsPage: React.FC = () => {
                             Annuler
                           </Button>
                         )}
-                        
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+
+                        <Button
+                          variant="outline"
+                          size="sm"
                           className="text-xs border-red-500 text-red-600 hover:bg-red-50"
                           onClick={() => handleDeleteEvent(event.id)}
                         >
@@ -1004,7 +1000,7 @@ const OrganizerEventsPage: React.FC = () => {
                         {totalEvents > 0 ? ((publishedEvents / totalEvents) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Badge variant="secondary">Auto-publié</Badge>
@@ -1014,7 +1010,7 @@ const OrganizerEventsPage: React.FC = () => {
                         {totalEvents > 0 ? ((autoPublishedEvents / totalEvents) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Badge variant="outline">En attente</Badge>
@@ -1024,7 +1020,7 @@ const OrganizerEventsPage: React.FC = () => {
                         {totalEvents > 0 ? ((pendingEvents / totalEvents) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Badge variant="secondary">Brouillon</Badge>
@@ -1034,7 +1030,7 @@ const OrganizerEventsPage: React.FC = () => {
                         {totalEvents > 0 ? ((draftEvents / totalEvents) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Badge variant="destructive">Rejeté</Badge>
@@ -1044,7 +1040,7 @@ const OrganizerEventsPage: React.FC = () => {
                         {totalEvents > 0 ? ((rejectedEvents / totalEvents) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Badge variant="destructive">Annulé</Badge>
@@ -1074,7 +1070,7 @@ const OrganizerEventsPage: React.FC = () => {
                       </div>
                       <span className="text-lg font-bold text-blue-600">{totalViews}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Heart className="h-4 w-4 text-red-600" />
@@ -1082,7 +1078,7 @@ const OrganizerEventsPage: React.FC = () => {
                       </div>
                       <span className="text-lg font-bold text-red-600">{totalLikes}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Share2 className="h-4 w-4 text-green-600" />
@@ -1090,7 +1086,7 @@ const OrganizerEventsPage: React.FC = () => {
                       </div>
                       <span className="text-lg font-bold text-green-600">{totalShares}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Users className="h-4 w-4 text-purple-600" />
@@ -1131,8 +1127,8 @@ const OrganizerEventsPage: React.FC = () => {
                     {/* Image de l'événement */}
                     {event.image && (
                       <div className="w-full h-48 bg-gray-200 overflow-hidden relative">
-                        <img 
-                          src={event.image} 
+                        <img
+                          src={event.image}
                           alt={event.title}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 opacity-75"
                         />
@@ -1153,7 +1149,7 @@ const OrganizerEventsPage: React.FC = () => {
                         )}
                       </div>
                     )}
-                    
+
                     <CardContent className="p-6">
                       <div className="space-y-3">
                         <div className="flex items-center space-x-2 mb-2">
@@ -1163,7 +1159,7 @@ const OrganizerEventsPage: React.FC = () => {
                             Supprimé
                           </Badge>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-semibold text-lg mb-1 line-clamp-1">{event.title}</h3>
                           <p className="text-gray-600 text-sm mb-2 line-clamp-2">{event.description}</p>
@@ -1222,18 +1218,18 @@ const OrganizerEventsPage: React.FC = () => {
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 pt-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-green-500 text-green-600 hover:bg-green-50"
                             onClick={() => handleRestoreEvent(event.id)}
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />
                             Restaurer
                           </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-red-500 text-red-600 hover:bg-red-50"
                             onClick={() => handlePermanentDeleteEvent(event.id)}
                           >

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { QRCode } from 'react-qr-code';
+import QRCode from 'react-qr-code';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Download, 
-  Share2, 
-  Calendar, 
-  MapPin, 
-  User, 
-  Phone, 
+import {
+  Download,
+  Share2,
+  Calendar,
+  MapPin,
+  User,
+  Phone,
   Mail,
   QrCode,
   CheckCircle,
@@ -73,20 +73,20 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
         // Sélectionner le dernier overlay (celui du TicketModal qui vient de s'ouvrir)
         const overlays = Array.from(document.querySelectorAll('[data-radix-dialog-overlay]'));
         const contents = Array.from(document.querySelectorAll('[data-radix-dialog-content]'));
-        
+
         if (overlays.length > 0) {
           // Le dernier overlay est celui du TicketModal
           const lastOverlay = overlays[overlays.length - 1] as HTMLElement;
           lastOverlay.style.zIndex = '99998';
         }
-        
+
         if (contents.length > 0) {
           // Le dernier content est celui du TicketModal
           const lastContent = contents[contents.length - 1] as HTMLElement;
           lastContent.style.zIndex = '99999';
         }
       }, 10);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -142,7 +142,7 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
   };
 
   console.log('TicketModal - Rendu du composant, isOpen:', isOpen);
-  
+
   if (!ticketData) {
     console.log('TicketModal - Pas de ticketData, fermeture du modal');
     return null;
@@ -150,8 +150,8 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent 
-        className="max-w-4xl max-h-[90vh] overflow-y-auto !z-[99999]" 
+      <DialogContent
+        className="max-w-4xl max-h-[90vh] overflow-y-auto !z-[99999]"
         style={{ zIndex: 99999 }}
       >
         <DialogHeader>
@@ -183,7 +183,7 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
                   )}
                   <p className="text-[10px] text-gray-500 font-mono mt-1">{ticketData.id.slice(-6)}</p>
                 </div>
-                
+
                 {/* Informations principales - Centre */}
                 <div className="flex-1 px-4 py-2">
                   <div className="flex items-center justify-between">
@@ -214,7 +214,7 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Type et icône - Côté droit */}
                 <div className="flex-shrink-0 w-16 h-20 bg-gray-50 border-l border-gray-200 flex flex-col items-center justify-center">
                   <div className="text-2xl mb-1">{getTypeIcon(ticketData.type)}</div>
@@ -262,7 +262,7 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
                       <span className="text-lg">ℹ️</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 px-4 py-2">
                     <div className="flex items-center space-x-6 text-sm">
                       {ticketData.additionalInfo.duration && (
@@ -292,7 +292,7 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex-shrink-0 w-16 h-16 bg-gray-50 border-l border-gray-200 flex items-center justify-center">
                     <span className="text-lg">📋</span>
                   </div>
@@ -340,7 +340,7 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
               <span>🖨️</span>
               <span>Imprimer</span>
             </Button>
-            
+
             <Button
               variant="outline"
               onClick={handleDownload}
@@ -349,7 +349,7 @@ const TicketModal: React.FC<TicketModalProps> = ({ isOpen, onClose, ticketData }
               <Download className="h-4 w-4" />
               <span>Télécharger</span>
             </Button>
-            
+
             <Button
               variant="outline"
               onClick={handleShare}

@@ -2,11 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Calendar, 
-  Users, 
-  Star, 
-  MapPin, 
+import {
+  Calendar,
+  Users,
+  Star,
   TrendingUp,
   Clock,
   CheckCircle,
@@ -83,7 +82,7 @@ const GuideDashboard: React.FC<GuideDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">+2 cette semaine</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Réservations en attente</CardTitle>
@@ -94,7 +93,7 @@ const GuideDashboard: React.FC<GuideDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">À confirmer</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Note moyenne</CardTitle>
@@ -240,13 +239,13 @@ const GuideDashboard: React.FC<GuideDashboardProps> = ({ user }) => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Badge 
+                  <Badge
                     variant={
-                      booking.status === 'Confirmée' 
-                        ? 'default' 
-                        : booking.status === 'En attente' 
-                        ? 'secondary' 
-                        : 'outline'
+                      booking.status === 'Confirmée'
+                        ? 'default'
+                        : booking.status === 'En attente'
+                          ? 'secondary'
+                          : 'outline'
                     }
                   >
                     {booking.status}

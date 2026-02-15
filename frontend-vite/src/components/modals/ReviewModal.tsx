@@ -4,12 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Star, 
-  Send, 
-  User, 
-  Calendar,
-  MapPin,
+import {
+  Star,
+  Send,
+  User,
   ThumbsUp,
   ThumbsDown
 } from 'lucide-react';
@@ -32,13 +30,13 @@ interface ReviewData {
   wouldRecommend: boolean;
 }
 
-const ReviewModal: React.FC<ReviewModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  targetId, 
-  targetType, 
-  targetName, 
-  onSubmit 
+const ReviewModal: React.FC<ReviewModalProps> = ({
+  isOpen,
+  onClose,
+  targetId,
+  targetType,
+  targetName,
+  onSubmit
 }) => {
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
@@ -50,7 +48,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (rating === 0) {
       alert('Veuillez donner une note avant de soumettre votre avis.');
       return;
@@ -77,7 +75,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
     console.log('Avis soumis:', reviewData);
     onSubmit?.(reviewData);
-    
+
     // Reset du formulaire
     setRating(0);
     setTitle('');
@@ -139,11 +137,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                     disabled={isSubmitting}
                   >
                     <Star
-                      className={`h-8 w-8 transition-colors ${
-                        star <= rating
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300 hover:text-yellow-300'
-                      }`}
+                      className={`h-8 w-8 transition-colors ${star <= rating
+                        ? 'text-yellow-400 fill-current'
+                        : 'text-gray-300 hover:text-yellow-300'
+                        }`}
                     />
                   </button>
                 ))}
@@ -228,11 +225,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setWouldRecommend(true)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${
-                    wouldRecommend
-                      ? 'bg-green-50 border-green-200 text-green-700'
-                      : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
-                  }`}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${wouldRecommend
+                    ? 'bg-green-50 border-green-200 text-green-700'
+                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                    }`}
                   disabled={isSubmitting}
                 >
                   <ThumbsUp className="h-4 w-4" />
@@ -241,11 +237,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setWouldRecommend(false)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${
-                    !wouldRecommend
-                      ? 'bg-red-50 border-red-200 text-red-700'
-                      : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
-                  }`}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-colors ${!wouldRecommend
+                    ? 'bg-red-50 border-red-200 text-red-700'
+                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                    }`}
                   disabled={isSubmitting}
                 >
                   <ThumbsDown className="h-4 w-4" />

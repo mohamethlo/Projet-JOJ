@@ -5,9 +5,9 @@ import { fr } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Download, Share2, Trash2, ExternalLink, Calendar, Clock, User, QrCode } from 'lucide-react';
+import { Download, Share2, Trash2, Calendar, Clock, User, QrCode } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { QRCode } from 'react-qr-code';
+import QRCode from 'react-qr-code';
 
 interface TicketCardProps {
   ticket: Ticket;
@@ -47,7 +47,7 @@ export const TicketCard = ({ ticket, onCancel }: TicketCardProps) => {
     };
     setQrCodeGuide(JSON.stringify(guideQrData));
   }, [ticket]);
-  
+
   const getStatusBadgeVariant = () => {
     switch (ticket.status) {
       case 'confirmed':
@@ -88,7 +88,7 @@ export const TicketCard = ({ ticket, onCancel }: TicketCardProps) => {
   };
 
   return (
-    <div 
+    <div
       className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
       onClick={handleViewDetails}
     >
@@ -174,7 +174,7 @@ export const TicketCard = ({ ticket, onCancel }: TicketCardProps) => {
                 </div>
                 <p className="text-[10px] text-gray-500 font-mono mt-1">{ticket.id.slice(-6)}</p>
               </div>
-              
+
               {/* QR Code Guide - Pour le suivi de visite */}
               <div className="flex flex-col items-center p-3 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 rounded-lg">
                 <p className="text-xs font-medium text-blue-800 mb-2">Code Guide</p>
@@ -190,7 +190,7 @@ export const TicketCard = ({ ticket, onCancel }: TicketCardProps) => {
               </div>
             </div>
             <p className="text-xs text-gray-500 text-center mt-2">
-              <span className="font-medium">Code Client:</span> Scannez pour vérifier votre commande • 
+              <span className="font-medium">Code Client:</span> Scannez pour vérifier votre commande •
               <span className="font-medium"> Code Guide:</span> Pour le suivi de la visite guidée
             </p>
           </div>
@@ -198,9 +198,9 @@ export const TicketCard = ({ ticket, onCancel }: TicketCardProps) => {
       </div>
 
       <div className="bg-gray-50 px-4 py-3 flex justify-end space-x-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={(e) => {
             e.stopPropagation();
             // TODO: Implémenter le téléchargement du ticket
@@ -209,9 +209,9 @@ export const TicketCard = ({ ticket, onCancel }: TicketCardProps) => {
           <Download className="h-4 w-4 mr-2" />
           Télécharger
         </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           onClick={(e) => {
             e.stopPropagation();
             // TODO: Implémenter le partage
@@ -221,9 +221,9 @@ export const TicketCard = ({ ticket, onCancel }: TicketCardProps) => {
           Partager
         </Button>
         {ticket.status === 'pending' && (
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             className="text-red-600 border-red-200 hover:bg-red-50"
             onClick={handleCancel}
           >

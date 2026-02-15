@@ -3,17 +3,14 @@ import { useAuth } from '@/context/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ReportDetailsModal } from '@/components/modals';
-import { 
+import {
   Search,
   Shield,
   Flag,
-  AlertTriangle,
   Eye,
-  CheckCircle,
-  X,
   MoreVertical,
   Clock
 } from 'lucide-react';

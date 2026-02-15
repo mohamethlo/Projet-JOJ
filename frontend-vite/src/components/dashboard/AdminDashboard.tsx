@@ -2,13 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Users, 
-  Calendar, 
-  Star, 
+import {
+  Users,
+  Calendar,
   TrendingUp,
   Clock,
-  CheckCircle,
   ArrowRight,
   AlertTriangle,
   Shield,
@@ -117,7 +115,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">+{mockAdminStats.newUsersThisMonth} ce mois</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Guides en attente</CardTitle>
@@ -128,7 +126,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">À valider</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Réservations</CardTitle>
@@ -139,7 +137,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">+{mockAdminStats.bookingsThisWeek} cette semaine</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Signalements</CardTitle>
@@ -267,7 +265,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user }) => {
               <div key={action.id} className="p-4 border rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-medium">{action.title}</h4>
-                  <Badge 
+                  <Badge
                     variant={action.priority === 'high' ? 'destructive' : 'secondary'}
                   >
                     {action.count}
@@ -296,11 +294,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user }) => {
           <div className="space-y-4">
             {mockRecentActivity.map((activity) => (
               <div key={activity.id} className="flex items-center space-x-3 p-3 border rounded-lg">
-                <div className={`w-2 h-2 rounded-full ${
-                  activity.status === 'success' ? 'bg-green-500' :
-                  activity.status === 'warning' ? 'bg-orange-500' :
-                  'bg-blue-500'
-                }`}></div>
+                <div className={`w-2 h-2 rounded-full ${activity.status === 'success' ? 'bg-green-500' :
+                    activity.status === 'warning' ? 'bg-orange-500' :
+                      'bg-blue-500'
+                  }`}></div>
                 <div className="flex-1">
                   <p className="text-sm font-medium">{activity.message}</p>
                   <p className="text-xs text-gray-500">{activity.time}</p>

@@ -6,22 +6,19 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  FileText, 
-  Image as ImageIcon, 
-  Save, 
-  X, 
-  Upload,
+import {
+  FileText,
+  Save,
+  X,
   Eye,
   Calendar,
   Tag,
   User,
-  AlertCircle,
-  Plus,
   Trash2,
   ArrowUp,
   ArrowDown,
-  Grid3X3
+  Grid3X3,
+  Clock
 } from 'lucide-react';
 
 interface ArticleData {
@@ -109,7 +106,7 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
       ...prev,
       [field]: value
     }));
-    
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
@@ -177,7 +174,7 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
         id: mode === 'edit' && article?.id ? article.id : Date.now().toString(),
         readTime: Math.ceil(formData.content.split(' ').length / 200) // Estimation basée sur 200 mots/minute
       };
-      
+
       onSave(articleToSave);
       onClose();
     }
@@ -393,7 +390,7 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                         <p className="text-red-500 text-xs mt-1">{errors.image}</p>
                       )}
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="fileUpload" className="text-sm font-medium">Ou télécharger un fichier</Label>
                       <Input
@@ -407,8 +404,8 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
 
                     {formData.image && (
                       <div className="w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                        <img 
-                          src={formData.image} 
+                        <img
+                          src={formData.image}
                           alt="Aperçu"
                           className="w-full h-full object-cover"
                         />
@@ -459,18 +456,18 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                             Tout supprimer
                           </Button>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                           {formData.images.map((image, index) => (
                             <div key={index} className="relative group">
                               <div className="w-full h-24 bg-gray-200 rounded-lg overflow-hidden">
-                                <img 
-                                  src={image} 
+                                <img
+                                  src={image}
                                   alt={`Image ${index + 1}`}
                                   className="w-full h-full object-cover"
                                 />
                               </div>
-                              
+
                               {/* Contrôles d'image */}
                               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
                                 <div className="flex space-x-1">
@@ -504,7 +501,7 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                                   </Button>
                                 </div>
                               </div>
-                              
+
                               {/* Numéro d'ordre */}
                               <div className="absolute top-1 left-1 bg-black bg-opacity-70 text-white text-xs px-1.5 py-0.5 rounded">
                                 {index + 1}
@@ -512,7 +509,7 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                             </div>
                           ))}
                         </div>
-                        
+
                         <div className="text-xs text-gray-500">
                           💡 Astuce: Utilisez les flèches pour réorganiser les images. La première image sera l'image principale.
                         </div>
@@ -538,7 +535,7 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                         <Tag className="h-4 w-4" />
                       </Button>
                     </div>
-                    
+
                     {formData.tags && formData.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {formData.tags.map((tag, index) => (
@@ -588,14 +585,14 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                   <div className="flex items-start space-x-4">
                     {formData.image && (
                       <div className="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0">
-                        <img 
-                          src={formData.image} 
+                        <img
+                          src={formData.image}
                           alt={formData.title}
                           className="w-full h-full object-cover rounded-lg"
                         />
                       </div>
                     )}
-                    
+
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
                         <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm">
@@ -605,9 +602,9 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                           {formData.status}
                         </span>
                       </div>
-                      
+
                       <h1 className="text-xl font-bold mb-2">{formData.title || 'Titre de l\'article'}</h1>
-                      
+
                       <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
                         <div className="flex items-center space-x-1">
                           <User className="h-4 w-4" />
@@ -636,7 +633,7 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="mt-4">
                     <p className="text-gray-700 leading-relaxed">
                       {formData.content || 'Contenu de l\'article...'}
@@ -651,8 +648,8 @@ const ArticleEditModal: React.FC<ArticleEditModalProps> = ({
                         {formData.images.map((image, index) => (
                           <div key={index} className="relative">
                             <div className="w-full h-20 bg-gray-200 rounded-lg overflow-hidden">
-                              <img 
-                                src={image} 
+                              <img
+                                src={image}
                                 alt={`Image ${index + 1}`}
                                 className="w-full h-full object-cover"
                               />

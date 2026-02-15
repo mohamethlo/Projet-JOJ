@@ -3,17 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { 
-  Calendar, 
-  Search, 
+import {
+  Calendar,
+  Search,
   CheckCircle,
   XCircle,
-  Clock,
   ArrowLeft,
   User,
   Phone,
-  Mail,
-  MapPin
+  Mail
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Link } from 'react-router-dom';
@@ -107,7 +105,7 @@ const BookingsPage: React.FC = () => {
   ]);
 
   const filteredBookings = bookings.filter(booking => {
-    const matchesSearch = 
+    const matchesSearch =
       booking.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.guestEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.roomNumber.includes(searchTerm);
@@ -121,14 +119,14 @@ const BookingsPage: React.FC = () => {
   };
 
   const handleConfirm = (id: string) => {
-    setBookings(bookings.map(b => 
+    setBookings(bookings.map(b =>
       b.id === id ? { ...b, status: 'Confirmée' } : b
     ));
   };
 
   const handleCancel = (id: string) => {
     if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
-      setBookings(bookings.map(b => 
+      setBookings(bookings.map(b =>
         b.id === id ? { ...b, status: 'Annulée' } : b
       ));
     }

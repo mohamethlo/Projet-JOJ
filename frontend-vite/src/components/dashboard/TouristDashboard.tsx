@@ -2,17 +2,14 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Calendar, 
-  Heart, 
-  Star, 
-  MapPin, 
-  Users, 
+import {
+  Calendar,
+  Heart,
+  Star,
+  MapPin,
+  Users,
   ArrowRight,
-  Clock,
-  CheckCircle,
   TrendingUp,
-  Globe,
   MessageSquare
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -105,7 +102,7 @@ const TouristDashboard: React.FC<TouristDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">Prochaine le 15 avril</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Jumelages</CardTitle>
@@ -116,7 +113,7 @@ const TouristDashboard: React.FC<TouristDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">En attente</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avis donnés</CardTitle>
@@ -154,8 +151,8 @@ const TouristDashboard: React.FC<TouristDashboardProps> = ({ user }) => {
               <div key={match.id} className="p-4 border rounded-lg mb-4 last:mb-0">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
-                    <img 
-                      src={match.local.avatar} 
+                    <img
+                      src={match.local.avatar}
                       alt={match.local.name}
                       className="w-12 h-12 rounded-full object-cover"
                     />
@@ -234,8 +231,8 @@ const TouristDashboard: React.FC<TouristDashboardProps> = ({ user }) => {
             <div className="space-y-3">
               {mockGuides.slice(0, 3).map((guide) => (
                 <div key={guide.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50">
-                  <img 
-                    src={guide.avatar} 
+                  <img
+                    src={guide.avatar}
                     alt={guide.name}
                     className="w-10 h-10 rounded-full object-cover"
                   />

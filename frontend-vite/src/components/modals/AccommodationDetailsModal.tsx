@@ -7,7 +7,6 @@ import {
   Building,
   MapPin,
   Star,
-  Users,
   Phone,
   Mail,
   Globe,
@@ -24,7 +23,6 @@ import {
   XCircle,
   AlertTriangle,
   MessageSquare,
-  Calendar,
   DollarSign
 } from 'lucide-react';
 
@@ -149,8 +147,8 @@ const AccommodationDetailsModal: React.FC<AccommodationDetailsModalProps> = ({
           {/* Image principale */}
           {accommodation.image && (
             <div className="w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
-              <img 
-                src={accommodation.image} 
+              <img
+                src={accommodation.image}
                 alt={accommodation.name}
                 className="w-full h-full object-cover"
               />
@@ -321,8 +319,8 @@ const AccommodationDetailsModal: React.FC<AccommodationDetailsModalProps> = ({
                   {accommodation.images.map((image, index) => (
                     <div key={index} className="relative group cursor-pointer">
                       <div className="w-full h-32 bg-gray-200 rounded-lg overflow-hidden">
-                        <img 
-                          src={image} 
+                        <img
+                          src={image}
                           alt={`Image ${index + 1}`}
                           className="w-full h-full object-cover transition-transform group-hover:scale-105"
                         />
@@ -369,7 +367,7 @@ const AccommodationDetailsModal: React.FC<AccommodationDetailsModalProps> = ({
               </Button>
             )}
           </div>
-          
+
           <div className="flex space-x-2">
             <Button variant="outline" onClick={() => handleAction('edit')}>
               <Edit className="h-4 w-4 mr-2" />

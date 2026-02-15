@@ -15,13 +15,15 @@ export interface AuthResponse {
   token: string;
 }
 
-export enum UserRole {
-  VISITOR = 'VISITOR',
-  LOCAL = 'LOCAL',
-  GUIDE = 'GUIDE',
-  ORGANIZER = 'ORGANIZER',
-  ADMIN = 'ADMIN'
-}
+export const UserRole = {
+  VISITOR: 'VISITOR',
+  LOCAL: 'LOCAL',
+  GUIDE: 'GUIDE',
+  ORGANIZER: 'ORGANIZER',
+  ADMIN: 'ADMIN'
+} as const;
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 export interface UserEntity {
   id: number;

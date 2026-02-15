@@ -7,31 +7,25 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Users, 
-  UserPlus, 
-  Search, 
-  Filter, 
-  MoreVertical, 
-  Eye, 
-  Edit, 
-  Trash2, 
-  Shield, 
-  UserCheck, 
-  UserX, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Calendar,
+import {
+  Users,
+  UserPlus,
+  Search,
+  Filter,
+  Eye,
+  Edit,
+  Trash2,
+  Shield,
+  UserCheck,
+  UserX,
+  MapPin,
+  CheckCircle,
   BarChart3,
   TrendingUp,
   Activity,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertTriangle
+  Clock
 } from 'lucide-react';
-import { UserManagementModal, UserEditModal, UserDetailsModal } from '@/components/modals';
+import { UserEditModal, UserDetailsModal } from '@/components/modals';
 import { toast } from 'sonner';
 
 // Données mock pour les utilisateurs
@@ -298,7 +292,7 @@ const UsersPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [activeTab, setActiveTab] = useState('list');
   const [users, setUsers] = useState(mockUsers);
-  
+
   // Données mock pour les utilisateurs supprimés
   const mockDeletedUsers = [
     {
@@ -355,7 +349,6 @@ const UsersPage: React.FC = () => {
   ];
 
   const [deletedUsers, setDeletedUsers] = useState(mockDeletedUsers);
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -366,11 +359,11 @@ const UsersPage: React.FC = () => {
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.location.toLowerCase().includes(searchTerm.toLowerCase());
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = selectedRole === '' || selectedRole === 'Tous' || user.role === selectedRole;
     const matchesStatus = selectedStatus === '' || selectedStatus === 'Tous' || user.status === selectedStatus;
-    
+
     return matchesSearch && matchesRole && matchesStatus;
   });
 
@@ -390,7 +383,7 @@ const UsersPage: React.FC = () => {
       setSelectedUser(null);
       setEditMode('create');
       setIsEditModalOpen(true);
-      
+
       toast.info('Création d\'utilisateur', {
         description: 'Formulaire de création d\'utilisateur ouvert.'
       });
@@ -413,15 +406,15 @@ const UsersPage: React.FC = () => {
           totalReviews: 0
         };
         setUsers(prev => [...prev, newUser]);
-        
+
         toast.success('Utilisateur créé avec succès', {
           description: `L'utilisateur "${userData.name}" a été créé avec succès.`
         });
       } else {
-        setUsers(prev => prev.map(user => 
+        setUsers(prev => prev.map(user =>
           user.id === userData.id ? userData : user
         ));
-        
+
         toast.success('Utilisateur modifié avec succès', {
           description: `L'utilisateur "${userData.name}" a été modifié avec succès.`
         });
@@ -441,7 +434,7 @@ const UsersPage: React.FC = () => {
         `Cet utilisateur sera déplacé vers la corbeille et pourra être restauré plus tard.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
           // Ajouter à la liste des supprimés avec la date de suppression
@@ -453,7 +446,7 @@ const UsersPage: React.FC = () => {
           setDeletedUsers(prev => [...prev, deletedUser]);
           // Supprimer de la liste active
           setUsers(prev => prev.filter(u => u.id !== userId));
-          
+
           toast.success('Utilisateur supprimé avec succès', {
             description: `L'utilisateur "${userToDelete.name}" a été déplacé vers la corbeille.`
           });
@@ -474,7 +467,7 @@ const UsersPage: React.FC = () => {
         `Cet utilisateur sera remis dans la liste des utilisateurs actifs.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
           // Retirer les propriétés de suppression
@@ -483,7 +476,7 @@ const UsersPage: React.FC = () => {
           setUsers(prev => [...prev, restoredUser]);
           // Supprimer de la liste des supprimés
           setDeletedUsers(prev => prev.filter(u => u.id !== userId));
-          
+
           toast.success('Utilisateur restauré avec succès', {
             description: `L'utilisateur "${userToRestore.name}" a été restauré et est maintenant actif.`
           });
@@ -506,17 +499,17 @@ const UsersPage: React.FC = () => {
         `Êtes-vous absolument sûr de vouloir continuer ?\n\n` +
         `Tapez "SUPPRIMER" dans la prochaine boîte de dialogue pour confirmer.`
       );
-      
+
       if (confirmed) {
         const doubleConfirm = window.prompt(
           `Pour confirmer la suppression définitive, tapez exactement : SUPPRIMER\n\n` +
           `Utilisateur à supprimer : "${userToDelete.name}"`
         );
-        
+
         if (doubleConfirm === 'SUPPRIMER') {
           try {
             setDeletedUsers(prev => prev.filter(u => u.id !== userId));
-            
+
             toast.success('Utilisateur supprimé définitivement', {
               description: `L'utilisateur "${userToDelete.name}" a été supprimé définitivement.`
             });
@@ -542,13 +535,13 @@ const UsersPage: React.FC = () => {
         `L'utilisateur ne pourra plus se connecter à la plateforme.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
-          setUsers(prev => prev.map(u => 
+          setUsers(prev => prev.map(u =>
             u.id === userId ? { ...u, status: 'suspended' } : u
           ));
-          
+
           toast.success('Utilisateur suspendu avec succès', {
             description: `L'utilisateur "${userToSuspend.name}" a été suspendu.`
           });
@@ -569,13 +562,13 @@ const UsersPage: React.FC = () => {
         `L'utilisateur pourra à nouveau se connecter à la plateforme.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
-          setUsers(prev => prev.map(u => 
+          setUsers(prev => prev.map(u =>
             u.id === userId ? { ...u, status: 'active' } : u
           ));
-          
+
           toast.success('Utilisateur activé avec succès', {
             description: `L'utilisateur "${userToActivate.name}" est maintenant actif.`
           });
@@ -596,13 +589,13 @@ const UsersPage: React.FC = () => {
         `L'utilisateur sera marqué comme vérifié.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
-          setUsers(prev => prev.map(u => 
+          setUsers(prev => prev.map(u =>
             u.id === userId ? { ...u, verified: true } : u
           ));
-          
+
           toast.success('Utilisateur vérifié avec succès', {
             description: `L'utilisateur "${userToVerify.name}" a été vérifié.`
           });
@@ -778,7 +771,7 @@ const UsersPage: React.FC = () => {
                                 <div className="flex items-center space-x-2">
                                   <div className="text-sm font-medium text-gray-900">{user.name}</div>
                                   {user.verified && (
-                                    <CheckCircle className="h-4 w-4 text-green-500" title="Vérifié" />
+                                    <CheckCircle className="h-4 w-4 text-green-500" />
                                   )}
                                 </div>
                                 <div className="text-sm text-gray-500">{user.email}</div>
@@ -793,7 +786,7 @@ const UsersPage: React.FC = () => {
                             </Badge>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <Badge 
+                            <Badge
                               variant={user.status === 'active' ? 'default' : user.status === 'suspended' ? 'destructive' : 'secondary'}
                               className="capitalize"
                             >
@@ -828,18 +821,18 @@ const UsersPage: React.FC = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center space-x-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
+                              <Button
+                                variant="outline"
+                                size="sm"
                                 onClick={() => handleViewUser(user)}
                                 className="text-xs"
                               >
                                 <Eye className="h-3 w-3 mr-1" />
                                 Voir
                               </Button>
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
+                              <Button
+                                variant="outline"
+                                size="sm"
                                 onClick={() => handleEditUser(user)}
                                 className="text-xs"
                               >
@@ -847,9 +840,9 @@ const UsersPage: React.FC = () => {
                                 Modifier
                               </Button>
                               {user.status === 'active' ? (
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
+                                <Button
+                                  variant="outline"
+                                  size="sm"
                                   className="text-xs border-orange-500 text-orange-600 hover:bg-orange-50"
                                   onClick={() => handleSuspendUser(user.id)}
                                 >
@@ -857,9 +850,9 @@ const UsersPage: React.FC = () => {
                                   Suspendre
                                 </Button>
                               ) : (
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
+                                <Button
+                                  variant="outline"
+                                  size="sm"
                                   className="text-xs border-green-500 text-green-600 hover:bg-green-50"
                                   onClick={() => handleActivateUser(user.id)}
                                 >
@@ -868,9 +861,9 @@ const UsersPage: React.FC = () => {
                                 </Button>
                               )}
                               {!user.verified && (
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
+                                <Button
+                                  variant="outline"
+                                  size="sm"
                                   className="text-xs border-blue-500 text-blue-600 hover:bg-blue-50"
                                   onClick={() => handleVerifyUser(user.id)}
                                 >
@@ -878,9 +871,9 @@ const UsersPage: React.FC = () => {
                                   Vérifier
                                 </Button>
                               )}
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
+                              <Button
+                                variant="outline"
+                                size="sm"
                                 className="text-xs border-red-500 text-red-600 hover:bg-red-50"
                                 onClick={() => handleDeleteUser(user.id)}
                               >
@@ -894,7 +887,7 @@ const UsersPage: React.FC = () => {
                     </tbody>
                   </table>
                 </div>
-                
+
                 {filteredUsers.length === 0 && (
                   <div className="text-center py-12">
                     <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
@@ -1013,7 +1006,7 @@ const UsersPage: React.FC = () => {
                       </div>
                       <span className="text-lg font-bold text-blue-600">{recentUsers}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Activity className="h-4 w-4 text-green-600" />
@@ -1023,7 +1016,7 @@ const UsersPage: React.FC = () => {
                         {((activeUsers / totalUsers) * 100).toFixed(1)}%
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="h-4 w-4 text-purple-600" />
@@ -1112,7 +1105,7 @@ const UsersPage: React.FC = () => {
                                   <div className="flex items-center space-x-2">
                                     <div className="text-sm font-medium text-gray-900">{user.name}</div>
                                     {user.verified && (
-                                      <CheckCircle className="h-4 w-4 text-green-500" title="Vérifié" />
+                                      <CheckCircle className="h-4 w-4 text-green-500" />
                                     )}
                                   </div>
                                   <div className="text-sm text-gray-500">{user.email}</div>
@@ -1127,7 +1120,7 @@ const UsersPage: React.FC = () => {
                               </Badge>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <Badge 
+                              <Badge
                                 variant={user.status === 'active' ? 'default' : user.status === 'suspended' ? 'destructive' : 'secondary'}
                                 className="capitalize"
                               >
@@ -1162,27 +1155,27 @@ const UsersPage: React.FC = () => {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center space-x-2">
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
+                                <Button
+                                  variant="outline"
+                                  size="sm"
                                   onClick={() => handleViewUser(user)}
                                   className="text-xs"
                                 >
                                   <Eye className="h-3 w-3 mr-1" />
                                   Voir
                                 </Button>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
+                                <Button
+                                  variant="outline"
+                                  size="sm"
                                   onClick={() => handleRestoreUser(user.id)}
                                   className="text-xs border-green-500 text-green-600 hover:bg-green-50"
                                 >
                                   <UserCheck className="h-3 w-3 mr-1" />
                                   Restaurer
                                 </Button>
-                                <Button 
-                                  variant="outline" 
-                                  size="sm" 
+                                <Button
+                                  variant="outline"
+                                  size="sm"
                                   onClick={() => handlePermanentDeleteUser(user.id)}
                                   className="text-xs border-red-500 text-red-600 hover:bg-red-50"
                                 >

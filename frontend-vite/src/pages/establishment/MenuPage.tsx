@@ -5,15 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { 
-  UtensilsCrossed, 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
   ArrowLeft,
-  DollarSign,
-  ChefHat,
   Flame
 } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
@@ -36,7 +33,7 @@ import {
 
 const MenuPage: React.FC = () => {
   const { user } = useAuth();
-  
+
   // Rediriger les hôtels vers leur dashboard
   if (user?.role === 'hotel') {
     return <Navigate to="/dashboard" replace />;
@@ -115,7 +112,7 @@ const MenuPage: React.FC = () => {
 
   const filteredItems = menuItems.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+      item.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'Tous' || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });

@@ -13,7 +13,7 @@ const AdminAddUserPage: React.FC = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'LOCAL' as UserRole,
+    role: 'local' as UserRole,
     location: ''
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -40,10 +40,14 @@ const AdminAddUserPage: React.FC = () => {
 
     try {
       // On envoie le rôle choisi par l'admin
-      await register(formData.email, formData.password, formData.role);
+      await register({
+        email: formData.email,
+        password: formData.password,
+        role: formData.role
+      });
       Swal.fire({ icon: 'success', title: 'Utilisateur ajouté', text: `Le compte ${formData.email} a été créé avec succès.` });
       // Reset du formulaire
-      setFormData({ email: '', password: '', confirmPassword: '', role: 'LOCAL', location: '' });
+      setFormData({ email: '', password: '', confirmPassword: '', role: 'local', location: '' });
     } catch (err) {
       Swal.fire({ icon: 'error', title: 'Erreur', text: err instanceof Error ? err.message : 'Erreur lors de la création de l\'utilisateur' });
     } finally {

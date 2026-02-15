@@ -90,7 +90,7 @@ export default function TicketDetailsPage() {
     customerName: ticket.customerName,
     customerEmail: ticket.customerEmail,
     customerPhone: undefined,
-    status: ticket.status,
+    status: ticket.status === 'completed' ? 'confirmed' : ticket.status as any,
     bookingDate: ticket.bookingDate,
     qrCode: ticket.id,
     additionalInfo: ticket.additionalInfo

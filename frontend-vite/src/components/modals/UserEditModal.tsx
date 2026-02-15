@@ -6,13 +6,13 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Shield, 
-  Save, 
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Shield,
+  Save,
   X,
   Upload,
   Eye,
@@ -163,7 +163,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -175,8 +175,9 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
     };
 
     // Retirer le mot de passe de confirmation pour l'envoi
-    delete userData.confirmPassword;
-    
+    delete (userData as any).confirmPassword;
+    delete (userData as any).password;
+
     onSave(userData);
     onClose();
   };
@@ -224,7 +225,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
   const locations = [
     'Dakar', 'Saint-Louis', 'Thiès', 'Kaolack', 'Ziguinchor', 'Mbour', 'Touba', 'Diourbel', 'Fatick', 'Kolda', 'Matam', 'Sédhiou', 'Tambacounda'
   ];
-  
+
   // Options pour les guides
   const languageOptions = ['Français', 'Anglais', 'Wolof', 'Sérère', 'Pulaar', 'Espagnol', 'Arabe', 'Mandarin'];
   const specialtyOptions = ['Histoire', 'Culture', 'Gastronomie', 'Nature', 'Écologie', 'Randonnée', 'Artisanat', 'Traditions', 'Musique', 'Architecture', 'Art', 'Photographie', 'Sport', 'Aventure', 'Plage', 'Religion', 'Économie', 'Politique'];
@@ -266,7 +267,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
                 Changer
               </Button>
             </div>
-            
+
             <div className="flex-1 space-y-4">
               <div>
                 <Label htmlFor="name">Nom complet *</Label>
@@ -436,7 +437,7 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
           {mode === 'edit' && formData.role === 'guide' && (
             <div className="space-y-6 border-t pt-6">
               <h3 className="text-lg font-semibold text-gray-900">Informations du guide</h3>
-              
+
               {/* Description */}
               <div>
                 <Label htmlFor="description">Description</Label>
@@ -459,11 +460,10 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
                       key={language}
                       type="button"
                       onClick={() => handleLanguageToggle(language)}
-                      className={`px-3 py-1 rounded-full text-sm border ${
-                        formData.languages.includes(language)
+                      className={`px-3 py-1 rounded-full text-sm border ${formData.languages.includes(language)
                           ? 'bg-blue-100 border-blue-500 text-blue-700'
                           : 'bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200'
-                      }`}
+                        }`}
                     >
                       {language}
                     </button>
@@ -480,11 +480,10 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
                       key={specialty}
                       type="button"
                       onClick={() => handleSpecialtyToggle(specialty)}
-                      className={`px-3 py-1 rounded-full text-sm border ${
-                        formData.specialties.includes(specialty)
+                      className={`px-3 py-1 rounded-full text-sm border ${formData.specialties.includes(specialty)
                           ? 'bg-green-100 border-green-500 text-green-700'
                           : 'bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200'
-                      }`}
+                        }`}
                     >
                       {specialty}
                     </button>

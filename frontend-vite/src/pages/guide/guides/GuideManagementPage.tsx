@@ -6,28 +6,26 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Users, 
-  Plus, 
-  Search, 
-  Filter, 
-  Eye, 
-  Edit, 
-  Trash2, 
-  MapPin, 
+import {
+  Users,
+  User,
+  Plus,
+  Search,
+  Filter,
+  Eye,
+  Edit,
+  Trash2,
+  MapPin,
   Clock,
   BarChart3,
-  TrendingUp,
   Activity,
   CheckCircle,
   XCircle,
   Star,
   Heart,
-  Share2,
   Image as ImageIcon,
   DollarSign,
-  Calendar,
-  User
+  Calendar
 } from 'lucide-react';
 import { GuideDetailsModal, GuideEditModal } from '@/components/modals';
 import { toast } from 'sonner';
@@ -148,7 +146,7 @@ const GuideManagementPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [activeTab, setActiveTab] = useState('list');
   const [tours, setTours] = useState(mockGuideTours);
-  
+
   // Données mock pour les visites guidées supprimées
   const mockDeletedTours = [
     {
@@ -199,12 +197,12 @@ const GuideManagementPage: React.FC = () => {
     const now = new Date();
     const autoPublishDate = new Date(autoPublishAt);
     const diffMs = autoPublishDate.getTime() - now.getTime();
-    
+
     if (diffMs <= 0) return 'Expiré';
-    
+
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (diffHours > 24) {
       const days = Math.floor(diffHours / 24);
       return `${days}j ${diffHours % 24}h`;
@@ -217,11 +215,11 @@ const GuideManagementPage: React.FC = () => {
 
   const filteredTours = tours.filter(tour => {
     const matchesSearch = tour.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         tour.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         tour.location.toLowerCase().includes(searchTerm.toLowerCase());
+      tour.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tour.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLocation = selectedLocation === '' || selectedLocation === 'Tous' || tour.location === selectedLocation;
     const matchesStatus = selectedStatus === '' || selectedStatus === 'Tous' || tour.status === selectedStatus;
-    
+
     return matchesSearch && matchesLocation && matchesStatus;
   });
 
@@ -241,7 +239,7 @@ const GuideManagementPage: React.FC = () => {
       setSelectedTour(null);
       setEditMode('create');
       setIsEditModalOpen(true);
-      
+
       toast.info('Création de visite guidée', {
         description: 'Formulaire de création de visite guidée ouvert.'
       });
@@ -257,7 +255,7 @@ const GuideManagementPage: React.FC = () => {
       if (editMode === 'create') {
         const now = new Date();
         const autoPublishAt = new Date(now.getTime() + 48 * 60 * 60 * 1000); // +48h
-        
+
         const newTour = {
           ...tourData,
           id: Date.now().toString(),
@@ -275,15 +273,15 @@ const GuideManagementPage: React.FC = () => {
           validatedAt: null
         };
         setTours(prev => [...prev, newTour]);
-        
+
         toast.success('Visite guidée soumise avec succès', {
           description: `La visite guidée "${tourData.name}" a été soumise pour validation. Publication automatique dans 48h.`
         });
       } else {
-        setTours(prev => prev.map(tour => 
+        setTours(prev => prev.map(tour =>
           tour.id === tourData.id ? { ...tour, ...tourData, updatedAt: new Date().toISOString().split('T')[0] } : tour
         ));
-        
+
         toast.success('Visite guidée modifiée avec succès', {
           description: `La visite guidée "${tourData.name}" a été modifiée avec succès.`
         });
@@ -303,7 +301,7 @@ const GuideManagementPage: React.FC = () => {
         `Cette visite guidée sera déplacée vers la corbeille et pourra être restaurée plus tard.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
           const deletedTour = {
@@ -313,7 +311,7 @@ const GuideManagementPage: React.FC = () => {
           };
           setDeletedTours(prev => [...prev, deletedTour]);
           setTours(prev => prev.filter(t => t.id !== tourId));
-          
+
           toast.success('Visite guidée supprimée avec succès', {
             description: `La visite guidée "${tourToDelete.name}" a été déplacée vers la corbeille.`
           });
@@ -334,13 +332,13 @@ const GuideManagementPage: React.FC = () => {
         `Cette visite guidée sera remise dans la liste des visites guidées actives.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
-          const { deletedAt, deletedBy, ...restoredTour } = tourToRestore;
+          const { deletedAt, deletedBy, ...restoredTour } = tourToRestore as any;
           setTours(prev => [...prev, restoredTour]);
           setDeletedTours(prev => prev.filter(t => t.id !== tourId));
-          
+
           toast.success('Visite guidée restaurée avec succès', {
             description: `La visite guidée "${tourToRestore.name}" a été restaurée et est maintenant active.`
           });
@@ -361,24 +359,24 @@ const GuideManagementPage: React.FC = () => {
         `La visite guidée sera publiée automatiquement dans 48h si non validée par l'admin.\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
           const now = new Date();
           const autoPublishAt = new Date(now.getTime() + 48 * 60 * 60 * 1000); // +48h
-          
-          setTours(prev => prev.map(t => 
-            t.id === tourId ? { 
-              ...t, 
+
+          setTours(prev => prev.map(t =>
+            t.id === tourId ? {
+              ...t,
               status: 'En attente',
               submittedAt: now.toISOString(),
               autoPublishAt: autoPublishAt.toISOString(),
               validatedBy: null,
               validatedAt: null,
-              updatedAt: new Date().toISOString().split('T')[0] 
+              updatedAt: new Date().toISOString().split('T')[0]
             } : t
           ));
-          
+
           toast.success('Visite guidée soumise avec succès', {
             description: `La visite guidée "${tour.name}" a été soumise pour validation. Publication automatique dans 48h.`
           });
@@ -399,21 +397,21 @@ const GuideManagementPage: React.FC = () => {
         `La visite guidée retournera au statut "Brouillon".\n\n` +
         `Cliquez sur "OK" pour confirmer ou "Annuler" pour abandonner.`
       );
-      
+
       if (confirmed) {
         try {
-          setTours(prev => prev.map(t => 
-            t.id === tourId ? { 
-              ...t, 
+          setTours(prev => prev.map(t =>
+            t.id === tourId ? {
+              ...t,
               status: 'Brouillon',
-              submittedAt: null,
-              autoPublishAt: null,
+              submittedAt: '',
+              autoPublishAt: '',
               validatedBy: null,
               validatedAt: null,
-              updatedAt: new Date().toISOString().split('T')[0] 
+              updatedAt: new Date().toISOString().split('T')[0]
             } : t
           ));
-          
+
           toast.success('Soumission annulée avec succès', {
             description: `La visite guidée "${tour.name}" est maintenant en brouillon.`
           });
@@ -436,17 +434,17 @@ const GuideManagementPage: React.FC = () => {
         `Êtes-vous absolument sûr de vouloir continuer ?\n\n` +
         `Tapez "SUPPRIMER" dans la prochaine boîte de dialogue pour confirmer.`
       );
-      
+
       if (confirmed) {
         const doubleConfirm = window.prompt(
           `Pour confirmer la suppression définitive, tapez exactement : SUPPRIMER\n\n` +
           `Visite guidée à supprimer : "${tourToDelete.name}"`
         );
-        
+
         if (doubleConfirm === 'SUPPRIMER') {
           try {
             setDeletedTours(prev => prev.filter(t => t.id !== tourId));
-            
+
             toast.success('Visite guidée supprimée définitivement', {
               description: `La visite guidée "${tourToDelete.name}" a été supprimée définitivement.`
             });
@@ -468,9 +466,7 @@ const GuideManagementPage: React.FC = () => {
   const totalTours = tours.length;
   const availableTours = tours.filter(t => t.status === 'Disponible').length;
   const autoPublishedTours = tours.filter(t => t.status === 'Auto-publié').length;
-  const pendingTours = tours.filter(t => t.status === 'En attente').length;
   const draftTours = tours.filter(t => t.status === 'Brouillon').length;
-  const rejectedTours = tours.filter(t => t.status === 'Rejeté').length;
   const suspendedTours = tours.filter(t => t.status === 'Suspendu').length;
   const totalBookings = tours.reduce((sum, tour) => sum + tour.bookings, 0);
   const totalViews = tours.reduce((sum, tour) => sum + tour.views, 0);
@@ -586,27 +582,27 @@ const GuideManagementPage: React.FC = () => {
                   {/* Image de la visite guidée */}
                   {tour.image && (
                     <div className="w-full h-48 bg-gray-200 overflow-hidden relative">
-                      <img 
-                        src={tour.image} 
+                      <img
+                        src={tour.image}
                         alt={tour.name}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                       {/* Badge de statut */}
                       <div className="absolute top-3 right-3">
-                        <Badge 
+                        <Badge
                           variant={
-                            tour.status === 'Disponible' ? 'default' : 
-                            tour.status === 'Auto-publié' ? 'secondary' :
-                            tour.status === 'En attente' ? 'outline' : 
-                            tour.status === 'Brouillon' ? 'secondary' :
-                            tour.status === 'Rejeté' ? 'destructive' :
-                            tour.status === 'Suspendu' ? 'destructive' : 'outline'
+                            tour.status === 'Disponible' ? 'default' :
+                              tour.status === 'Auto-publié' ? 'secondary' :
+                                tour.status === 'En attente' ? 'outline' :
+                                  tour.status === 'Brouillon' ? 'secondary' :
+                                    tour.status === 'Rejeté' ? 'destructive' :
+                                      tour.status === 'Suspendu' ? 'destructive' : 'outline'
                           }
                         >
                           {tour.status}
                         </Badge>
                       </div>
-                      
+
                       {/* Compte à rebours pour les visites en attente */}
                       {tour.status === 'En attente' && tour.autoPublishAt && (
                         <div className="absolute top-3 left-3">
@@ -627,14 +623,14 @@ const GuideManagementPage: React.FC = () => {
                       )}
                     </div>
                   )}
-                  
+
                   <CardContent className="p-6">
                     <div className="space-y-3">
                       <div className="flex items-center space-x-2 mb-2">
                         <Badge variant="outline" className="text-xs">{tour.location}</Badge>
                         <Badge variant="outline" className="text-xs">{tour.duration}</Badge>
                       </div>
-                      
+
                       <div>
                         <h3 className="font-semibold text-lg mb-1 line-clamp-1">{tour.name}</h3>
                         <p className="text-gray-600 text-sm mb-2 line-clamp-2">{tour.description}</p>
@@ -670,7 +666,7 @@ const GuideManagementPage: React.FC = () => {
                           </div>
                         </div>
                       )}
-                      
+
                       {tour.status === 'Auto-publié' && (
                         <div className="bg-orange-50 p-2 rounded-lg">
                           <div className="text-xs text-orange-700">
@@ -681,7 +677,7 @@ const GuideManagementPage: React.FC = () => {
                           </div>
                         </div>
                       )}
-                      
+
                       {tour.status === 'En attente' && (
                         <div className="bg-blue-50 p-2 rounded-lg">
                           <div className="text-xs text-blue-700">
@@ -716,17 +712,17 @@ const GuideManagementPage: React.FC = () => {
                       </div>
 
                       <div className="grid grid-cols-2 gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleViewTour(tour)}
                         >
                           <Eye className="h-3 w-3 mr-1" />
                           Voir
                         </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleEditTour(tour)}
                         >
                           <Edit className="h-3 w-3 mr-1" />
@@ -736,9 +732,9 @@ const GuideManagementPage: React.FC = () => {
 
                       <div className="grid grid-cols-3 gap-1">
                         {tour.status === 'Brouillon' && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-blue-500 text-blue-600 hover:bg-blue-50"
                             onClick={() => handleSubmitTour(tour.id)}
                           >
@@ -746,11 +742,11 @@ const GuideManagementPage: React.FC = () => {
                             Soumettre
                           </Button>
                         )}
-                        
+
                         {tour.status === 'En attente' && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-orange-500 text-orange-600 hover:bg-orange-50"
                             onClick={() => handleCancelSubmission(tour.id)}
                           >
@@ -758,10 +754,10 @@ const GuideManagementPage: React.FC = () => {
                             Annuler
                           </Button>
                         )}
-                        
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
+
+                        <Button
+                          variant="outline"
+                          size="sm"
                           className="text-xs border-red-500 text-red-600 hover:bg-red-50"
                           onClick={() => handleDeleteTour(tour.id)}
                         >
@@ -860,7 +856,7 @@ const GuideManagementPage: React.FC = () => {
                         {totalTours > 0 ? ((availableTours / totalTours) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Badge variant="secondary">Brouillon</Badge>
@@ -870,7 +866,7 @@ const GuideManagementPage: React.FC = () => {
                         {totalTours > 0 ? ((draftTours / totalTours) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Badge variant="destructive">Suspendu</Badge>
@@ -900,7 +896,7 @@ const GuideManagementPage: React.FC = () => {
                       </div>
                       <span className="text-lg font-bold text-blue-600">{totalViews}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Heart className="h-4 w-4 text-red-600" />
@@ -908,7 +904,7 @@ const GuideManagementPage: React.FC = () => {
                       </div>
                       <span className="text-lg font-bold text-red-600">{totalLikes}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Calendar className="h-4 w-4 text-green-600" />
@@ -916,7 +912,7 @@ const GuideManagementPage: React.FC = () => {
                       </div>
                       <span className="text-lg font-bold text-green-600">{totalBookings}</span>
                     </div>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <Star className="h-4 w-4 text-yellow-600" />
@@ -957,8 +953,8 @@ const GuideManagementPage: React.FC = () => {
                     {/* Image de la visite guidée */}
                     {tour.image && (
                       <div className="w-full h-48 bg-gray-200 overflow-hidden relative">
-                        <img 
-                          src={tour.image} 
+                        <img
+                          src={tour.image}
                           alt={tour.name}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 opacity-75"
                         />
@@ -979,7 +975,7 @@ const GuideManagementPage: React.FC = () => {
                         )}
                       </div>
                     )}
-                    
+
                     <CardContent className="p-6">
                       <div className="space-y-3">
                         <div className="flex items-center space-x-2 mb-2">
@@ -989,7 +985,7 @@ const GuideManagementPage: React.FC = () => {
                             Supprimée
                           </Badge>
                         </div>
-                        
+
                         <div>
                           <h3 className="font-semibold text-lg mb-1 line-clamp-1">{tour.name}</h3>
                           <p className="text-gray-600 text-sm mb-2 line-clamp-2">{tour.description}</p>
@@ -1050,18 +1046,18 @@ const GuideManagementPage: React.FC = () => {
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 pt-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-green-500 text-green-600 hover:bg-green-50"
                             onClick={() => handleRestoreTour(tour.id)}
                           >
                             <CheckCircle className="h-3 w-3 mr-1" />
                             Restaurer
                           </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="text-xs border-red-500 text-red-600 hover:bg-red-50"
                             onClick={() => handlePermanentDeleteTour(tour.id)}
                           >

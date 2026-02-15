@@ -15,7 +15,6 @@ import {
   Search,
   Filter,
   MapPin,
-  Star,
   Grid3X3,
   List,
   ArrowUpDown,
@@ -304,8 +303,8 @@ const AccommodationPage: React.FC = () => {
               {/* Liste des établissements */}
               {sortedAccommodations.length > 0 ? (
                 <div className={`grid gap-8 ${viewMode === 'grid'
-                    ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-                    : 'grid-cols-1'
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                  : 'grid-cols-1'
                   }`}>
                   {sortedAccommodations.map((accommodation) => (
                     <AccommodationCard

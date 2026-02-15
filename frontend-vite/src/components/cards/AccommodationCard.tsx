@@ -18,7 +18,7 @@ import {
   Dumbbell,
   Wind
 } from 'lucide-react';
-import { getReviewStats, getRecentReviews } from '@/lib/mockReviews';
+// import { getReviewStats, getRecentReviews } from '@/lib/mockReviews';
 import { AccommodationDetailsModal, AccommodationBookingModal, ReviewModal, ReviewsModal } from '@/components/modals';
 
 interface AccommodationProps {
@@ -71,18 +71,18 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
     setIsReviewModalOpen(true);
   };
 
-  const handleViewReviews = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsReviewsModalOpen(true);
-  };
+  // const handleViewReviews = (e: React.MouseEvent) => {
+  //   e.stopPropagation();
+  //   setIsReviewsModalOpen(true);
+  // };
 
   // Vérifier si l'utilisateur peut laisser un avis
   // En mode développement, on affiche le bouton pour tous les utilisateurs
   const canLeaveReviewForAccommodation = true; // Toujours visible pour le développement
 
   // Récupérer les données des avis
-  const reviewStats = getReviewStats(accommodation.id, 'accommodation');
-  const recentReviews = getRecentReviews(accommodation.id, 'accommodation', 2);
+  // const reviewStats = getReviewStats(accommodation.id, 'accommodation');
+  // const recentReviews = getRecentReviews(accommodation.id, 'accommodation', 2);
 
   const getTypeIcon = (type: string) => {
     switch (type) {

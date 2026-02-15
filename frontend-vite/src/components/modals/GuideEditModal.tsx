@@ -6,22 +6,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Users, 
-  Save, 
+import {
+  Users,
+  Save,
   X,
-  Upload,
   Plus,
   Trash2,
   ArrowUp,
-  ArrowDown,
-  Grid3X3,
-  Image as ImageIcon,
-  MapPin,
-  Clock,
-  DollarSign,
-  Calendar,
-  User
+  ArrowDown
 } from 'lucide-react';
 
 interface GuideEditModalProps {
@@ -168,7 +160,7 @@ const GuideEditModal: React.FC<GuideEditModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -208,9 +200,9 @@ const GuideEditModal: React.FC<GuideEditModalProps> = ({
             const result = e.target?.result as string;
             newImages.push(result);
             if (newImages.length === files.length) {
-              setFormData(prev => ({ 
-                ...prev, 
-                images: [...prev.images, ...newImages] 
+              setFormData(prev => ({
+                ...prev,
+                images: [...prev.images, ...newImages]
               }));
             }
           };
@@ -230,7 +222,7 @@ const GuideEditModal: React.FC<GuideEditModalProps> = ({
   const handleMoveImage = (index: number, direction: 'up' | 'down') => {
     const newImages = [...formData.images];
     const newIndex = direction === 'up' ? index - 1 : index + 1;
-    
+
     if (newIndex >= 0 && newIndex < newImages.length) {
       [newImages[index], newImages[newIndex]] = [newImages[newIndex], newImages[index]];
       setFormData(prev => ({ ...prev, images: newImages }));
@@ -404,7 +396,7 @@ const GuideEditModal: React.FC<GuideEditModalProps> = ({
           {/* Galerie d'images */}
           <div className="space-y-4">
             <Label>Galerie d'images</Label>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="images" className="text-sm text-gray-600">
@@ -438,23 +430,23 @@ const GuideEditModal: React.FC<GuideEditModalProps> = ({
                       Tout supprimer
                     </Button>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {formData.images.map((image, index) => (
                       <div key={index} className="relative group">
                         <div className="aspect-square rounded-lg overflow-hidden border-2 border-gray-200">
-                          <img 
-                            src={image} 
+                          <img
+                            src={image}
                             alt={`Image ${index + 1}`}
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        
+
                         {/* Numéro de l'image */}
                         <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
                           {index + 1}
                         </div>
-                        
+
                         {/* Contrôles au survol */}
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-1">
                           {index > 0 && (
@@ -468,7 +460,7 @@ const GuideEditModal: React.FC<GuideEditModalProps> = ({
                               <ArrowUp className="h-3 w-3" />
                             </Button>
                           )}
-                          
+
                           {index < formData.images.length - 1 && (
                             <Button
                               type="button"
@@ -480,7 +472,7 @@ const GuideEditModal: React.FC<GuideEditModalProps> = ({
                               <ArrowDown className="h-3 w-3" />
                             </Button>
                           )}
-                          
+
                           <Button
                             type="button"
                             variant="destructive"
@@ -494,7 +486,7 @@ const GuideEditModal: React.FC<GuideEditModalProps> = ({
                       </div>
                     ))}
                   </div>
-                  
+
                   <p className="text-xs text-gray-500">
                     💡 Astuce: La première image sera utilisée comme image principale. Utilisez les flèches pour réorganiser.
                   </p>

@@ -3,12 +3,11 @@ import { useAuth } from '@/context/AuthContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Search, 
-  Filter, 
+import {
+  Search,
   Shield,
   MessageSquare,
   Flag,
@@ -30,7 +29,7 @@ const ModerationPage: React.FC = () => {
   const [selectedType, setSelectedType] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [activeTab, setActiveTab] = useState('reports');
-  
+
   // États pour les modales
   const [selectedReport, setSelectedReport] = useState<any>(null);
   const [selectedComment, setSelectedComment] = useState<any>(null);
@@ -175,32 +174,32 @@ const ModerationPage: React.FC = () => {
 
   const filteredReports = mockReports.filter(report => {
     const matchesSearch = report.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         report.reporter.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         report.reportedUser.toLowerCase().includes(searchTerm.toLowerCase());
-    
+      report.reporter.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      report.reportedUser.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesType = !selectedType || selectedType === 'Tous' || report.type === selectedType;
     const matchesStatus = !selectedStatus || selectedStatus === 'Tous' || report.status === selectedStatus;
-    
+
     return matchesSearch && matchesType && matchesStatus;
   });
 
   const filteredComments = mockComments.filter(comment => {
     const matchesSearch = comment.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         comment.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         comment.context.toLowerCase().includes(searchTerm.toLowerCase());
-    
+      comment.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      comment.context.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesStatus = !selectedStatus || selectedStatus === 'Tous' || comment.status === selectedStatus;
-    
+
     return matchesSearch && matchesStatus;
   });
 
   const filteredUsers = mockUsers.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.role.toLowerCase().includes(searchTerm.toLowerCase());
-    
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.role.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesStatus = !selectedStatus || selectedStatus === 'Tous' || user.status === selectedStatus;
-    
+
     return matchesSearch && matchesStatus;
   });
 
@@ -368,10 +367,10 @@ const ModerationPage: React.FC = () => {
                               </Badge>
                               <span className="text-sm text-gray-500">{report.date}</span>
                             </div>
-                            
+
                             <h3 className="font-semibold text-lg mb-2">{report.type}</h3>
                             <p className="text-gray-600 mb-3">{report.content}</p>
-                            
+
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
                                 <span className="font-medium">Signalé par:</span> {report.reporter}
@@ -399,18 +398,18 @@ const ModerationPage: React.FC = () => {
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="flex space-x-2">
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="sm"
                               onClick={() => handleViewReport(report)}
                             >
                               <Eye className="h-4 w-4 mr-1" />
                               Voir
                             </Button>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => handleViewReport(report)}
                               title="Actions rapides"
@@ -469,7 +468,7 @@ const ModerationPage: React.FC = () => {
                               </Badge>
                               <span className="text-sm text-gray-500">{comment.date}</span>
                             </div>
-                            
+
                             <div className="mb-4">
                               <h3 className="font-semibold text-lg mb-2">{comment.title}</h3>
                               <div className="grid grid-cols-2 gap-4 text-sm mb-3">
@@ -481,15 +480,15 @@ const ModerationPage: React.FC = () => {
                                 </div>
                               </div>
                               <p className="text-gray-800 bg-gray-50 p-4 rounded-lg mb-3">{comment.content}</p>
-                              
+
                               {comment.rating && (
                                 <div className="flex items-center space-x-2 text-sm">
                                   <span className="font-medium">Note:</span>
                                   <div className="flex items-center">
                                     {[...Array(5)].map((_, i) => (
-                                      <Star 
-                                        key={i} 
-                                        className={`h-4 w-4 ${i < parseInt(comment.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                                      <Star
+                                        key={i}
+                                        className={`h-4 w-4 ${i < parseInt(comment.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
                                       />
                                     ))}
                                     <span className="ml-2 text-gray-600">({comment.rating}/5)</span>
@@ -498,9 +497,9 @@ const ModerationPage: React.FC = () => {
                               )}
                             </div>
                           </div>
-                          
+
                           <div className="flex flex-col space-y-2 ml-4">
-                            <Button 
+                            <Button
                               className="bg-green-600 hover:bg-green-700 text-white"
                               size="sm"
                               onClick={() => handleCommentAction(comment.id, 'approve')}
@@ -508,7 +507,7 @@ const ModerationPage: React.FC = () => {
                               <CheckCircle className="h-4 w-4 mr-1" />
                               Approuver
                             </Button>
-                            <Button 
+                            <Button
                               className="bg-yellow-600 hover:bg-yellow-700 text-white"
                               size="sm"
                               onClick={() => handleViewComment(comment)}
@@ -516,7 +515,7 @@ const ModerationPage: React.FC = () => {
                               <AlertTriangle className="h-4 w-4 mr-1" />
                               Modérer
                             </Button>
-                            <Button 
+                            <Button
                               className="bg-red-600 hover:bg-red-700 text-white"
                               size="sm"
                               onClick={() => handleCommentAction(comment.id, 'reject')}
@@ -586,7 +585,7 @@ const ModerationPage: React.FC = () => {
                               </Badge>
                               <span className="text-sm text-gray-500">{comment.date}</span>
                             </div>
-                            
+
                             <div className="mb-3">
                               <div className="flex items-center space-x-2 mb-2">
                                 <h3 className="font-semibold text-lg">{comment.author}</h3>
@@ -601,24 +600,24 @@ const ModerationPage: React.FC = () => {
                               <p className="text-sm text-gray-600 mb-2">{comment.context}</p>
                               <p className="text-gray-800 bg-gray-50 p-3 rounded-lg">{comment.content}</p>
                             </div>
-                            
+
                             <div className="flex items-center space-x-4 text-sm text-gray-500">
                               <span>👍 {comment.likes}</span>
                               <span>👎 {comment.dislikes}</span>
                             </div>
                           </div>
-                          
+
                           <div className="flex space-x-2">
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="sm"
                               onClick={() => handleViewComment(comment)}
                             >
                               <Eye className="h-4 w-4 mr-1" />
                               Voir
                             </Button>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => handleViewComment(comment)}
                               title="Actions rapides"
@@ -693,12 +692,12 @@ const ModerationPage: React.FC = () => {
                                 {user.reports} signalement(s)
                               </Badge>
                             </div>
-                            
+
                             <div className="mb-3">
                               <h3 className="font-semibold text-lg mb-1">{user.name}</h3>
                               <p className="text-gray-600 mb-2">{user.email}</p>
                             </div>
-                            
+
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
                                 <span className="font-medium">Inscription:</span> {user.joinDate}
@@ -707,7 +706,7 @@ const ModerationPage: React.FC = () => {
                                 <span className="font-medium">Dernière activité:</span> {user.lastActivity}
                               </div>
                             </div>
-                            
+
                             {user.violations.length > 0 && (
                               <div className="mt-3">
                                 <span className="font-medium text-sm">Violations:</span>
@@ -721,18 +720,18 @@ const ModerationPage: React.FC = () => {
                               </div>
                             )}
                           </div>
-                          
+
                           <div className="flex space-x-2">
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="sm"
                               onClick={() => handleViewUser(user)}
                             >
                               <Eye className="h-4 w-4 mr-1" />
                               Voir
                             </Button>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => handleViewUser(user)}
                               title="Actions rapides"
@@ -799,12 +798,12 @@ const ModerationPage: React.FC = () => {
             setSelectedUser(null);
           }}
           user={selectedUser}
-          onUpdateRole={handleUserAction}
-          onBanUser={handleUserAction}
-          onUnbanUser={handleUserAction}
-          onWarnUser={handleUserAction}
-          onVerifyUser={handleUserAction}
-          onDeleteUser={handleUserAction}
+          onUpdateRole={(userId) => handleUserAction(userId, 'role')}
+          onBanUser={(userId) => handleUserAction(userId, 'ban')}
+          onUnbanUser={(userId) => handleUserAction(userId, 'unban')}
+          onWarnUser={(userId) => handleUserAction(userId, 'warn')}
+          onVerifyUser={(userId) => handleUserAction(userId, 'verify')}
+          onDeleteUser={(userId) => handleUserAction(userId, 'delete')}
         />
       )}
     </div>

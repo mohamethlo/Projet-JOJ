@@ -5,22 +5,18 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { 
-  Flag, 
-  User, 
-  Calendar, 
-  MessageSquare, 
-  AlertTriangle, 
-  CheckCircle, 
-  X, 
+import {
+  Flag,
+  User,
+  Calendar,
+  AlertTriangle,
+  CheckCircle,
+  X,
   Eye,
   Download,
-  Share2,
-  Clock,
   Shield,
   Ban,
-  UserCheck,
-  UserX
+  UserCheck
 } from 'lucide-react';
 
 interface ReportData {
@@ -182,7 +178,7 @@ Utilisateur signalé: ${report.reportedUser} (${report.reportedUserRole})
 Statut du signaleur: ${report.reporterStatus}
 Statut de l'utilisateur signalé: ${report.reportedUserStatus}
     `;
-    
+
     const blob = new Blob([reportData], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -227,7 +223,7 @@ Statut de l'utilisateur signalé: ${report.reportedUserStatus}
                   <span>{report.date}</span>
                 </div>
               </div>
-              
+
               <h2 className="text-xl font-semibold mb-2">{report.type}</h2>
               <p className="text-gray-700 mb-4">{report.content}</p>
             </div>
@@ -368,7 +364,7 @@ Statut de l'utilisateur signalé: ${report.reportedUserStatus}
                   {action === 'warn' && 'Avertir l\'utilisateur'}
                   {action === 'ban' && 'Bannir l\'utilisateur'}
                 </h3>
-                
+
                 <div className="space-y-4">
                   {action === 'approve' && (
                     <div>
@@ -382,7 +378,7 @@ Statut de l'utilisateur signalé: ${report.reportedUserStatus}
                       />
                     </div>
                   )}
-                  
+
                   {(action === 'reject' || action === 'warn' || action === 'ban') && (
                     <div>
                       <Label htmlFor="reason">Raison *</Label>
@@ -396,7 +392,7 @@ Statut de l'utilisateur signalé: ${report.reportedUserStatus}
                       />
                     </div>
                   )}
-                  
+
                   {action === 'ban' && (
                     <div>
                       <Label htmlFor="duration">Durée du bannissement</Label>
@@ -415,7 +411,7 @@ Statut de l'utilisateur signalé: ${report.reportedUserStatus}
                       </select>
                     </div>
                   )}
-                  
+
                   <div className="flex justify-end space-x-3">
                     <Button
                       variant="outline"
@@ -433,9 +429,9 @@ Statut de l'utilisateur signalé: ${report.reportedUserStatus}
                       disabled={action === 'reject' || action === 'warn' || action === 'ban' ? !reason : false}
                       className={
                         action === 'approve' ? 'bg-green-600 hover:bg-green-700' :
-                        action === 'reject' ? 'bg-red-600 hover:bg-red-700' :
-                        action === 'warn' ? 'bg-yellow-600 hover:bg-yellow-700' :
-                        'bg-red-600 hover:bg-red-700'
+                          action === 'reject' ? 'bg-red-600 hover:bg-red-700' :
+                            action === 'warn' ? 'bg-yellow-600 hover:bg-yellow-700' :
+                              'bg-red-600 hover:bg-red-700'
                       }
                     >
                       Confirmer

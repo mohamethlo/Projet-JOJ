@@ -3,15 +3,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Shield, 
-  Calendar, 
-  Clock, 
-  CheckCircle, 
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Shield,
+  Calendar,
+  Clock,
+  CheckCircle,
   XCircle,
   Activity,
   Star,
@@ -101,18 +101,18 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             <Avatar className="h-20 w-20">
               <AvatarImage src={user.avatar} alt={user.name} />
               <AvatarFallback className="text-lg">
-                {user.name.split(' ').map(n => n[0]).join('')}
+                {user.name.split(' ').map((n: string) => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
-            
+
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-2">
                 <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
                 {user.verified && (
-                  <CheckCircle className="h-6 w-6 text-green-500" title="Utilisateur vérifié" />
+                  <CheckCircle className="h-6 w-6 text-green-500" />
                 )}
               </div>
-              
+
               <div className="flex items-center space-x-4 mb-4">
                 <Badge className={`${getRoleColor(user.role)} border-0`}>
                   <Shield className="h-3 w-3 mr-1" />
@@ -122,7 +122,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                   {getStatusLabel(user.status)}
                 </Badge>
               </div>
-              
+
               <p className="text-gray-600">{user.email}</p>
             </div>
           </div>
@@ -134,7 +134,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 <Mail className="h-5 w-5 mr-2 text-blue-600" />
                 Informations de contact
               </h3>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <Mail className="h-4 w-4 text-gray-400" />
@@ -143,7 +143,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                     <p className="text-sm text-gray-600">{user.email}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <Phone className="h-4 w-4 text-gray-400" />
                   <div>
@@ -151,7 +151,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                     <p className="text-sm text-gray-600">{user.phone}</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <MapPin className="h-4 w-4 text-gray-400" />
                   <div>
@@ -167,7 +167,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 <Activity className="h-5 w-5 mr-2 text-green-600" />
                 Activité
               </h3>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <Calendar className="h-4 w-4 text-gray-400" />
@@ -182,7 +182,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <Clock className="h-4 w-4 text-gray-400" />
                   <div>
@@ -208,7 +208,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
               <Star className="h-5 w-5 mr-2 text-yellow-600" />
               Statistiques d'activité
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-blue-50 p-4 rounded-lg">
                 <div className="flex items-center space-x-3">
@@ -219,7 +219,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-green-50 p-4 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <Star className="h-8 w-8 text-green-600" />
@@ -238,7 +238,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
               <Shield className="h-5 w-5 mr-2 text-purple-600" />
               Informations de sécurité
             </h3>
-            
+
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center space-x-3">
@@ -254,7 +254,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <AlertTriangle className="h-5 w-5 text-orange-500" />
                   <div>
@@ -272,8 +272,8 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
         <DialogFooter className="flex justify-between">
           <div className="flex space-x-2">
             {user.status === 'active' ? (
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={onSuspend}
                 className="border-orange-500 text-orange-600 hover:bg-orange-50"
               >
@@ -281,8 +281,8 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 Suspendre
               </Button>
             ) : (
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={onActivate}
                 className="border-green-500 text-green-600 hover:bg-green-50"
               >
@@ -290,10 +290,10 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 Activer
               </Button>
             )}
-            
+
             {!user.verified && (
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={onVerify}
                 className="border-blue-500 text-blue-600 hover:bg-blue-50"
               >
@@ -302,13 +302,13 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
               </Button>
             )}
           </div>
-          
+
           <div className="flex space-x-2">
             <Button variant="outline" onClick={onEdit}>
               Modifier
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={onDelete}
               className="border-red-500 text-red-600 hover:bg-red-50"
             >

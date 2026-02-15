@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, CheckCircle2, Info, AlertTriangle, Heart, MessageCircle, Newspaper } from 'lucide-react';
+import { Bell, CheckCircle2, Heart, MessageCircle, Newspaper } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNotifications, NotificationType } from '@/context/NotificationContext';

@@ -2,16 +2,14 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Shield, 
-  Users, 
-  AlertTriangle, 
-  MapPin, 
+import {
+  Shield,
+  AlertTriangle,
+  MapPin,
   TrendingUp,
   Clock,
   CheckCircle,
   ArrowRight,
-  MessageSquare,
   Eye,
   Ban,
   FileText,
@@ -115,7 +113,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">+1 cette semaine</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Signalements résolus</CardTitle>
@@ -126,7 +124,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ user }) => {
             <p className="text-xs text-muted-foreground">75% de résolution</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Utilisateurs bannis</CardTitle>
@@ -208,7 +206,7 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ user }) => {
                     <p className="text-xs text-gray-600">{area.lastCheck}</p>
                   </div>
                   <div className="text-right">
-                    <Badge 
+                    <Badge
                       variant={area.status === 'Patrouillé' ? 'default' : 'secondary'}
                     >
                       {area.status}
@@ -264,12 +262,10 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ user }) => {
             {mockRecentReports.map((report) => (
               <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center space-x-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    report.priority === 'high' ? 'bg-red-100' : 'bg-orange-100'
-                  }`}>
-                    <AlertTriangle className={`h-5 w-5 ${
-                      report.priority === 'high' ? 'text-red-600' : 'text-orange-600'
-                    }`} />
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${report.priority === 'high' ? 'bg-red-100' : 'bg-orange-100'
+                    }`}>
+                    <AlertTriangle className={`h-5 w-5 ${report.priority === 'high' ? 'text-red-600' : 'text-orange-600'
+                      }`} />
                   </div>
                   <div>
                     <h4 className="font-medium">{report.type}</h4>
@@ -279,13 +275,13 @@ const SecurityDashboard: React.FC<SecurityDashboardProps> = ({ user }) => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <Badge 
+                  <Badge
                     variant={
-                      report.status === 'Résolu' 
-                        ? 'default' 
-                        : report.status === 'En cours' 
-                        ? 'secondary' 
-                        : 'outline'
+                      report.status === 'Résolu'
+                        ? 'default'
+                        : report.status === 'En cours'
+                          ? 'secondary'
+                          : 'outline'
                     }
                   >
                     {report.status}

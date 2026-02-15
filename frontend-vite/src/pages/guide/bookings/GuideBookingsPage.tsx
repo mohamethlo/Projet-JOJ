@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,50 +6,70 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { QRCode } from 'react-qr-code';
-import { 
-  Calendar, 
-  Clock, 
-  Users, 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Star, 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle,
+import QRCode from 'react-qr-code';
+import {
+  Calendar,
+  Clock,
+  Users,
+  MapPin,
+  Phone,
+  Mail,
+  Star,
+  CheckCircle,
+  XCircle,
   Search,
-  Filter,
   Eye,
   MessageCircle,
-  Download,
-  BarChart3,
-  TrendingUp,
   DollarSign,
-  User,
   Calendar as CalendarIcon,
   Clock as ClockIcon,
-  MapPin as MapPinIcon,
-  Phone as PhoneIcon,
-  Mail as MailIcon,
-  Star as StarIcon,
   CheckCircle as CheckCircleIcon,
   XCircle as XCircleIcon,
-  AlertTriangle as AlertTriangleIcon,
-  MessageCircle as MessageCircleIcon,
   Download as DownloadIcon,
-  BarChart3 as BarChart3Icon,
-  TrendingUp as TrendingUpIcon,
-  DollarSign as DollarSignIcon,
-  User as UserIcon,
   QrCode,
   Play,
   Square
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+interface Booking {
+  id: string;
+  tourist: {
+    name: string;
+    email: string;
+    phone: string;
+    avatar: string;
+    nationality: string;
+  };
+  tour: {
+    name: string;
+    date: string;
+    time: string;
+    duration: string;
+    location: string;
+    price: string;
+    maxGroupSize: number;
+    currentGroupSize: number;
+  };
+  status: string;
+  bookingDate: string;
+  specialRequests?: string;
+  paymentStatus: string;
+  totalAmount: string;
+  notes?: string;
+  rating?: number;
+  review?: string;
+  cancellationReason?: string;
+  present?: boolean;
+  presentAt?: string;
+  visitStarted?: boolean;
+  visitStartedAt?: string;
+  visitEnded?: boolean;
+  visitEndedAt?: string;
+}
+
 // Données mock pour les réservations
-const mockBookings = [
+const mockBookings: Booking[] = [
   {
     id: '1',
     tourist: {
@@ -194,7 +214,6 @@ const GuideBookingsPage: React.FC = () => {
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isQrScannerOpen, setIsQrScannerOpen] = useState(false);
-  const [scannedTicket, setScannedTicket] = useState<any>(null);
 
   // Filtrage des réservations
   const filteredBookings = useMemo(() => {
@@ -246,8 +265,8 @@ const GuideBookingsPage: React.FC = () => {
 
   // Actions sur les réservations
   const handleConfirmBooking = (bookingId: string) => {
-    setBookings(prev => prev.map(booking => 
-      booking.id === bookingId 
+    setBookings(prev => prev.map(booking =>
+      booking.id === bookingId
         ? { ...booking, status: 'confirmed' }
         : booking
     ));
@@ -255,8 +274,8 @@ const GuideBookingsPage: React.FC = () => {
   };
 
   const handleCancelBooking = (bookingId: string) => {
-    setBookings(prev => prev.map(booking => 
-      booking.id === bookingId 
+    setBookings(prev => prev.map(booking =>
+      booking.id === bookingId
         ? { ...booking, status: 'cancelled' }
         : booking
     ));
@@ -264,8 +283,8 @@ const GuideBookingsPage: React.FC = () => {
   };
 
   const handleCompleteBooking = (bookingId: string) => {
-    setBookings(prev => prev.map(booking => 
-      booking.id === bookingId 
+    setBookings(prev => prev.map(booking =>
+      booking.id === bookingId
         ? { ...booking, status: 'completed' }
         : booking
     ));
@@ -283,8 +302,8 @@ const GuideBookingsPage: React.FC = () => {
   };
 
   const handleMarkAsPresent = (bookingId: string) => {
-    setBookings(prev => prev.map(booking => 
-      booking.id === bookingId 
+    setBookings(prev => prev.map(booking =>
+      booking.id === bookingId
         ? { ...booking, present: true, presentAt: new Date().toISOString() }
         : booking
     ));
@@ -292,8 +311,8 @@ const GuideBookingsPage: React.FC = () => {
   };
 
   const handleStartVisit = (bookingId: string) => {
-    setBookings(prev => prev.map(booking => 
-      booking.id === bookingId 
+    setBookings(prev => prev.map(booking =>
+      booking.id === bookingId
         ? { ...booking, visitStarted: true, visitStartedAt: new Date().toISOString() }
         : booking
     ));
@@ -301,8 +320,8 @@ const GuideBookingsPage: React.FC = () => {
   };
 
   const handleEndVisit = (bookingId: string) => {
-    setBookings(prev => prev.map(booking => 
-      booking.id === bookingId 
+    setBookings(prev => prev.map(booking =>
+      booking.id === bookingId
         ? { ...booking, visitEnded: true, visitEndedAt: new Date().toISOString() }
         : booking
     ));
@@ -323,7 +342,6 @@ const GuideBookingsPage: React.FC = () => {
         // Si ce n'est pas du JSON, chercher par ID direct
         const booking = bookings.find(b => b.id === qrData || b.id.includes(qrData));
         if (booking) {
-          setScannedTicket(booking);
           setIsQrScannerOpen(false);
           setSelectedBooking(booking);
           setIsDetailsModalOpen(true);
@@ -336,14 +354,13 @@ const GuideBookingsPage: React.FC = () => {
       }
 
       // Si c'est du JSON, chercher par les données du ticket
-      const booking = bookings.find(b => 
-        b.id === ticketData.id || 
+      const booking = bookings.find(b =>
+        b.id === ticketData.id ||
         b.tourist.name.toLowerCase() === ticketData.customer?.toLowerCase() ||
         (ticketData.id && b.id.includes(ticketData.id))
       );
-      
+
       if (booking) {
-        setScannedTicket(booking);
         setIsQrScannerOpen(false);
         setSelectedBooking(booking);
         setIsDetailsModalOpen(true);
@@ -368,7 +385,7 @@ const GuideBookingsPage: React.FC = () => {
       .reduce((sum, b) => sum + parseInt(b.totalAmount.replace(/[^\d]/g, '')), 0);
     const averageRating = bookings
       .filter(b => b.rating)
-      .reduce((sum, b) => sum + b.rating, 0) / bookings.filter(b => b.rating).length || 0;
+      .reduce((sum, b) => sum + (b.rating || 0), 0) / bookings.filter(b => b.rating).length || 0;
 
     return {
       total,
@@ -421,9 +438,9 @@ const GuideBookingsPage: React.FC = () => {
             Gérez vos réservations et suivez vos revenus
           </p>
         </div>
-        
+
         <div className="flex items-center space-x-4 mt-4 lg:mt-0">
-          <Button 
+          <Button
             onClick={handleScanQRCode}
             className="flex items-center space-x-2 bg-orange-600 hover:bg-orange-700"
           >
@@ -449,7 +466,7 @@ const GuideBookingsPage: React.FC = () => {
               className="pl-10"
             />
           </div>
-          
+
           <Select value={selectedStatus} onValueChange={setSelectedStatus}>
             <SelectTrigger className="w-full md:w-48">
               <SelectValue placeholder="Statut" />
@@ -582,7 +599,7 @@ const GuideBookingsPage: React.FC = () => {
                             </Badge>
                           )}
                         </div>
-                        
+
                         <div className="text-right">
                           <p className="text-lg font-semibold text-green-600">{booking.totalAmount}</p>
                           <p className="text-sm text-gray-500">
@@ -599,7 +616,7 @@ const GuideBookingsPage: React.FC = () => {
                             <Eye className="h-4 w-4 mr-1" />
                             Voir
                           </Button>
-                          
+
                           <Button
                             variant="outline"
                             size="sm"
@@ -795,21 +812,21 @@ const GuideBookingsPage: React.FC = () => {
 
       {/* Modal de détails de réservation */}
       {isDetailsModalOpen && selectedBooking && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           onClick={() => {
             setIsDetailsModalOpen(false);
             setSelectedBooking(null);
           }}
         >
-          <div 
+          <div
             className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">Détails de la Réservation</h2>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => {
                   setIsDetailsModalOpen(false);
@@ -902,7 +919,7 @@ const GuideBookingsPage: React.FC = () => {
                     <p className="font-medium">{new Date(selectedBooking.bookingDate).toLocaleDateString('fr-FR')}</p>
                   </div>
                 </div>
-                
+
                 {/* Suivi de visite */}
                 {(selectedBooking.present || selectedBooking.visitStarted || selectedBooking.visitEnded) && (
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
@@ -1022,7 +1039,7 @@ const GuideBookingsPage: React.FC = () => {
               {selectedBooking.status === 'confirmed' && (
                 <>
                   {!selectedBooking.present && (
-                    <Button 
+                    <Button
                       onClick={() => {
                         handleMarkAsPresent(selectedBooking.id);
                         setIsDetailsModalOpen(false);
@@ -1035,7 +1052,7 @@ const GuideBookingsPage: React.FC = () => {
                     </Button>
                   )}
                   {selectedBooking.present && !selectedBooking.visitStarted && (
-                    <Button 
+                    <Button
                       onClick={() => {
                         handleStartVisit(selectedBooking.id);
                         setIsDetailsModalOpen(false);
@@ -1048,7 +1065,7 @@ const GuideBookingsPage: React.FC = () => {
                     </Button>
                   )}
                   {selectedBooking.visitStarted && !selectedBooking.visitEnded && (
-                    <Button 
+                    <Button
                       onClick={() => {
                         handleEndVisit(selectedBooking.id);
                         setIsDetailsModalOpen(false);
@@ -1062,8 +1079,8 @@ const GuideBookingsPage: React.FC = () => {
                   )}
                 </>
               )}
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => {
                   setIsDetailsModalOpen(false);
                   setSelectedBooking(null);
@@ -1071,7 +1088,7 @@ const GuideBookingsPage: React.FC = () => {
               >
                 Fermer
               </Button>
-              <Button 
+              <Button
                 onClick={() => {
                   handleContactTourist(selectedBooking);
                   setIsDetailsModalOpen(false);
@@ -1098,7 +1115,7 @@ const GuideBookingsPage: React.FC = () => {
               Scannez le QR code du ticket du client pour accéder rapidement aux détails de la réservation
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div className="text-center p-4 bg-orange-50 rounded-lg">
               <p className="text-sm text-gray-600 mb-4">

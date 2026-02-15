@@ -2,12 +2,11 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  Star, 
+import {
+  Star,
   ArrowLeft,
   User,
-  Calendar,
-  MessageSquare
+  Calendar
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -80,11 +79,10 @@ const ReviewsPage: React.FC = () => {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-5 w-5 ${
-                      i < Math.round(averageRating)
+                    className={`h-5 w-5 ${i < Math.round(averageRating)
                         ? 'fill-yellow-400 text-yellow-400'
                         : 'text-gray-300'
-                    }`}
+                      }`}
                   />
                 ))}
               </div>
@@ -167,11 +165,10 @@ const ReviewsPage: React.FC = () => {
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`h-5 w-5 ${
-                            i < review.rating
+                          className={`h-5 w-5 ${i < review.rating
                               ? 'fill-yellow-400 text-yellow-400'
                               : 'text-gray-300'
-                          }`}
+                            }`}
                         />
                       ))}
                     </div>

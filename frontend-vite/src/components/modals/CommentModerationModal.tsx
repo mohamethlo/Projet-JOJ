@@ -5,20 +5,17 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { 
-  MessageSquare, 
-  User, 
-  Calendar, 
-  CheckCircle, 
-  X, 
-  Eye,
+import {
+  MessageSquare,
+  User,
+  Calendar,
+  CheckCircle,
+  X,
   Download,
   Flag,
-  AlertTriangle,
   Shield,
   Ban,
-  UserCheck,
-  Clock
+  UserCheck
 } from 'lucide-react';
 
 interface CommentData {
@@ -156,7 +153,7 @@ Statistiques:
 - Likes: ${comment.likes || 0}
 - Réponses: ${comment.replies || 0}
     `;
-    
+
     const blob = new Blob([commentData], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -204,7 +201,7 @@ Statistiques:
                   </Badge>
                 )}
               </div>
-              
+
               <h2 className="text-lg font-semibold mb-2">
                 Commentaire sur: {comment.targetType} - {comment.targetName}
               </h2>
@@ -332,7 +329,7 @@ Statistiques:
                   {action === 'warn' && 'Avertir l\'utilisateur'}
                   {action === 'ban' && 'Bannir l\'utilisateur'}
                 </h3>
-                
+
                 <div className="space-y-4">
                   {action === 'approve' && (
                     <div>
@@ -346,7 +343,7 @@ Statistiques:
                       />
                     </div>
                   )}
-                  
+
                   {(action === 'reject' || action === 'delete' || action === 'warn' || action === 'ban') && (
                     <div>
                       <Label htmlFor="reason">Raison *</Label>
@@ -360,7 +357,7 @@ Statistiques:
                       />
                     </div>
                   )}
-                  
+
                   {action === 'ban' && (
                     <div>
                       <Label htmlFor="duration">Durée du bannissement</Label>
@@ -379,7 +376,7 @@ Statistiques:
                       </select>
                     </div>
                   )}
-                  
+
                   <div className="flex justify-end space-x-3">
                     <Button
                       variant="outline"
@@ -397,10 +394,10 @@ Statistiques:
                       disabled={action === 'reject' || action === 'delete' || action === 'warn' || action === 'ban' ? !reason : false}
                       className={
                         action === 'approve' ? 'bg-green-600 hover:bg-green-700' :
-                        action === 'reject' ? 'bg-red-600 hover:bg-red-700' :
-                        action === 'delete' ? 'bg-red-600 hover:bg-red-700' :
-                        action === 'warn' ? 'bg-yellow-600 hover:bg-yellow-700' :
-                        'bg-red-600 hover:bg-red-700'
+                          action === 'reject' ? 'bg-red-600 hover:bg-red-700' :
+                            action === 'delete' ? 'bg-red-600 hover:bg-red-700' :
+                              action === 'warn' ? 'bg-yellow-600 hover:bg-yellow-700' :
+                                'bg-red-600 hover:bg-red-700'
                       }
                     >
                       Confirmer

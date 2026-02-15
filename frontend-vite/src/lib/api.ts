@@ -10,9 +10,9 @@ export const apiRequest = async (
   options: RequestInit = {}
 ): Promise<Response> => {
   const token = localStorage.getItem('lateranga_token');
-  
-  const headers: HeadersInit = {
-    ...options.headers,
+
+  const headers: Record<string, string> = {
+    ...(options.headers as Record<string, string>),
   };
 
   // N'ajouter Content-Type que si ce n'est pas un FormData
@@ -26,7 +26,7 @@ export const apiRequest = async (
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
-    headers,
+    headers: headers as HeadersInit,
   });
 
   // Gérer l'expiration du token
@@ -44,11 +44,11 @@ export const apiRequest = async (
  */
 export const apiGet = async <T>(endpoint: string): Promise<T> => {
   const response = await apiRequest(endpoint, { method: 'GET' });
-  
+
   if (!response.ok) {
     throw new Error(`Erreur API: ${response.statusText}`);
   }
-  
+
   return response.json();
 };
 
@@ -57,16 +57,16 @@ export const apiGet = async <T>(endpoint: string): Promise<T> => {
  */
 export const apiPost = async <T>(endpoint: string, data: any): Promise<T> => {
   const body = data instanceof FormData ? data : JSON.stringify(data);
-  
+
   const response = await apiRequest(endpoint, {
     method: 'POST',
     body: body,
   });
-  
+
   if (!response.ok) {
     throw new Error(`Erreur API: ${response.statusText}`);
   }
-  
+
   return response.json();
 };
 
@@ -75,16 +75,16 @@ export const apiPost = async <T>(endpoint: string, data: any): Promise<T> => {
  */
 export const apiPut = async <T>(endpoint: string, data: any): Promise<T> => {
   const body = data instanceof FormData ? data : JSON.stringify(data);
-  
+
   const response = await apiRequest(endpoint, {
     method: 'PUT',
     body: body,
   });
-  
+
   if (!response.ok) {
     throw new Error(`Erreur API: ${response.statusText}`);
   }
-  
+
   return response.json();
 };
 
@@ -93,15 +93,15 @@ export const apiPut = async <T>(endpoint: string, data: any): Promise<T> => {
  */
 export const apiDelete = async <T>(endpoint: string): Promise<T | null> => {
   const response = await apiRequest(endpoint, { method: 'DELETE' });
-  
+
   if (!response.ok) {
     throw new Error(`Erreur API: ${response.statusText}`);
   }
-  
+
   // Si la réponse est vide (204 No Content), retourner null
   const text = await response.text();
   if (!text) return null as T | null;
-  
+
   return JSON.parse(text);
 };
 

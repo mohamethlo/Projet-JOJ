@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useAuth } from '@/context/AuthContext';
+
 import {
   ArrowLeft,
   Save,
@@ -28,9 +28,8 @@ import {
 } from 'lucide-react';
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
-  const [coverImage, setCoverImage] = useState('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1920&h=600&fit=crop');
-  const [profileImage, setProfileImage] = useState('/images/nouveau_logo.jpeg');
+  const [coverImage] = useState('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1920&h=600&fit=crop');
+  const [profileImage] = useState('/images/nouveau_logo.jpeg');
   const [name, setName] = useState('Le Djoloff Royal');
   const [category, setCategory] = useState('Restaurant');
   const [tagline, setTagline] = useState('Saveurs authentiques du Sénégal dans un cadre royal');
@@ -41,10 +40,7 @@ const ProfilePage: React.FC = () => {
   const [website, setWebsite] = useState('www.djoloffroyal.sn');
   const [amenities, setAmenities] = useState(['WiFi Gratuit', 'Terrasse', 'Parking', 'Climatisation', 'Service Traiteur']);
   const [newAmenity, setNewAmenity] = useState('');
-  const [hours, setHours] = useState({
-    'Lundi - Vendredi': '12h00 - 23h00',
-    'Samedi - Dimanche': '11h00 - 00h00'
-  });
+
 
   const handleAddAmenity = () => {
     if (newAmenity.trim()) {

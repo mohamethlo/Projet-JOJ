@@ -5,27 +5,21 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { 
-  User, 
-  Calendar, 
-  Shield, 
-  Ban, 
-  UserCheck, 
-  UserX,
+import {
+  User,
+  Calendar,
+  Shield,
+  Ban,
+  UserCheck,
   Mail,
   Phone,
   MapPin,
   Activity,
   AlertTriangle,
   CheckCircle,
-  X,
   Download,
-  Eye,
   Edit,
-  Trash2,
-  Clock,
-  Star
+  Trash2
 } from 'lucide-react';
 
 interface UserData {
@@ -185,7 +179,7 @@ Banni: ${user.isBanned ? 'Oui' : 'Non'}
 ${user.banReason ? `Raison du bannissement: ${user.banReason}` : ''}
 ${user.banExpiry ? `Expiration du bannissement: ${user.banExpiry}` : ''}
     `;
-    
+
     const blob = new Blob([userData], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -239,7 +233,7 @@ ${user.banExpiry ? `Expiration du bannissement: ${user.banExpiry}` : ''}
                   </Badge>
                 )}
               </div>
-              
+
               <h2 className="text-xl font-semibold mb-2">{user.name}</h2>
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <div className="flex items-center space-x-1">
@@ -440,7 +434,7 @@ ${user.banExpiry ? `Expiration du bannissement: ${user.banExpiry}` : ''}
                   {action === 'verify' && 'Vérifier l\'utilisateur'}
                   {action === 'delete' && 'Supprimer l\'utilisateur'}
                 </h3>
-                
+
                 <div className="space-y-4">
                   {action === 'updateRole' && (
                     <div>
@@ -460,7 +454,7 @@ ${user.banExpiry ? `Expiration du bannissement: ${user.banExpiry}` : ''}
                       </select>
                     </div>
                   )}
-                  
+
                   {(action === 'ban' || action === 'warn' || action === 'delete') && (
                     <div>
                       <Label htmlFor="reason">Raison *</Label>
@@ -474,7 +468,7 @@ ${user.banExpiry ? `Expiration du bannissement: ${user.banExpiry}` : ''}
                       />
                     </div>
                   )}
-                  
+
                   {action === 'ban' && (
                     <div>
                       <Label htmlFor="duration">Durée du bannissement</Label>
@@ -493,7 +487,7 @@ ${user.banExpiry ? `Expiration du bannissement: ${user.banExpiry}` : ''}
                       </select>
                     </div>
                   )}
-                  
+
                   <div className="flex justify-end space-x-3">
                     <Button
                       variant="outline"
@@ -511,11 +505,11 @@ ${user.banExpiry ? `Expiration du bannissement: ${user.banExpiry}` : ''}
                       disabled={action === 'ban' || action === 'warn' || action === 'delete' ? !reason : false}
                       className={
                         action === 'updateRole' ? 'bg-blue-600 hover:bg-blue-700' :
-                        action === 'ban' ? 'bg-red-600 hover:bg-red-700' :
-                        action === 'unban' ? 'bg-green-600 hover:bg-green-700' :
-                        action === 'warn' ? 'bg-yellow-600 hover:bg-yellow-700' :
-                        action === 'verify' ? 'bg-blue-600 hover:bg-blue-700' :
-                        'bg-red-600 hover:bg-red-700'
+                          action === 'ban' ? 'bg-red-600 hover:bg-red-700' :
+                            action === 'unban' ? 'bg-green-600 hover:bg-green-700' :
+                              action === 'warn' ? 'bg-yellow-600 hover:bg-yellow-700' :
+                                action === 'verify' ? 'bg-blue-600 hover:bg-blue-700' :
+                                  'bg-red-600 hover:bg-red-700'
                       }
                     >
                       Confirmer

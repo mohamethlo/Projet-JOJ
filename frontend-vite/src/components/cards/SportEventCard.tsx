@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Calendar, 
-  MapPin, 
-  Users, 
-  Clock, 
-  Play, 
-  Pause, 
+import {
+  Calendar,
+  MapPin,
+  Users,
+  Clock,
   Trophy,
-  Target,
-  Activity,
   Eye,
   Star
 } from 'lucide-react';
@@ -54,7 +50,7 @@ interface SportEventCardProps {
   onRegister?: (id: string) => void;
 }
 
-const SportEventCard: React.FC<SportEventCardProps> = ({ event, onRegister }) => {
+const SportEventCard: React.FC<SportEventCardProps> = ({ event }) => {
   const { user } = useAuth();
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -88,6 +84,7 @@ const SportEventCard: React.FC<SportEventCardProps> = ({ event, onRegister }) =>
 
   const isLive = event.isLive || false;
 
+  /*
   const getEventIcon = (type: string) => {
     switch (type) {
       case 'goal':
@@ -102,6 +99,7 @@ const SportEventCard: React.FC<SportEventCardProps> = ({ event, onRegister }) =>
         return '📊';
     }
   };
+  */
 
   const handleReserve = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -228,7 +226,7 @@ const SportEventCard: React.FC<SportEventCardProps> = ({ event, onRegister }) =>
                   Voir tous les avis
                 </Button>
               </div>
-              
+
               {recentReviews.length > 0 && (
                 <div className="space-y-2">
                   {recentReviews.slice(0, 2).map((review) => (
@@ -239,9 +237,8 @@ const SportEventCard: React.FC<SportEventCardProps> = ({ event, onRegister }) =>
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className={`h-3 w-3 ${
-                                i < review.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'
-                              }`}
+                              className={`h-3 w-3 ${i < review.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'
+                                }`}
                             />
                           ))}
                         </div>

@@ -9,14 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Globe, 
-  Heart, 
-  Star, 
+import {
+  User,
+  MapPin,
+  Globe,
+  Heart,
+  Star,
   Calendar,
   Edit3,
   Save,
@@ -25,8 +23,6 @@ import {
   Shield,
   Award,
   MessageSquare,
-  Users,
-  Clock,
   LogOut
 } from 'lucide-react';
 import ProfileStats from '@/components/profile/ProfileStats';
@@ -259,7 +255,7 @@ const ProfilePage: React.FC = () => {
                       </h4>
                       <LanguageSelector
                         languages={editedProfile.languages}
-                        onLanguagesChange={(languages) => setEditedProfile({...editedProfile, languages})}
+                        onLanguagesChange={(languages) => setEditedProfile({ ...editedProfile, languages })}
                         disabled={!isEditing}
                       />
                     </div>
@@ -272,7 +268,7 @@ const ProfilePage: React.FC = () => {
                       </h4>
                       <InterestSelector
                         interests={editedProfile.interests}
-                        onInterestsChange={(interests) => setEditedProfile({...editedProfile, interests})}
+                        onInterestsChange={(interests) => setEditedProfile({ ...editedProfile, interests })}
                         disabled={!isEditing}
                       />
                     </div>
@@ -337,7 +333,7 @@ const ProfilePage: React.FC = () => {
                   <Input
                     id="name"
                     value={editedProfile.name}
-                    onChange={(e) => setEditedProfile({...editedProfile, name: e.target.value})}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, name: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>
@@ -347,7 +343,7 @@ const ProfilePage: React.FC = () => {
                     id="email"
                     type="email"
                     value={editedProfile.email}
-                    onChange={(e) => setEditedProfile({...editedProfile, email: e.target.value})}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, email: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>
@@ -356,7 +352,7 @@ const ProfilePage: React.FC = () => {
                   <Input
                     id="phone"
                     value={editedProfile.phone}
-                    onChange={(e) => setEditedProfile({...editedProfile, phone: e.target.value})}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>
@@ -365,7 +361,7 @@ const ProfilePage: React.FC = () => {
                   <Input
                     id="location"
                     value={editedProfile.location}
-                    onChange={(e) => setEditedProfile({...editedProfile, location: e.target.value})}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, location: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>
@@ -376,7 +372,7 @@ const ProfilePage: React.FC = () => {
                 <Textarea
                   id="bio"
                   value={editedProfile.bio}
-                  onChange={(e) => setEditedProfile({...editedProfile, bio: e.target.value})}
+                  onChange={(e) => setEditedProfile({ ...editedProfile, bio: e.target.value })}
                   disabled={!isEditing}
                   placeholder="Parlez-nous de vous..."
                   rows={4}
@@ -398,9 +394,9 @@ const ProfilePage: React.FC = () => {
               {/* Section de déconnexion */}
               <div className="pt-6 border-t">
                 <h4 className="font-medium mb-4 text-red-600">Zone de danger</h4>
-                <Button 
-                  onClick={handleLogout} 
-                  variant="destructive" 
+                <Button
+                  onClick={handleLogout}
+                  variant="destructive"
                   className="flex items-center space-x-2"
                 >
                   <LogOut className="h-4 w-4" />
@@ -434,9 +430,8 @@ const ProfilePage: React.FC = () => {
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className={`h-4 w-4 ${
-                                i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                              }`}
+                              className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                }`}
                             />
                           ))}
                         </div>
@@ -478,15 +473,15 @@ const ProfilePage: React.FC = () => {
               Êtes-vous sûr de vouloir vous déconnecter ? Vous devrez vous reconnecter pour accéder à votre compte.
             </p>
             <div className="flex space-x-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => setShowLogoutDialog(false)}
                 className="flex-1"
               >
                 Annuler
               </Button>
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 onClick={confirmLogout}
                 className="flex-1"
               >

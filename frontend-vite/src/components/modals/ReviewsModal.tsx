@@ -5,15 +5,13 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Star, 
-  Search, 
-  Filter, 
-  Calendar, 
-  ThumbsUp, 
+import {
+  Star,
+  Search,
+  Calendar,
+  ThumbsUp,
   ThumbsDown,
   MessageSquare,
-  X,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -88,11 +86,11 @@ interface ReviewsModalProps {
   canInteract?: boolean; // Si false, désactive les likes et réponses
 }
 
-const ReviewsModal: React.FC<ReviewsModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  targetId, 
-  targetType, 
+const ReviewsModal: React.FC<ReviewsModalProps> = ({
+  isOpen,
+  onClose,
+  targetId,
+  targetType,
   targetName,
   canInteract = true
 }) => {
@@ -101,8 +99,8 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
   const [filterRecommendation, setFilterRecommendation] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [likedReviews, setLikedReviews] = useState<Set<string>>(new Set());
-  const [replies, setReplies] = useState<{[key: string]: string}>({});
-  const [showReplyForm, setShowReplyForm] = useState<{[key: string]: boolean}>({});
+  const [replies, setReplies] = useState<{ [key: string]: string }>({});
+  const [showReplyForm, setShowReplyForm] = useState<{ [key: string]: boolean }>({});
   const reviewsPerPage = 5;
 
   // Use mock data for now
@@ -110,11 +108,11 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
 
   // Calculer les statistiques
   const totalReviews = reviews.length;
-  const averageRating = totalReviews > 0 
+  const averageRating = totalReviews > 0
     ? (reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1)
     : '0.0';
   const recommendedCount = reviews.filter(r => r.wouldRecommend).length;
-  const recommendationRate = totalReviews > 0 
+  const recommendationRate = totalReviews > 0
     ? Math.round((recommendedCount / totalReviews) * 100)
     : 0;
 
@@ -122,7 +120,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
   const ratingDistribution = [5, 4, 3, 2, 1].map(rating => ({
     rating,
     count: reviews.filter(r => r.rating === rating).length,
-    percentage: totalReviews > 0 
+    percentage: totalReviews > 0
       ? Math.round((reviews.filter(r => r.rating === rating).length / totalReviews) * 100)
       : 0
   }));
@@ -130,13 +128,13 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
   // Filtrer les avis
   const filteredReviews = reviews.filter(review => {
     const matchesSearch = review.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         review.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         review.author.name.toLowerCase().includes(searchTerm.toLowerCase());
+      review.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      review.author.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRating = filterRating === 'all' || review.rating.toString() === filterRating;
-    const matchesRecommendation = filterRecommendation === 'all' || 
+    const matchesRecommendation = filterRecommendation === 'all' ||
       (filterRecommendation === 'yes' && review.wouldRecommend) ||
       (filterRecommendation === 'no' && !review.wouldRecommend);
-    
+
     return matchesSearch && matchesRating && matchesRecommendation;
   });
 
@@ -149,9 +147,8 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`h-4 w-4 ${
-          i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-        }`}
+        className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+          }`}
       />
     ));
   };
@@ -205,7 +202,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
     if (replyText && replyText.trim()) {
       // Simulation d'envoi de réponse
       console.log(`Réponse soumise pour l'avis ${reviewId}:`, replyText);
-      
+
       // Réinitialiser le formulaire
       setReplies(prev => ({
         ...prev,
@@ -215,7 +212,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
         ...prev,
         [reviewId]: false
       }));
-      
+
       // Afficher un message de succès (simulation)
       alert('Réponse envoyée avec succès !');
     }
@@ -267,17 +264,17 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
               </div>
               <div className="text-sm text-gray-600">Note moyenne</div>
             </div>
-            
+
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-3xl font-bold text-blue-600">{totalReviews}</div>
               <div className="text-sm text-gray-600">Total avis</div>
             </div>
-            
+
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <div className="text-3xl font-bold text-green-600">{recommendationRate}%</div>
               <div className="text-sm text-gray-600">Recommandent</div>
             </div>
-            
+
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-3xl font-bold text-purple-600">
                 {reviews.reduce((sum, r) => sum + r.likes, 0)}
@@ -296,7 +293,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                   <Star className="h-4 w-4 text-yellow-400 fill-current" />
                 </div>
                 <div className="flex-1 bg-gray-200 rounded-full h-2">
-                  <div 
+                  <div
                     className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${percentage}%` }}
                   ></div>
@@ -321,7 +318,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                 />
               </div>
             </div>
-            
+
             <div className="flex gap-2">
               <Select value={filterRating} onValueChange={setFilterRating}>
                 <SelectTrigger className="w-32">
@@ -336,7 +333,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                   <SelectItem value="1">1 étoile</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={filterRecommendation} onValueChange={setFilterRecommendation}>
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Recommandation" />
@@ -372,7 +369,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                         {review.author.name.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
                     </Avatar>
-                    
+
                     <div className="flex-1">
                       <div className="flex items-start justify-between">
                         <div>
@@ -384,28 +381,28 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                             </Badge>
                           </div>
                         </div>
-                        
+
                         <div className="flex items-center space-x-1">
                           {getRatingStars(review.rating)}
                         </div>
                       </div>
-                      
+
                       <p className="text-gray-700 mt-2">{review.content}</p>
-                      
+
                       {review.pros && (
                         <div className="mt-3">
                           <p className="text-sm font-medium text-green-700">Points positifs :</p>
                           <p className="text-sm text-gray-600">{review.pros}</p>
                         </div>
                       )}
-                      
+
                       {review.cons && (
                         <div className="mt-2">
                           <p className="text-sm font-medium text-red-700">Points à améliorer :</p>
                           <p className="text-sm text-gray-600">{review.cons}</p>
                         </div>
                       )}
-                      
+
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center space-x-4 text-sm text-gray-500">
                           <div className="flex items-center space-x-1">
@@ -425,33 +422,31 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                             </div>
                           )}
                         </div>
-                        
+
                         <div className="flex items-center space-x-3 text-sm">
                           <button
                             onClick={() => canInteract && handleLikeReview(review.id)}
                             disabled={!canInteract}
-                            className={`flex items-center space-x-1 px-2 py-1 rounded-full transition-colors ${
-                              !canInteract 
+                            className={`flex items-center space-x-1 px-2 py-1 rounded-full transition-colors ${!canInteract
                                 ? 'opacity-50 cursor-not-allowed text-gray-400'
                                 : likedReviews.has(review.id)
                                   ? 'bg-blue-100 text-blue-600'
                                   : 'hover:bg-gray-100 text-gray-500'
-                            }`}
+                              }`}
                           >
                             <ThumbsUp className={`h-4 w-4 ${!canInteract ? 'text-gray-400' : likedReviews.has(review.id) ? 'text-blue-600' : 'text-gray-500'}`} />
                             <span className="font-medium">
                               {getReviewLikes(review.id, review.likes)}
                             </span>
                           </button>
-                          
+
                           <button
                             onClick={() => canInteract && handleShowReplyForm(review.id)}
                             disabled={!canInteract}
-                            className={`flex items-center space-x-1 px-2 py-1 rounded-full transition-colors ${
-                              !canInteract 
+                            className={`flex items-center space-x-1 px-2 py-1 rounded-full transition-colors ${!canInteract
                                 ? 'opacity-50 cursor-not-allowed text-gray-400'
                                 : 'hover:bg-gray-100 text-gray-500'
-                            }`}
+                              }`}
                           >
                             <MessageSquare className="h-4 w-4" />
                             <span className="font-medium">{review.replies}</span>
@@ -460,7 +455,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Formulaire de réponse */}
                   {showReplyForm[review.id] && canInteract && (
                     <div className="mt-4 p-3 bg-gray-50 rounded-lg">
@@ -481,7 +476,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                             {(replies[review.id] || '').length}/500 caractères
                           </div>
                         </div>
-                        
+
                         <div className="flex justify-end space-x-2">
                           <Button
                             variant="outline"
@@ -513,7 +508,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
               <div className="text-sm text-gray-600">
                 Affichage de {startIndex + 1} à {Math.min(startIndex + reviewsPerPage, filteredReviews.length)} sur {filteredReviews.length} avis
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <Button
                   variant="outline"
@@ -523,7 +518,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                
+
                 <div className="flex items-center space-x-1">
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     const page = i + 1;
@@ -540,7 +535,7 @@ const ReviewsModal: React.FC<ReviewsModalProps> = ({
                     );
                   })}
                 </div>
-                
+
                 <Button
                   variant="outline"
                   size="sm"

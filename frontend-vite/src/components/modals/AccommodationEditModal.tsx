@@ -6,18 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Building, 
-  Save, 
-  X, 
-  Upload,
+import {
+  Building,
+  Save,
+  X,
   Eye,
-  MapPin,
-  Phone,
-  Mail,
-  Globe,
-  Clock,
-  CheckCircle,
   Plus,
   Trash2,
   Grid3X3
@@ -129,7 +122,7 @@ const AccommodationEditModal: React.FC<AccommodationEditModalProps> = ({
       ...prev,
       [field]: value
     }));
-    
+
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({
@@ -416,7 +409,7 @@ const AccommodationEditModal: React.FC<AccommodationEditModalProps> = ({
                         <p className="text-red-500 text-xs mt-1">{errors.image}</p>
                       )}
                     </div>
-                    
+
                     <div>
                       <Label htmlFor="fileUpload" className="text-sm font-medium">Ou télécharger un fichier</Label>
                       <Input
@@ -430,8 +423,8 @@ const AccommodationEditModal: React.FC<AccommodationEditModalProps> = ({
 
                     {formData.image && (
                       <div className="w-32 h-32 bg-gray-200 rounded-lg overflow-hidden">
-                        <img 
-                          src={formData.image} 
+                        <img
+                          src={formData.image}
                           alt="Aperçu"
                           className="w-full h-full object-cover"
                         />
@@ -479,13 +472,13 @@ const AccommodationEditModal: React.FC<AccommodationEditModalProps> = ({
                             Tout supprimer
                           </Button>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                           {formData.images.map((image, index) => (
                             <div key={index} className="relative group">
                               <div className="w-full h-24 bg-gray-200 rounded-lg overflow-hidden">
-                                <img 
-                                  src={image} 
+                                <img
+                                  src={image}
                                   alt={`Image ${index + 1}`}
                                   className="w-full h-full object-cover"
                                 />
@@ -605,7 +598,7 @@ const AccommodationEditModal: React.FC<AccommodationEditModalProps> = ({
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    
+
                     {formData.amenities && formData.amenities.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {formData.amenities.map((amenity, index) => (
@@ -641,7 +634,7 @@ const AccommodationEditModal: React.FC<AccommodationEditModalProps> = ({
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    
+
                     {formData.policies && formData.policies.length > 0 && (
                       <div className="space-y-2">
                         {formData.policies.map((policy, index) => (
@@ -666,29 +659,29 @@ const AccommodationEditModal: React.FC<AccommodationEditModalProps> = ({
               <Card>
                 <CardContent className="p-4">
                   <h3 className="font-semibold mb-4">Aperçu de l'établissement</h3>
-                  
+
                   {formData.image && (
                     <div className="w-full h-48 bg-gray-200 rounded-lg overflow-hidden mb-4">
-                      <img 
-                        src={formData.image} 
+                      <img
+                        src={formData.image}
                         alt="Aperçu"
                         className="w-full h-full object-cover"
                       />
                     </div>
                   )}
-                  
+
                   <div className="space-y-3">
                     <div>
                       <h4 className="text-lg font-semibold">{formData.name || 'Nom de l\'établissement'}</h4>
                       <p className="text-gray-600">{formData.type} • {formData.location}</p>
                     </div>
-                    
+
                     <div className="flex items-center space-x-4">
                       <span className="text-yellow-600 font-medium">⭐ {formData.rating || 0}/5</span>
                       <span className="text-gray-500">({formData.reviews || 0} avis)</span>
                       <span className="font-semibold text-green-600">{formData.price || 'Prix'}</span>
                     </div>
-                    
+
                     <div>
                       <p className="text-gray-700">
                         {formData.description || 'Description de l\'établissement...'}
@@ -724,7 +717,7 @@ const AccommodationEditModal: React.FC<AccommodationEditModalProps> = ({
               {isPreviewMode ? 'Modifier' : 'Aperçu'}
             </Button>
           </div>
-          
+
           <div className="flex space-x-2">
             <Button variant="outline" onClick={onClose}>
               <X className="h-4 w-4 mr-2" />

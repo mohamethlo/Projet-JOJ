@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,15 +7,10 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Flag, 
-  MessageSquare, 
-  AlertTriangle, 
-  User, 
-  Mail, 
-  Phone,
-  MapPin,
-  Calendar,
+import {
+  Flag,
+  MessageSquare,
+  AlertTriangle,
   Star,
   Send,
   CheckCircle,
@@ -59,7 +53,6 @@ const mockComments = [
 ];
 
 const SignalerPage: React.FC = () => {
-  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('report');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -91,10 +84,10 @@ const SignalerPage: React.FC = () => {
   const handleReportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulation d'envoi
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     setIsSubmitting(false);
     setIsSubmitted(true);
   };
@@ -102,10 +95,10 @@ const SignalerPage: React.FC = () => {
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulation d'envoi
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     setIsSubmitting(false);
     setCommentData({
       content: '',
@@ -114,7 +107,7 @@ const SignalerPage: React.FC = () => {
       contactMethod: 'email',
       contactInfo: ''
     });
-    
+
     // Afficher un message de confirmation
     alert('Votre commentaire a été soumis et sera publié après approbation par notre équipe de modération.');
   };
@@ -157,10 +150,10 @@ const SignalerPage: React.FC = () => {
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-2">Signalement Envoyé</h2>
             <p className="text-gray-600 mb-6">
-              Votre signalement a été transmis à notre équipe de modération. 
+              Votre signalement a été transmis à notre équipe de modération.
               Nous vous contacterons dans les plus brefs délais.
             </p>
-            <Button 
+            <Button
               onClick={() => {
                 setIsSubmitted(false);
                 setReportData({
@@ -299,8 +292,8 @@ const SignalerPage: React.FC = () => {
                   </div>
 
                   <div className="flex justify-end">
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       disabled={isSubmitting || !reportData.type || !reportData.description || !reportData.email}
                       className="flex items-center space-x-2"
                     >
@@ -338,7 +331,7 @@ const SignalerPage: React.FC = () => {
                     </div>
                     <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                       <p className="text-sm text-blue-700">
-                        <strong>Note :</strong> Les commentaires sont modérés avant publication. 
+                        <strong>Note :</strong> Les commentaires sont modérés avant publication.
                         Seuls les commentaires approuvés par notre équipe apparaissent ici.
                       </p>
                     </div>
@@ -364,9 +357,8 @@ const SignalerPage: React.FC = () => {
                                     {[...Array(5)].map((_, i) => (
                                       <Star
                                         key={i}
-                                        className={`h-4 w-4 ${
-                                          i < comment.rating! ? 'text-yellow-500 fill-current' : 'text-gray-300'
-                                        }`}
+                                        className={`h-4 w-4 ${i < comment.rating! ? 'text-yellow-500 fill-current' : 'text-gray-300'
+                                          }`}
                                       />
                                     ))}
                                   </div>
@@ -377,11 +369,10 @@ const SignalerPage: React.FC = () => {
                                 <div className="flex items-center space-x-4">
                                   <button
                                     onClick={() => handleLikeComment(comment.id)}
-                                    className={`flex items-center space-x-1 px-2 py-1 rounded-full transition-colors ${
-                                      likedComments.has(comment.id)
-                                        ? 'bg-blue-100 text-blue-600'
-                                        : 'hover:bg-gray-100 text-gray-500'
-                                    }`}
+                                    className={`flex items-center space-x-1 px-2 py-1 rounded-full transition-colors ${likedComments.has(comment.id)
+                                      ? 'bg-blue-100 text-blue-600'
+                                      : 'hover:bg-gray-100 text-gray-500'
+                                      }`}
                                   >
                                     <ThumbsUp className="h-4 w-4" />
                                     <span className="font-medium">
@@ -482,8 +473,8 @@ const SignalerPage: React.FC = () => {
 
                       <div>
                         <Label htmlFor="comment-rating">Note (optionnel)</Label>
-                        <Select 
-                          value={commentData.rating?.toString() || ''} 
+                        <Select
+                          value={commentData.rating?.toString() || ''}
                           onValueChange={(value) => handleCommentInputChange('rating', value ? parseInt(value) : null)}
                         >
                           <SelectTrigger>
@@ -499,8 +490,8 @@ const SignalerPage: React.FC = () => {
                         </Select>
                       </div>
 
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         disabled={isSubmitting || !commentData.content || !commentData.category}
                         className="w-full"
                       >
@@ -521,35 +512,35 @@ const SignalerPage: React.FC = () => {
             <div>
               <h3 className="font-medium text-gray-800 mb-2">🔒 Confidentialité</h3>
               <p className="mb-4">
-                Tous vos signalements sont traités de manière strictement confidentielle. 
+                Tous vos signalements sont traités de manière strictement confidentielle.
                 Vos informations personnelles ne seront jamais partagées avec des tiers.
               </p>
-              
+
               <h3 className="font-medium text-gray-800 mb-2">⚖️ Traitement</h3>
               <p>
-                Chaque signalement est examiné par notre équipe de modération dans les 24-48h. 
+                Chaque signalement est examiné par notre équipe de modération dans les 24-48h.
                 Nous vous contacterons uniquement si des informations supplémentaires sont nécessaires.
               </p>
             </div>
-            
+
             <div>
               <h3 className="font-medium text-gray-800 mb-2">✅ Commentaires</h3>
               <p className="mb-4">
-                Les commentaires sont soumis à modération avant publication. 
+                Les commentaires sont soumis à modération avant publication.
                 Seuls les commentaires respectueux et constructifs seront approuvés.
               </p>
-              
+
               <h3 className="font-medium text-gray-800 mb-2">🚫 Interdictions</h3>
               <p>
-                Sont interdits : le spam, le harcèlement, les propos discriminatoires, 
+                Sont interdits : le spam, le harcèlement, les propos discriminatoires,
                 les fausses informations et tout contenu illégal.
               </p>
             </div>
           </div>
-          
+
           <div className="mt-6 pt-4 border-t border-gray-200">
             <p className="text-xs text-gray-500 text-center">
-              En utilisant ce service, vous acceptez nos conditions d'utilisation et notre politique de confidentialité. 
+              En utilisant ce service, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
               Pour toute question, contactez-nous à : support@discoversenegal.sn
             </p>
           </div>

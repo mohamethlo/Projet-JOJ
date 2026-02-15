@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar, Clock, Users, CheckCircle, UserPlus, Star, Calculator, Info, MapPin } from 'lucide-react';
+import { CheckCircle, UserPlus, Star, Info, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import TicketModal from '@/components/tickets/TicketModal';
@@ -113,7 +113,7 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
     const checkOutDate = new Date(formData.bookingDetails.checkOut);
     const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
     const rooms = parseInt(formData.bookingDetails.rooms) || 1;
-    
+
     return basePrice * nights * rooms;
   };
 
@@ -168,11 +168,11 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
       if (step === 3) {
         return;
       }
-      
+
       // Vérifier s'il y a des données saisies
       const hasData = formData.contactInfo.name || formData.contactInfo.email || formData.contactInfo.phone ||
-                     formData.bookingDetails.checkIn || formData.bookingDetails.checkOut || formData.bookingDetails.guests;
-      
+        formData.bookingDetails.checkIn || formData.bookingDetails.checkOut || formData.bookingDetails.guests;
+
       if (hasData) {
         // Demander confirmation avant de fermer
         const confirmed = window.confirm(
@@ -182,7 +182,7 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
           return; // Ne pas fermer si l'utilisateur annule
         }
       }
-      
+
       // Fermer normalement
       handleClose();
     }
@@ -193,7 +193,7 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
   };
 
   const totalPrice = calculateTotalPrice();
-  const nights = formData.bookingDetails.checkIn && formData.bookingDetails.checkOut ? 
+  const nights = formData.bookingDetails.checkIn && formData.bookingDetails.checkOut ?
     Math.ceil((new Date(formData.bookingDetails.checkOut).getTime() - new Date(formData.bookingDetails.checkIn).getTime()) / (1000 * 60 * 60 * 24)) : 0;
 
   return (
@@ -212,9 +212,8 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
                   {[1, 2, 3].map((stepNumber) => (
                     <div
                       key={stepNumber}
-                      className={`w-2 h-2 rounded-full ${
-                        stepNumber <= step ? 'bg-blue-500' : 'bg-gray-300'
-                      }`}
+                      className={`w-2 h-2 rounded-full ${stepNumber <= step ? 'bg-blue-500' : 'bg-gray-300'
+                        }`}
                     />
                   ))}
                 </div>
@@ -317,7 +316,7 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
                   <Button variant="outline" onClick={handleClose} className="text-red-600 border-red-600 hover:bg-red-50">
                     Annuler la réservation
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => setStep(2)}
                     disabled={!formData.contactInfo.name || !formData.contactInfo.email || !formData.contactInfo.phone}
                     className="bg-blue-600 hover:bg-blue-700"
@@ -332,7 +331,7 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold mb-4">Détails de la réservation</h3>
-                  
+
                   {/* Information importante */}
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                     <div className="flex items-start space-x-3">
@@ -344,7 +343,7 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
                       <div>
                         <h4 className="text-sm font-semibold text-blue-800 mb-1">Politique de réservation</h4>
                         <p className="text-sm text-blue-700">
-                          Annulation gratuite jusqu'à 24h avant l'arrivée. 
+                          Annulation gratuite jusqu'à 24h avant l'arrivée.
                           <strong> Arrivée : {accommodation.checkIn || '14h00'} - Départ : {accommodation.checkOut || '12h00'}</strong>
                         </p>
                       </div>
@@ -531,7 +530,7 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
                       Précédent
                     </Button>
                   </div>
-                  <Button 
+                  <Button
                     onClick={handleSubmit}
                     disabled={!formData.bookingDetails.checkIn || !formData.bookingDetails.checkOut || !formData.bookingDetails.guests || !formData.bookingDetails.rooms}
                     className="bg-green-600 hover:bg-green-700"
