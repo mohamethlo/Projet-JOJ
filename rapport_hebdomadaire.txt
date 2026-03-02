@@ -1,0 +1,149 @@
+RAPPORT D'ACTIVITÉ HEBDOMADAIRE - PROJET DISCOVER SÉNÉGAL
+Période : Du 24 Février au 1er Mars 2026
+
+OBJET : Mise en place de l'espace Agences de Voyage, système d'engagement visiteur, amélioration des interfaces et corrections diverses
+
+═══════════════════════════════════════════════════════════════
+I. FONCTIONNALITÉ MAJEURE : ESPACE AGENCES DE VOYAGE
+═══════════════════════════════════════════════════════════════
+
+La réalisation principale de cette semaine est la création d'un espace dédié
+aux agences de voyage, similaire à ce qui existe déjà pour les hôtels et les
+restaurants.
+
+1.1 Nouveau Rôle Utilisateur "Agency"
+   * Un nouveau rôle `agency` a été ajouté au système d'authentification.
+   * Un compte de test est disponible : agence@test.com
+   * Les agences ont un dashboard personnalisé distinct de celui des hôtels.
+
+1.2 Page Publique des Agences (/agencies)
+   * Création d'une nouvelle page de listing des agences accessibles à tous
+     les visiteurs, sans connexion requise.
+   * Interface avec filtres par type de circuit (Safari, Éco-Tourisme, etc.)
+   * Cartes d'agences avec photo, description, note et spécialités.
+
+1.3 Profils Détaillés des Agences
+   * La page de profil d'établissement a été adaptée pour afficher un onglet
+     "Offres & Circuits" à la place de l'onglet "Chambres" habituellement
+     réservé aux hôtels.
+
+1.4 Dashboard Agence - Page "Nos Offres & Circuits"
+   * Création de la page AgencyOffersPage.tsx entièrement dédiée aux agences.
+   * Remplacement de la vue "Gestion des Chambres" (qui s'affichait par erreur)
+     par une interface métier adaptée aux voyages organisés.
+   * Interface avec 7 offres mockées variées (Safari, Culturel, Aventure,
+     Éco-Tourisme, Photo & Art, Détente, Grand Tour).
+
+═══════════════════════════════════════════════════════════════
+II. AMÉLIORATIONS DES CARTES D'OFFRES
+═══════════════════════════════════════════════════════════════
+
+2.1 Redesign Premium des Cartes
+   * Badges de type colorés selon la catégorie (Safari en amber, Culturel en
+     violet, Aventure en rouge, Éco-Tourisme en teal, Détente en rose).
+   * Affichage des notes et avis directement sur l'image hero de chaque carte.
+   * Localisation (destination) visible en superposition sur la photo.
+   * Barre de taux de remplissage (nombre d'inscrits vs capacité maximum).
+   * Effet zoom sur l'image au survol de la carte.
+   * Tags "services inclus" plus compacts, avec icône de vérification.
+   * Bouton "Ajouter une offre" sous forme de carte fantôme interactive.
+
+2.2 Tableau de Bord Statistique
+   * 4 indicateurs clés en haut de page : Total Offres, Offres Actives,
+     Voyageurs Inscrits, Taux de Remplissage global.
+
+2.3 Bouton "Détail" sur les Cartes
+   * Chaque carte dispose désormais de 3 actions : Détail, Modifier, Supprimer.
+   * Le bouton "Détail" ouvre un modal immersif complet comprenant :
+     - Image hero grande avec navigation de galerie (flèches + indicateurs)
+     - Badge de type, destination et note
+     - Prix mis en avant dans un encadré
+     - 3 statistiques clés (Durée, Capacité, Inscrits)
+     - Barre de taux de remplissage avec couleur dynamique
+     - Description complète du circuit
+     - Tous les services inclus (liste exhaustive)
+     - Boutons "Modifier" et "Fermer" en bas
+
+═══════════════════════════════════════════════════════════════
+III. SYSTÈME D'ENGAGEMENT VISITEUR INTELLIGENT (MODE INVITÉ)
+═══════════════════════════════════════════════════════════════
+
+L'une des fonctionnalités les plus stratégiques de la semaine est la mise en
+place d'un système complet de conversion des visiteurs anonymes en membres
+inscrits, sans bloquer leur navigation.
+
+3.1 Popup de Connexion sur Toutes les Actions Protégées
+   * En mode invité, chaque tentative d'interaction (liker, sauvegarder,
+     réserver, contacter un guide, commenter, etc.) déclenche automatiquement
+     un popup élégant invitant à se connecter ou à créer un compte.
+   * Le popup s'affiche de manière non-bloquante : le visiteur reste sur la
+     page et peut continuer à explorer même après sa fermeture.
+   * Implémenté via le hook useProtectedAction.ts et le composant AuthModal.tsx,
+     intégrés sur tous les boutons interactifs clés de la plateforme
+     (Hébergements, Événements, Flux, Profils, Vidéos).
+
+3.2 Page Immersive de Conversion (VisitorEngagementModal)
+   * Après 2 tentatives d'actions protégées (ou après un certain scroll),
+     une page immersive plein écran s'affiche automatiquement, invitant
+     le visiteur à rejoindre DiscoverSénégal.
+   * Design Terre & Or premium avec animation pour capter l'attention.
+   * Message personnalisé mettant en avant les bénéfices de l'inscription.
+   * L'utilisateur peut toujours choisir de fermer la page et continuer
+     à explorer en mode invité.
+   * Implémenté via le contexte VisitorEngagementContext.tsx qui tracke
+     les interactions et le scroll (déclencheur à 6 scrolls ou 2 actions).
+
+   => IMPACT BUSINESS : Ce système crée un "besoin organique" d'inscription.
+      Le visiteur découvre du contenu de valeur, tente d'interagir, et
+      s'inscrit pour ne pas perdre ses actions. Ce mécanisme garantit une
+      base d'utilisateurs plus qualifiée et engagée que les inscriptions
+      forcées à l'entrée du site.
+
+
+═══════════════════════════════════════════════════════════════
+IV. AUTRES CORRECTIONS ET AMÉLIORATIONS
+═══════════════════════════════════════════════════════════════
+
+4.1 Bouton Menu sur les Cartes Restaurants
+   * Ajout d'un bouton "Menu" sur les cartes de restaurants dans le flux.
+   * Redirection directe vers l'onglet Menu de la page publique du restaurant.
+
+4.2 Bouton Partager Fonctionnel
+   * Le bouton "Partager" dans le flux de découverte est maintenant actif.
+   * Utilise l'API Web Share native du navigateur.
+   * Fallback automatique : copie du lien dans le presse-papiers si Web Share
+     n'est pas supporté par le navigateur.
+
+4.3 Onglet Menu sur les Pages Publiques de Restaurants
+   * Les profils publics des restaurants disposent maintenant d'un onglet "Menu"
+     affichant les plats par catégorie avec photos, descriptions et prix.
+
+4.4 Correction du Rechargement des Images
+   * Résolution d'un problème d'affichage des images sur la page d'accueil
+     (ERR_CONNECTION_REFUSED) dû à l'interruption du serveur de développement.
+
+═══════════════════════════════════════════════════════════════
+V. ÉTAT TECHNIQUE ET PERSPECTIVE
+═══════════════════════════════════════════════════════════════
+
+FICHIERS MODIFIÉS CETTE SEMAINE :
+  - src/context/AuthContext.tsx      (ajout rôle 'agency')
+  - src/components/layout/Sidebar.tsx (liens agences)
+  - src/App.tsx                       (nouvelles routes)
+  - src/lib/mockData.ts               (données agences)
+  - src/pages/agency/AgencyPage.tsx   (nouveau - listing public)
+  - src/pages/agency/AgencyOffersPage.tsx (nouveau - dashboard)
+  - src/pages/establishment/EstablishmentProfilePage.tsx (onglet offres)
+  - src/pages/feed/DiscoverFeedPage.tsx  (bouton partager)
+  - src/pages/accommodation/AccommodationPage.tsx (bouton Menu)
+
+PROCHAINES PISTES ENVISAGEABLES :
+  - Connexion backend réelle pour les agences (actuellement mocké)
+  - Système de réservation spécifique aux circuits
+  - Page de profil public détaillée pour chaque agence
+  - Filtres avancés sur la page /agencies (prix, durée, destination)
+
+═══════════════════════════════════════════════════════════════
+
+Rédigé par l'Assistant IA Antigravity
+Date de rédaction : 01 Mars 2026

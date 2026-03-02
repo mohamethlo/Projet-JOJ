@@ -8,6 +8,8 @@ import { ReviewModal, ReviewsModal } from '@/components/modals';
 import { useAuth } from '@/context/AuthContext';
 import { getReviewStats, getRecentReviews } from '@/lib/mockReviews';
 
+import useProtectedAction from '../../hooks/useProtectedAction';
+
 interface EventProps {
   id: string;
   title: string;
@@ -29,6 +31,7 @@ const EventCard: React.FC<{
   event,
 }) => {
     const { user } = useAuth();
+    const { performAction, AuthModalComponent } = useProtectedAction();
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -46,7 +49,7 @@ const EventCard: React.FC<{
 
     const handleRegister = (e: React.MouseEvent) => {
       e.stopPropagation();
-      setIsRegistrationModalOpen(true);
+      performAction(() => setIsRegistrationModalOpen(true));
     };
 
     const handleViewDetails = (e: React.MouseEvent) => {
@@ -56,7 +59,7 @@ const EventCard: React.FC<{
 
     const handleReview = (e: React.MouseEvent) => {
       e.stopPropagation();
-      setIsReviewModalOpen(true);
+      performAction(() => setIsReviewModalOpen(true));
     };
 
     const handleViewReviews = (e: React.MouseEvent) => {
@@ -252,6 +255,7 @@ const EventCard: React.FC<{
           targetType="event"
           targetName={event.title}
         />
+        {AuthModalComponent}
       </>
     );
   };

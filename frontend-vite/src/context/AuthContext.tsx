@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security' | 'hotel' | 'restaurant';
+export type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security' | 'hotel' | 'restaurant' | 'agency';
 
 export interface User {
   id: string;
@@ -51,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         else if (role === 'guide') parsed.name = 'Amadou Sarr';
         else if (role === 'hotel') parsed.name = 'Terrou-Bi Resort';
         else if (role === 'restaurant') parsed.name = 'La Fourchette';
+        else if (role === 'agency') parsed.name = 'Sénégal Découvertes';
         else parsed.name = 'Voyageur';
         localStorage.setItem('discoversenegal_user', JSON.stringify(parsed));
       }
@@ -72,6 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       else if (email.includes('local')) role = 'local';
       else if (email.includes('restaurant')) role = 'restaurant';
       else if (email.includes('hotel') || email.includes('auberge')) role = 'hotel';
+      else if (email.includes('agence') || email.includes('agency')) role = 'agency';
 
       const nameFromEmail = email.split('@')[0];
       let name = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
@@ -82,6 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         else if (role === 'guide') name = 'Amadou Sarr';
         else if (role === 'hotel') name = 'Terrou-Bi Resort';
         else if (role === 'restaurant') name = 'La Fourchette';
+        else if (role === 'agency') name = 'Sénégal Découvertes';
         else name = 'Voyageur';
       }
 

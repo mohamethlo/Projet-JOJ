@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, MapPin, CheckCircle, Heart, Clock, Award, MessageCircle, Eye } from 'lucide-react';
 import { GuideDetailsModal, GuideBookingModal, GuideContactModal } from '@/components/modals';
+import useProtectedAction from '../../hooks/useProtectedAction';
 
 interface GuideProps {
   id: string;
@@ -41,18 +42,25 @@ const GuideCard: React.FC<{
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+    const { performAction, AuthModalComponent } = useProtectedAction();
 
     const handleFavorite = (e: React.MouseEvent) => {
       e.stopPropagation();
-      setIsFavorited(!isFavorited);
+      performAction(() => {
+        setIsFavorited(!isFavorited);
+      });
     };
 
     const handleReservation = () => {
-      setIsBookingModalOpen(true);
+      performAction(() => {
+        setIsBookingModalOpen(true);
+      });
     };
 
     const handleContact = () => {
-      setIsContactModalOpen(true);
+      performAction(() => {
+        setIsContactModalOpen(true);
+      });
     };
 
 
@@ -183,6 +191,7 @@ const GuideCard: React.FC<{
             onClose={() => setIsContactModalOpen(false)}
             guide={guide}
           />
+          {AuthModalComponent}
         </>
       );
     }
@@ -305,6 +314,7 @@ const GuideCard: React.FC<{
           onClose={() => setIsContactModalOpen(false)}
           guide={guide}
         />
+        {AuthModalComponent}
       </>
     );
   };

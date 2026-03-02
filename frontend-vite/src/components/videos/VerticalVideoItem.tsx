@@ -6,6 +6,7 @@ import { useFeed } from '@/context/FeedContext';
 import { useAuth } from '@/context/AuthContext';
 import { Comment } from '@/types/feed';
 import { toast } from 'sonner';
+import useProtectedAction from '../../hooks/useProtectedAction';
 
 interface VerticalVideoItemProps {
     video: {
@@ -32,6 +33,7 @@ interface VerticalVideoItemProps {
 const VerticalVideoItem: React.FC<VerticalVideoItemProps> = ({ video, isActive }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const { likePost, savePost } = useFeed();
+    const { performAction, AuthModalComponent } = useProtectedAction();
     const [isPlaying, setIsPlaying] = useState(false);
     const [isFollowed, setIsFollowed] = useState(false);
     const [showHeartAnim, setShowHeartAnim] = useState(false);
@@ -96,9 +98,11 @@ const VerticalVideoItem: React.FC<VerticalVideoItemProps> = ({ video, isActive }
     const handleDoubleTap = () => {
         const now = Date.now();
         if (now - lastTap.current < 300) {
-            if (!video.isLiked) handleLike();
-            setShowHeartAnim(true);
-            setTimeout(() => setShowHeartAnim(false), 800);
+            performAction(() => {
+                if (!video.isLiked) handleLike();
+                setShowHeartAnim(true);
+                setTimeout(() => setShowHeartAnim(false), 800);
+            });
         }
         lastTap.current = now;
     };
@@ -168,7 +172,7 @@ const VerticalVideoItem: React.FC<VerticalVideoItemProps> = ({ video, isActive }
                         <AvatarFallback>{video.author.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <button
-                        onClick={(e) => { e.stopPropagation(); setIsFollowed(!isFollowed); }}
+                        onClick={(e) => { e.stopPropagation(); performAction(() => setIsFollowed(!isFollowed)); }}
                         className={cn(
                             "absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full flex items-center justify-center border-2 border-white transition-all",
                             isFollowed ? "bg-emerald-500 scale-90" : "bg-[#F2A900] hover:scale-110"
@@ -180,7 +184,7 @@ const VerticalVideoItem: React.FC<VerticalVideoItemProps> = ({ video, isActive }
 
                 {/* Like */}
                 <button
-                    onClick={(e) => { e.stopPropagation(); handleLike(); }}
+                    onClick={(e) => { e.stopPropagation(); performAction(() => handleLike()); }}
                     className="flex flex-col items-center gap-1 group"
                 >
                     <div className={cn(
@@ -209,7 +213,7 @@ const VerticalVideoItem: React.FC<VerticalVideoItemProps> = ({ video, isActive }
 
                 {/* Save */}
                 <button
-                    onClick={(e) => { e.stopPropagation(); handleSave(); }}
+                    onClick={(e) => { e.stopPropagation(); performAction(() => handleSave()); }}
                     className="flex flex-col items-center gap-1 group"
                 >
                     <div className={cn(
@@ -317,7 +321,7 @@ const VerticalVideoItem: React.FC<VerticalVideoItemProps> = ({ video, isActive }
                                     className="w-full bg-[#2D1B08]/5 rounded-full px-4 py-2.5 text-xs text-[#2D1B08] placeholder:text-[#5D4037]/40 focus:outline-none pr-10"
                                 />
                                 <button
-                                    onClick={handlePublishComment}
+                                    onClick={() => performAction(() => handlePublishComment())}
                                     disabled={!newComment.trim()}
                                     className={cn(
                                         "absolute right-2 top-1/2 -translate-y-1/2 transition-colors",
@@ -401,6 +405,7 @@ const VerticalVideoItem: React.FC<VerticalVideoItemProps> = ({ video, isActive }
                     to { transform: rotate(360deg); }
                 }
             `}} />
+            {AuthModalComponent}
         </div>
     );
 };

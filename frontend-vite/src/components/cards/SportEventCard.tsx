@@ -15,6 +15,8 @@ import { EventRegistrationModal, EventDetailsModal } from '@/components/modals';
 import { ReviewModal, ReviewsModal } from '@/components/modals';
 import { useAuth } from '@/context/AuthContext';
 
+import useProtectedAction from '../../hooks/useProtectedAction';
+
 interface SportEventCardProps {
   event: {
     id: string;
@@ -52,6 +54,7 @@ interface SportEventCardProps {
 
 const SportEventCard: React.FC<SportEventCardProps> = ({ event }) => {
   const { user } = useAuth();
+  const { performAction, AuthModalComponent } = useProtectedAction();
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -103,7 +106,7 @@ const SportEventCard: React.FC<SportEventCardProps> = ({ event }) => {
 
   const handleReserve = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsReservationModalOpen(true);
+    performAction(() => setIsReservationModalOpen(true));
   };
 
   const handleViewDetails = (e: React.MouseEvent) => {
@@ -113,7 +116,7 @@ const SportEventCard: React.FC<SportEventCardProps> = ({ event }) => {
 
   const handleReview = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsReviewModalOpen(true);
+    performAction(() => setIsReviewModalOpen(true));
   };
 
   const handleViewReviews = (e: React.MouseEvent) => {
@@ -328,6 +331,7 @@ const SportEventCard: React.FC<SportEventCardProps> = ({ event }) => {
         targetType="event"
         targetName={event.title}
       />
+      {AuthModalComponent}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +26,8 @@ interface AccommodationProps {
   capacity?: number;
   checkIn?: string;
   checkOut?: string;
+  roomName?: string;
+  roomType?: string;
 }
 
 interface AccommodationBookingModalProps {
@@ -61,6 +63,21 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
       additionalServices: ''
     }
   });
+
+  // Pre-fill form data if a specific room is selected
+  useEffect(() => {
+    if (isOpen && accommodation.roomType) {
+      setFormData(prev => ({
+        ...prev,
+        bookingDetails: {
+          ...prev.bookingDetails,
+          roomType: accommodation.roomName || accommodation.roomType || '',
+          guests: accommodation.capacity ? `${accommodation.capacity} personne${accommodation.capacity > 1 ? 's' : ''}` : prev.bookingDetails.guests,
+          rooms: '1 chambre'
+        }
+      }));
+    }
+  }, [isOpen, accommodation]);
 
   const roomTypes = [
     'Chambre Standard',
@@ -243,9 +260,16 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
                     </div>
                   </div>
                   <div className="flex items-center justify-between mt-3">
-                    <Badge variant="outline" className="text-blue-600 border-blue-600">
-                      {accommodation.price} {accommodation.type === 'Restaurant' ? 'par personne' : 'par nuit'}
-                    </Badge>
+                    <div className="flex gap-2">
+                      <Badge variant="outline" className="text-blue-600 border-blue-600">
+                        {accommodation.price} {accommodation.type === 'Restaurant' ? 'par personne' : 'par nuit'}
+                      </Badge>
+                      {accommodation.roomName && (
+                        <Badge className="bg-blue-600 text-white border-none shadow-sm animate-pulse">
+                          Réservation spécifique
+                        </Badge>
+                      )}
+                    </div>
                     <Badge variant="outline" className="text-green-600 border-green-600">
                       {accommodation.availability}
                     </Badge>
@@ -376,9 +400,13 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="guests">Nombre d'invités *</Label>
-                        <Select value={formData.bookingDetails.guests} onValueChange={(value) => handleInputChange('bookingDetails.guests', value)}>
-                          <SelectTrigger>
+                        <Label htmlFor="guests">Nombre d'invités {accommodation.roomName && <span className="text-[10px] text-blue-600 ml-1 font-bold">(Verrouillé)</span>}</Label>
+                        <Select
+                          value={formData.bookingDetails.guests}
+                          onValueChange={(value) => handleInputChange('bookingDetails.guests', value)}
+                          disabled={!!accommodation.roomName}
+                        >
+                          <SelectTrigger className={accommodation.roomName ? "bg-gray-100 cursor-not-allowed border-blue-100" : ""}>
                             <SelectValue placeholder="Nombre d'invités" />
                           </SelectTrigger>
                           <SelectContent>
@@ -391,9 +419,13 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
                         </Select>
                       </div>
                       <div>
-                        <Label htmlFor="rooms">Nombre de chambres *</Label>
-                        <Select value={formData.bookingDetails.rooms} onValueChange={(value) => handleInputChange('bookingDetails.rooms', value)}>
-                          <SelectTrigger>
+                        <Label htmlFor="rooms">Nombre de chambres {accommodation.roomName && <span className="text-[10px] text-blue-600 ml-1 font-bold">(Verrouillé)</span>}</Label>
+                        <Select
+                          value={formData.bookingDetails.rooms}
+                          onValueChange={(value) => handleInputChange('bookingDetails.rooms', value)}
+                          disabled={!!accommodation.roomName}
+                        >
+                          <SelectTrigger className={accommodation.roomName ? "bg-gray-100 cursor-not-allowed border-blue-100" : ""}>
                             <SelectValue placeholder="Nombre de chambres" />
                           </SelectTrigger>
                           <SelectContent>
@@ -408,9 +440,13 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
                     </div>
 
                     <div>
-                      <Label htmlFor="roomType">Type de chambre</Label>
-                      <Select value={formData.bookingDetails.roomType} onValueChange={(value) => handleInputChange('bookingDetails.roomType', value)}>
-                        <SelectTrigger>
+                      <Label htmlFor="roomType">Type de chambre {accommodation.roomName && <span className="text-[10px] text-blue-600 ml-1 font-bold">(Verrouillé)</span>}</Label>
+                      <Select
+                        value={formData.bookingDetails.roomType}
+                        onValueChange={(value) => handleInputChange('bookingDetails.roomType', value)}
+                        disabled={!!accommodation.roomName}
+                      >
+                        <SelectTrigger className={accommodation.roomName ? "bg-gray-100 cursor-not-allowed border-blue-100" : ""}>
                           <SelectValue placeholder="Sélectionnez le type de chambre" />
                         </SelectTrigger>
                         <SelectContent>

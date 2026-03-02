@@ -60,11 +60,13 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, isTransparent: propIsTrans
   };
 
   const categories = [
+    { name: 'Accueil', path: '/' },
     { name: 'Echo Sénégal', path: '/echos-senegal', special: true },
     { name: 'Vidéos', path: '/videos', special: true },
     { name: 'Histoires', path: '/history' },
     { name: 'Cultures', path: '/map' },
-    { name: 'Hébergements', path: '/accommodation' },
+    { name: 'Hébergement', path: '/accommodation' },
+    { name: 'Restauration', path: '/restaurants' },
     { name: 'Guides', path: '/guides' },
     { name: 'Événements', path: '/events' }
   ];
@@ -86,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, isTransparent: propIsTrans
       )}>
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
           {/* ROW 1: Identity & Search & Actions */}
-          <div className="flex items-center justify-between h-14 gap-4">
+          <div className="flex items-center justify-between h-14 gap-2 sm:gap-4">
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
@@ -97,21 +99,34 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, isTransparent: propIsTrans
                 <MenuIcon size={22} />
               </Button>
 
-              {!user && (
-                <Link to="/" className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg overflow-hidden border-2 border-[#F2A900] bg-white p-0.5">
+              <div className="flex items-center gap-3">
+                <Link to="/" className="flex items-center gap-2 group transition-all hover:scale-105 active:scale-95">
+                  <div className="w-8 h-8 rounded-lg overflow-hidden border-2 border-[#F2A900] bg-white p-0.5 shadow-sm group-hover:border-[#1B5E20] transition-colors">
                     <img src="/images/nouveau_logo.jpeg" alt="Logo" className="w-full h-full object-contain" />
                   </div>
-                  <span className={cn("text-lg font-black tracking-tighter truncate", isTransparent ? "text-white" : "text-[#1B5E20]")}>
-                    DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span>
-                  </span>
+                  {!user && (
+                    <span className={cn("text-lg font-black tracking-tighter truncate hidden xs:block", isTransparent ? "text-white" : "text-[#1B5E20]")}>
+                      DISCOVER <span className="text-[#F2A900]">SÉNÉGAL</span>
+                    </span>
+                  )}
                 </Link>
-              )}
+
+                {!user && (
+                  <div className="bg-[#F2A900]/10 border border-[#F2A900]/20 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full flex items-center gap-1 sm:gap-1.5 shadow-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#F2A900] animate-pulse shrink-0"></div>
+                    <span className="text-[8px] sm:text-[9px] font-black text-[#F2A900] uppercase tracking-widest whitespace-nowrap">
+                      <span className="hidden xs:inline">Mode</span> Visiteur
+                    </span>
+                  </div>
+                )}
+              </div>
 
               {user && (
-                <h2 className={cn("text-lg font-black tracking-tight hidden sm:block", isTransparent ? "text-white" : "text-[#2D1B08]")}>
-                  {user.name}
-                </h2>
+                <div className="flex items-center gap-2">
+                  <h2 className={cn("text-lg font-black tracking-tight hidden sm:block", isTransparent ? "text-white" : "text-[#2D1B08]")}>
+                    {user.name}
+                  </h2>
+                </div>
               )}
             </div>
 
@@ -156,8 +171,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, isTransparent: propIsTrans
 
               {!user ? (
                 <div className="flex items-center gap-2 sm:gap-4">
-                  <Link to="/auth/login" className={cn("text-xs font-black uppercase tracking-wider hover:text-[#F2A900] transition-colors", isTransparent ? "text-white" : "text-[#2D1B08]")}>
-                    Connexion
+                  <Link to="/auth/login" className={cn("text-[10px] sm:text-xs font-black uppercase tracking-wider hover:text-[#F2A900] transition-colors whitespace-nowrap", isTransparent ? "text-white" : "text-[#2D1B08]")}>
+                    <span className="hidden xs:inline">Connexion</span>
+                    <span className="xs:hidden">Login</span>
                   </Link>
                   <Link to="/auth/register">
                     <Button size="sm" className="bg-[#1B5E20] hover:bg-[#154618] text-white font-black rounded-full h-9 px-4 text-[10px] uppercase tracking-widest hidden xs:flex">

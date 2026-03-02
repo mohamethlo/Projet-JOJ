@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useVisitorEngagement } from '@/context/VisitorEngagementContext';
+import { Toaster } from 'sonner';
 import {
     Heart,
     MessageCircle,
@@ -54,6 +56,7 @@ import ModernVideoPlayer from '@/components/feed/ModernVideoPlayer';
 import { Comment, Post } from '@/types/feed';
 import { MOCK_POSTS } from '@/data/mockFeedData';
 import { useFeed } from '@/context/FeedContext';
+import useProtectedAction from '../../hooks/useProtectedAction';
 
 const CATEGORIES = [
     { id: 'culture', label: 'Culture', color: 'from-orange-500 to-amber-600' },
@@ -67,6 +70,8 @@ const CATEGORIES = [
 const PostCard = ({ post }: { post: Post }) => {
     const { user: currentUser } = useAuth();
     const { addNotification } = useNotifications();
+    const { performAction, AuthModalComponent } = useProtectedAction();
+    const navigate = useNavigate();
     const [showComments, setShowComments] = useState(false);
     const [newComment, setNewComment] = useState('');
     const [localComments, setLocalComments] = useState<Comment[]>(post.mockComments || []);
@@ -75,28 +80,32 @@ const PostCard = ({ post }: { post: Post }) => {
     const { likePost, savePost } = useFeed();
 
     const handleLike = () => {
-        likePost(post.id);
+        performAction(() => {
+            likePost(post.id);
 
-        if (!post.isLiked && currentUser?.id !== post.author.id) {
-            addNotification({
-                type: 'like',
-                title: 'Nouveau J\'aime',
-                message: `${currentUser?.name || 'Un utilisateur'} a aimé votre publication: "${post.content.substring(0, 30)}..."`,
-                authorId: post.author.id,
-                link: `/ echos - senegal ? postId = ${post.id} `
-            });
-        }
+            if (!post.isLiked && currentUser?.id !== post.author.id) {
+                addNotification({
+                    type: 'like',
+                    title: 'Nouveau J\'aime',
+                    message: `${currentUser?.name || 'Un utilisateur'} a aimé votre publication: "${post.content.substring(0, 30)}..."`,
+                    authorId: post.author.id,
+                    link: `/ echos - senegal ? postId = ${post.id} `
+                });
+            }
+        });
     };
 
     const handleSave = () => {
-        savePost(post.id);
-        const savedPosts = JSON.parse(localStorage.getItem('discoversenegal_saved_posts') || '[]');
-        if (!post.isSaved) {
-            localStorage.setItem('discoversenegal_saved_posts', JSON.stringify([...savedPosts, post.id]));
-        } else {
-            localStorage.setItem('discoversenegal_saved_posts', JSON.stringify(savedPosts.filter((id: string) => id !== post.id)));
-        }
-        window.dispatchEvent(new Event('storage_updated'));
+        performAction(() => {
+            savePost(post.id);
+            const savedPosts = JSON.parse(localStorage.getItem('discoversenegal_saved_posts') || '[]');
+            if (!post.isSaved) {
+                localStorage.setItem('discoversenegal_saved_posts', JSON.stringify([...savedPosts, post.id]));
+            } else {
+                localStorage.setItem('discoversenegal_saved_posts', JSON.stringify(savedPosts.filter((id: string) => id !== post.id)));
+            }
+            window.dispatchEvent(new Event('storage_updated'));
+        });
     };
 
     const handleDeleteComment = (commentId: string) => {
@@ -114,43 +123,74 @@ const PostCard = ({ post }: { post: Post }) => {
     const handlePublishComment = () => {
         if (!newComment.trim()) return;
 
-        const comment: Comment = {
-            id: Date.now().toString(),
-            author: currentUser?.name || 'Visiteur',
-            avatar: currentUser?.avatar || '/images/nouveau_logo.jpeg',
-            text: newComment,
-            date: 'À l\'instant',
-            replies: []
-        };
-
-        if (replyingTo) {
-            const updateReplies = (comments: Comment[]): Comment[] => {
-                return comments.map(c => {
-                    if (c.id === replyingTo.id) {
-                        return { ...c, replies: [...(c.replies || []), comment] };
-                    }
-                    if (c.replies && c.replies.length > 0) {
-                        return { ...c, replies: updateReplies(c.replies) };
-                    }
-                    return c;
-                });
+        performAction(() => {
+            const comment: Comment = {
+                id: Date.now().toString(),
+                author: currentUser?.name || 'Visiteur',
+                avatar: currentUser?.avatar || '/images/nouveau_logo.jpeg',
+                text: newComment,
+                date: 'À l\'instant',
+                replies: []
             };
-            setLocalComments(updateReplies(localComments));
-            setReplyingTo(null);
-        } else {
-            setLocalComments([comment, ...localComments]);
-            // Notify post author
-            if (currentUser?.id !== post.author.id) {
+
+            if (replyingTo) {
+                const updateReplies = (comments: Comment[]): Comment[] => {
+                    return comments.map(c => {
+                        if (c.id === replyingTo.id) {
+                            return { ...c, replies: [...(c.replies || []), comment] };
+                        }
+                        if (c.replies && c.replies.length > 0) {
+                            return { ...c, replies: updateReplies(c.replies) };
+                        }
+                        return c;
+                    });
+                };
+                setLocalComments(updateReplies(localComments));
+                setReplyingTo(null);
+            } else {
+                setLocalComments([comment, ...localComments]);
+                // Notify post author
+                if (currentUser?.id !== post.author.id) {
+                    addNotification({
+                        type: 'comment',
+                        title: 'Nouveau Commentaire',
+                        message: `${currentUser?.name || 'Un utilisateur'} a commenté votre publication.`,
+                        authorId: post.author.id,
+                        link: `/echos-senegal?postId=${post.id}`
+                    });
+                }
+            }
+            setNewComment('');
+        });
+    };
+
+    const handleShare = async () => {
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: `Découvrez la publication de ${post.author.name} sur DiscoverSenegal`,
+                    text: post.content,
+                    url: window.location.origin + `/echos-senegal?postId=${post.id}`,
+                });
                 addNotification({
-                    type: 'comment',
-                    title: 'Nouveau Commentaire',
-                    message: `${currentUser?.name || 'Un utilisateur'} a commenté votre publication.`,
-                    authorId: post.author.id,
-                    link: `/ echos - senegal ? postId = ${post.id} `
+                    type: 'system',
+                    title: 'Partagé avec succès',
+                    message: 'La publication a été partagée.',
+                    authorId: 'system',
+                });
+            } else {
+                // Fallback: Copy to clipboard
+                await navigator.clipboard.writeText(window.location.origin + `/echos-senegal?postId=${post.id}`);
+                addNotification({
+                    type: 'system',
+                    title: 'Lien copié',
+                    message: 'Le lien de la publication a été copié dans le presse-papiers.',
+                    authorId: 'system',
                 });
             }
+        } catch (error) {
+            console.error('Error sharing:', error);
         }
-        setNewComment('');
     };
 
     const CommentItem = ({ comment, isReply = false }: { comment: Comment, isReply?: boolean }) => (
@@ -347,15 +387,16 @@ const PostCard = ({ post }: { post: Post }) => {
                             <MessageCircle size={18} className={cn("sm:w-5 sm:h-5", showComments ? "fill-current" : "")} />
                             <span className="text-[11px] sm:text-xs font-black">{post.comments}</span>
                         </button>
-                        <button className="text-[#5D4037]/60 hover:text-[#F2A900] transition-all">
+                        <button className="text-[#5D4037]/60 hover:text-[#F2A900] transition-all" onClick={handleShare}>
                             <Share2 size={18} className="sm:w-5 sm:h-5" />
                         </button>
-                        <Link to={`/ messages ? userId = ${post.author.id} `}>
-                            <button className="text-[#5D4037]/60 hover:text-[#F2A900] transition-all flex items-center gap-1.5">
-                                <MessageSquare size={18} className="sm:w-5 sm:h-5" />
-                                <span className="text-[10px] font-black uppercase tracking-wider hidden xs:inline">Contacter</span>
-                            </button>
-                        </Link>
+                        <button
+                            className="text-[#5D4037]/60 hover:text-[#F2A900] transition-all flex items-center gap-1.5"
+                            onClick={() => performAction(() => navigate(`/messages?userId=${post.author.id}`))}
+                        >
+                            <MessageSquare size={18} className="sm:w-5 sm:h-5" />
+                            <span className="text-[10px] font-black uppercase tracking-wider hidden xs:inline">Contacter</span>
+                        </button>
                     </div>
                     <button
                         onClick={handleSave}
@@ -420,14 +461,17 @@ const PostCard = ({ post }: { post: Post }) => {
                     </div>
                 )}
             </CardFooter>
+            {AuthModalComponent}
         </Card >
     );
 };
 
 const DiscoverFeedPage = () => {
-    const { user: currentUser } = useAuth();
+    const { user: currentUser, logout } = useAuth();
     const { addNotification } = useNotifications();
     const { posts, addPost } = useFeed();
+    const { AuthModalComponent, performAction } = useProtectedAction();
+    const { trackScroll } = useVisitorEngagement();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [activeTab, setActiveTab] = useState<'all' | 'saved' | 'create' | 'my-posts'>(
@@ -461,6 +505,27 @@ const DiscoverFeedPage = () => {
         window.addEventListener('storage_updated', loadSaved);
         return () => window.removeEventListener('storage_updated', loadSaved);
     }, []);
+
+    // Intelligent Scroll Tracking for Visitors
+    useEffect(() => {
+        if (currentUser) return; // Only for visitors
+
+        let lastScrollTop = 0;
+        let scrollSteps = 0;
+        const threshold = 500; // Track every 500px of scroll
+
+        const handleScroll = () => {
+            const st = window.pageYOffset || document.documentElement.scrollTop;
+            if (st > lastScrollTop + threshold) {
+                scrollSteps++;
+                lastScrollTop = st;
+                trackScroll(); // Signal a "scroll step"
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [currentUser, trackScroll]);
 
     const filteredPosts = activeTab === 'all'
         ? posts
@@ -1137,6 +1202,7 @@ const DiscoverFeedPage = () => {
                 <div className="inline-block w-8 h-8 border-4 border-[#F2A900]/30 border-t-[#F2A900] rounded-full animate-spin mb-4"></div>
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-[#5D4037]">Chargement de nouveaux récits...</p>
             </div>
+            {AuthModalComponent}
         </div>
     );
 };

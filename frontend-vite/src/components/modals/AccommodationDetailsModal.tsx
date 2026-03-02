@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -67,7 +68,15 @@ const AccommodationDetailsModal: React.FC<AccommodationDetailsModalProps> = ({
   onSuspend,
   onActivate
 }) => {
+  const navigate = useNavigate();
   const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const isAccommodation = ['Hôtel', 'Auberge', 'Villa', 'Résidence'].includes(accommodation.type);
+
+  const handleViewRooms = () => {
+    navigate(`/establishment/${accommodation.id}?tab=rooms`);
+    onClose();
+  };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -381,6 +390,15 @@ const AccommodationDetailsModal: React.FC<AccommodationDetailsModalProps> = ({
               <Trash2 className="h-4 w-4 mr-2" />
               Supprimer
             </Button>
+            {isAccommodation && (
+              <Button
+                className="bg-[#1B5E20] hover:bg-[#15490F]"
+                onClick={handleViewRooms}
+              >
+                <Bed className="h-4 w-4 mr-2" />
+                Voir les chambres
+              </Button>
+            )}
             <Button onClick={onClose}>
               Fermer
             </Button>

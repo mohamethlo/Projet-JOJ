@@ -416,7 +416,38 @@ export const mockAccommodations = [
     availability: 'Disponible',
     capacity: 200,
     checkIn: '15:00',
-    checkOut: '12:00'
+    checkOut: '12:00',
+    rooms: [
+      {
+        id: '101',
+        name: 'Chambre Deluxe Océan',
+        type: 'Double',
+        price: '85,000 FCFA',
+        capacity: 2,
+        amenities: ['WiFi', 'TV', 'Climatisation', 'Mini-bar', 'Vue Mer'],
+        image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800',
+          'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800',
+          'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800'
+        ],
+        description: 'Une chambre élégante offrant une vue imprenable sur l\'océan Atlantique. Équipée de tout le confort moderne pour un séjour inoubliable.'
+      },
+      {
+        id: '102',
+        name: 'Suite Familiale Horizon',
+        type: 'Suite',
+        price: '125,000 FCFA',
+        capacity: 4,
+        amenities: ['WiFi', 'TV', 'Climatisation', 'Espace Salon', 'Balcon'],
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800',
+          'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800'
+        ],
+        description: 'Espace généreux idéal pour les familles, avec un salon séparé et un grand balcon dominant l\'horizon.'
+      }
+    ]
   },
   {
     id: '2',
@@ -448,7 +479,36 @@ export const mockAccommodations = [
     availability: 'Disponible',
     capacity: 50,
     checkIn: '14:00',
-    checkOut: '11:00'
+    checkOut: '11:00',
+    rooms: [
+      {
+        id: '301',
+        name: 'Chambre Éco-Brousse',
+        type: 'Simple',
+        price: '25,000 FCFA',
+        capacity: 1,
+        amenities: ['Ventilateur', 'Moustiquaire', 'Petit-déjeuner inclus'],
+        image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800'
+        ],
+        description: 'Une expérience authentique au plus près de la nature, avec tout le nécessaire pour un repos paisible.'
+      },
+      {
+        id: '302',
+        name: 'Case Familiale Traditionnelle',
+        type: 'Triple',
+        price: '45,000 FCFA',
+        capacity: 3,
+        amenities: ['Terrasse', 'Moustiquaire', 'Vue Réserve'],
+        image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+          'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800'
+        ],
+        description: 'Idéal pour les petits groupes ou familles souhaitant partager une expérience unique en brousse.'
+      }
+    ]
   },
   {
     id: '4',
@@ -465,7 +525,23 @@ export const mockAccommodations = [
     availability: 'Disponible',
     capacity: 8,
     checkIn: '16:00',
-    checkOut: '10:00'
+    checkOut: '10:00',
+    rooms: [
+      {
+        id: '401',
+        name: 'Villa Entière (4 Chambres)',
+        type: 'Villa',
+        price: '120,000 FCFA',
+        capacity: 8,
+        amenities: ['Piscine Privée', 'Cuisine équipée', 'Personnel de maison', 'WiFi'],
+        image: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800',
+          'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800'
+        ],
+        description: 'Vivez l\'exclusivité dans cette villa somptueuse avec piscine privée et service personnalisé.'
+      }
+    ]
   },
   {
     id: '5',
@@ -482,7 +558,36 @@ export const mockAccommodations = [
     availability: 'Disponible',
     capacity: 100,
     checkIn: '15:00',
-    checkOut: '12:00'
+    checkOut: '12:00',
+    rooms: [
+      {
+        id: '501',
+        name: 'Studio Meublé Moderne',
+        type: 'Studio',
+        price: '45,000 FCFA',
+        capacity: 2,
+        amenities: ['WiFi', 'Kitchenette', 'Canapé-lit'],
+        image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800'
+        ],
+        description: 'Studio compact et moderne, parfaitement équipé pour les séjours professionnels ou en solo.'
+      },
+      {
+        id: '502',
+        name: 'Appartement T2 Premium',
+        type: 'Appartement',
+        price: '75,000 FCFA',
+        capacity: 3,
+        amenities: ['Salon séparé', 'Balcon', 'Lave-linge'],
+        image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800',
+          'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800'
+        ],
+        description: 'Appartement spacieux avec balcon, idéal pour les longs séjours offrant confort et autonomie.'
+      }
+    ]
   },
   {
     id: '6',
@@ -664,6 +769,82 @@ export const mockMatches = [
     },
     compatibility: 95,
     reason: 'Vous partagez les mêmes intérêts pour la culture et l\'histoire du Sénégal',
-    commonInterests: ['Culture', 'Histoire', 'Gastronomie']
+  }
+];
+
+// Mock data pour les agences de voyage
+export const mockAgencies = [
+  {
+    id: '1',
+    name: 'Sénégal Découvertes',
+    description: 'Agence leader dans l\'organisation de circuits touristiques authentiques à travers le Sénégal.',
+    type: 'Agency',
+    location: 'Dakar',
+    rating: 4.9,
+    reviews: 342,
+    price: 'À partir de 150,000 FCFA',
+    image: 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?w=800',
+    amenities: ['Circuits Sur-Mesure', 'Guides Multilingues', 'Transport Climatisé', 'Assurance Voyage'],
+    featured: true,
+    availability: 'Ouvert',
+    capacity: 0,
+    offers: [
+      {
+        id: 'o1',
+        title: 'Circuit Casamance Authenthique',
+        duration: '7 Jours / 6 Nuits',
+        price: '350,000 FCFA',
+        capacity: 10,
+        amenities: ['Vols Inclus', 'Hébergement 4*', 'Demi-pension', 'Excursions en pirogue'],
+        image: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800',
+        ],
+        description: 'Découvrez la beauté verdoyante de la Casamance, ses bolongs, ses villages traditionnels et sa culture riche.'
+      },
+      {
+        id: 'o2',
+        title: 'Safari Réserve de Bandia',
+        duration: '1 Journée',
+        price: '45,000 FCFA',
+        capacity: 15,
+        amenities: ['Transport 4x4', 'Guide Animalier', 'Déjeuner Inclus'],
+        image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800',
+        ],
+        description: 'Une journée inoubliable au cœur d\'une réserve naturelle avec girafes, rhinocéros, zèbres et singes.'
+      }
+    ]
+  },
+  {
+    id: '2',
+    name: 'Teranga Voyages',
+    description: 'Spécialiste de l\'éco-tourisme et des séjours de déconnexion dans les régions reculées.',
+    type: 'Agency',
+    location: 'Saint-Louis',
+    rating: 4.7,
+    reviews: 189,
+    price: 'À partir de 75,000 FCFA',
+    image: 'https://images.unsplash.com/photo-1522070054238-fa61db5d8623?w=800',
+    amenities: ['Éco-Tourism', 'Séjours Immersion', 'Ateliers Locaux'],
+    featured: false,
+    availability: 'Ouvert',
+    capacity: 0,
+    offers: [
+      {
+        id: 'o3',
+        title: 'Immersion Siné-Saloum',
+        duration: '3 Jours / 2 Nuits',
+        price: '120,000 FCFA',
+        capacity: 8,
+        amenities: ['Campement Écolo', 'Pêche Artisanale', 'Rencontre avec les villageois'],
+        image: 'https://images.unsplash.com/photo-1555561081-3006bb711e74?w=800',
+        images: [
+          'https://images.unsplash.com/photo-1555561081-3006bb711e74?w=800',
+        ],
+        description: 'Déconnectez totalement dans le delta du Siné-Saloum au sein de cases écologiques.'
+      }
+    ]
   }
 ];

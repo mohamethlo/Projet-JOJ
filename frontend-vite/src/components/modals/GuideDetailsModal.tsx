@@ -25,6 +25,7 @@ import {
   Trophy,
   User
 } from 'lucide-react';
+import useProtectedAction from '../../hooks/useProtectedAction';
 
 interface GuideProps {
   id: string;
@@ -71,6 +72,7 @@ const GuideDetailsModal: React.FC<GuideDetailsModalProps> = ({ isOpen, onClose, 
   const [isShared, setIsShared] = useState(false);
   const [isTimeSlotsModalOpen, setIsTimeSlotsModalOpen] = useState(false);
   const [selectedDayForTimeSlots, setSelectedDayForTimeSlots] = useState<AvailabilityDay | null>(null);
+  const { performAction, AuthModalComponent } = useProtectedAction();
 
   // Fonction pour ouvrir le modal des créneaux
   const handleViewTimeSlots = (day: AvailabilityDay) => {
@@ -101,26 +103,29 @@ const GuideDetailsModal: React.FC<GuideDetailsModalProps> = ({ isOpen, onClose, 
 
   // Fonctions pour les actions
   const handleLike = () => {
-    setIsLiked(!isLiked);
+    performAction(() => {
+      setIsLiked(!isLiked);
+    });
   };
 
-  const handleShare = () => {
-    setIsShared(!isShared);
-    // Simulation de partage
-    if (navigator.share) {
-      navigator.share({
-        title: `Guide ${guide.name}`,
-        text: `Découvrez ${guide.name}, guide certifié à ${guide.location}`,
-        url: window.location.href
-      });
-    } else {
-      alert('Fonction de partage activée !');
-    }
+  const handleShare = async () => {
+    performAction(async () => {
+      try {
+        await navigator.share({
+          title: `Guide: ${guide.name}`,
+          text: guide.description,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.log('Erreur lors du partage', error);
+      }
+    });
   };
 
   const handleDownload = () => {
-    // Simulation de téléchargement
-    alert('Téléchargement des informations du guide...');
+    performAction(() => {
+      console.log('Téléchargement des informations du guide...');
+    });
   };
 
 
@@ -568,7 +573,7 @@ const GuideDetailsModal: React.FC<GuideDetailsModalProps> = ({ isOpen, onClose, 
           </div>
         </DialogContent>
       </Dialog>
-
+      {AuthModalComponent}
       {/* Modal des créneaux de disponibilité - Portail */}
       {isTimeSlotsModalOpen && selectedDayForTimeSlots && (
         <div
@@ -604,12 +609,12 @@ const GuideDetailsModal: React.FC<GuideDetailsModalProps> = ({ isOpen, onClose, 
                   <div
                     key={slot.time}
                     className={`p-3 rounded-lg border text-center ${slot.status === 'available'
-                        ? 'bg-green-50 border-green-200 text-green-800'
-                        : slot.status === 'booked'
-                          ? 'bg-red-50 border-red-200 text-red-800'
-                          : slot.status === 'break'
-                            ? 'bg-yellow-50 border-yellow-200 text-yellow-800'
-                            : 'bg-gray-50 border-gray-200 text-gray-800'
+                      ? 'bg-green-50 border-green-200 text-green-800'
+                      : slot.status === 'booked'
+                        ? 'bg-red-50 border-red-200 text-red-800'
+                        : slot.status === 'break'
+                          ? 'bg-yellow-50 border-yellow-200 text-yellow-800'
+                          : 'bg-gray-50 border-gray-200 text-gray-800'
                       }`}
                   >
                     <div className="font-medium text-sm">
