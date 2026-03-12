@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Clock, 
-  User, 
+import {
+  Clock,
+  User,
   Calendar,
   Eye,
   Heart,
@@ -92,7 +92,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit, onDelete }) 
   // ✅ Construction de l'URL de l'image
   const imageUrl = (() => {
     if (!article.image) return undefined;
-    if (article.image.startsWith('http')) return article.image; // externe
+    if (article.image.startsWith('http') || article.image.startsWith('/images/')) return article.image; // externe ou local public
     const filename = article.image.replace(/^\/?uploads\/articles\//, ''); // supprime le préfixe si présent
     return `${BACKEND_URL}/uploads/articles/${encodeURIComponent(filename)}`;
   })();
@@ -101,7 +101,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit, onDelete }) 
     <>
       <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden">
         <div className="relative h-48">
-          <img 
+          <img
             src={imageUrl}
             alt={imageUrl ? article.title : 'IMAGE MISSING'}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -153,17 +153,17 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit, onDelete }) 
             </Button>
           </div>
         </div>
-        
+
         <CardContent className="p-6">
           <div className="space-y-3">
             <h3 className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
               {article.title}
             </h3>
-            
+
             <p className="text-gray-600 text-sm line-clamp-3">
               {article.excerpt}
             </p>
-            
+
             <div className="flex items-center justify-between text-xs text-gray-500">
               <div className="flex items-center space-x-3">
                 <div className="flex items-center">
@@ -180,8 +180,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit, onDelete }) 
                 <span>{article.readTime}</span>
               </div>
             </div>
-            
-            <Button 
+
+            <Button
               onClick={handleViewDetails}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               size="sm"
@@ -198,7 +198,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit, onDelete }) 
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="relative">
-              <img 
+              <img
                 src={imageUrl}
                 alt={imageUrl ? article.title : 'IMAGE MISSING'}
                 className="w-full h-64 object-cover rounded-t-lg"
@@ -217,7 +217,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, onEdit, onDelete }) 
                 ×
               </Button>
             </div>
-            
+
             <div className="p-6">
               <h1 className="text-2xl font-bold text-gray-900 mb-4">{article.title}</h1>
               <div className="prose max-w-none text-gray-700 leading-relaxed">

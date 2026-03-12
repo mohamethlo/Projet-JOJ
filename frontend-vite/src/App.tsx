@@ -25,6 +25,9 @@ import NotificationsPage from '@/pages/notifications/NotificationsPage'
 import ScannerPage from '@/pages/security/ScannerPage'
 import AgencyPage from '@/pages/agency/AgencyPage'
 import AgencyOffersPage from '@/pages/agency/AgencyOffersPage'
+import AgencyBookingsPage from '@/pages/agency/AgencyBookingsPage'
+import AgencyProfilePage from '@/pages/agency/AgencyProfilePage'
+import AgencyReviewsPage from '@/pages/agency/AgencyReviewsPage'
 import SecurityDashboardPage from '@/pages/security/DashboardPage'
 import SecurityReportsPage from '@/pages/security/ReportsPage'
 import MesTicketsPage from '@/pages/mes-tickets/index'
@@ -142,6 +145,9 @@ const App = () => {
 
           <Route element={<ProtectedRoute roles={['agency']}><Layout><Outlet /></Layout></ProtectedRoute>}>
             <Route path="/establishment/offers" element={<AgencyOffersPage />} />
+            <Route path="/agency/bookings" element={<AgencyBookingsPage />} />
+            <Route path="/agency/profile" element={<AgencyProfilePage />} />
+            <Route path="/agency/reviews" element={<AgencyReviewsPage />} />
           </Route>
 
           <Route path="*" element={

@@ -1044,10 +1044,10 @@ const OffersTab: React.FC<{ establishment: any, performAction: (callback: () => 
                         </div>
 
                         <CardContent className="p-6 flex-1 flex flex-col pt-6">
-                            <div className="flex justify-between items-start mb-4 gap-4">
-                                <div>
+                            <div className="flex flex-col sm:flex-row sm:justify-between items-start mb-4 gap-2 sm:gap-4">
+                                <div className="w-full sm:w-auto">
                                     <h3 className="text-xl font-black text-[#2D1B08] leading-tight mb-2 group-hover:text-[#F2A900] transition-colors">{offer.title}</h3>
-                                    <div className="flex items-center gap-4 text-sm font-bold text-[#5D4037]">
+                                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm font-bold text-[#5D4037]">
                                         {offer.capacity && (
                                             <span className="flex items-center gap-1.5 bg-[#EBE3D5]/50 px-2.5 py-1 rounded-lg">
                                                 <Users size={14} className="text-[#F2A900]" />
@@ -1056,7 +1056,7 @@ const OffersTab: React.FC<{ establishment: any, performAction: (callback: () => 
                                         )}
                                     </div>
                                 </div>
-                                <div className="text-right shrink-0">
+                                <div className="text-left sm:text-right shrink-0 mt-2 sm:mt-0 w-full sm:w-auto p-3 sm:p-0 bg-[#F9F6F2] sm:bg-transparent rounded-xl sm:rounded-none">
                                     <p className="text-[10px] font-black text-[#5D4037] uppercase tracking-widest mb-0.5">À PARTIR DE</p>
                                     <p className="text-2xl font-black text-[#1B5E20]">{offer.price}</p>
                                 </div>
@@ -1077,16 +1077,16 @@ const OffersTab: React.FC<{ establishment: any, performAction: (callback: () => 
                                     ))}
                                 </div>
 
-                                <div className="flex gap-3 pt-4 border-t border-[#EBE3D5]">
+                                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-[#EBE3D5]">
                                     <Button
-                                        className="flex-1 bg-[#1B5E20] hover:bg-[#15490F] text-white font-black rounded-xl py-6 tracking-wide shadow-lg shadow-[#1B5E20]/20"
+                                        className="w-full sm:flex-1 bg-[#1B5E20] hover:bg-[#15490F] text-white font-black rounded-xl py-6 tracking-wide shadow-lg shadow-[#1B5E20]/20 text-xs sm:text-sm"
                                         onClick={() => performAction(() => { })}
                                     >
                                         Demander un devis
                                     </Button>
                                     <Button
                                         variant="outline"
-                                        className="flex-1 border-2 border-[#EBE3D5] text-[#2D1B08] hover:bg-[#F5F5F5] font-black rounded-xl py-6 tracking-wide"
+                                        className="w-full sm:flex-1 border-2 border-[#EBE3D5] text-[#2D1B08] hover:bg-[#F5F5F5] font-black rounded-xl py-6 tracking-wide text-xs sm:text-sm"
                                         onClick={() => performAction(() => { })}
                                     >
                                         Voir les détails

@@ -51,7 +51,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNotifications } from '@/context/NotificationContext';
-import ModernVideoPlayer from '@/components/feed/ModernVideoPlayer';
 
 import { Comment, Post } from '@/types/feed';
 import { MOCK_POSTS } from '@/data/mockFeedData';
@@ -329,31 +328,21 @@ const PostCard = ({ post }: { post: Post }) => {
                     )}
                 </div>
 
-                {post.video ? (
-                    <div className="relative bg-black group/video overflow-hidden">
-                        <ModernVideoPlayer
-                            src={post.video}
-                            poster={post.images[0]}
-                            onLike={() => !post.isLiked && handleLike()}
-                        />
-                    </div>
-                ) : (
-                    /* Multi-image support simplified for demo */
-                    <div className={cn(
-                        "grid gap-1 mt-2",
-                        post.images.length > 1 ? "grid-cols-2" : "grid-cols-1"
-                    )}>
-                        {post.images.map((img, idx) => (
-                            <div key={idx} className="aspect-square overflow-hidden bg-gray-100">
-                                <img
-                                    src={img}
-                                    alt={`Post image ${idx + 1} `}
-                                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                )}
+                {/* Multi-image support simplified for demo */}
+                <div className={cn(
+                    "grid gap-1 mt-2",
+                    post.images.length > 1 ? "grid-cols-2" : "grid-cols-1"
+                )}>
+                    {post.images.map((img, idx) => (
+                        <div key={idx} className="aspect-square overflow-hidden bg-gray-100">
+                            <img
+                                src={img}
+                                alt={`Post image ${idx + 1} `}
+                                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                            />
+                        </div>
+                    ))}
+                </div>
             </CardContent>
 
             <CardFooter className="flex flex-col p-0 border-t border-[#EBE3D5]/30">
@@ -910,45 +899,15 @@ const DiscoverFeedPage = () => {
                                         </div>
                                     </div>
 
-                                    <div className="space-y-4 flex-1 min-w-[200px]">
+                                    <div className="space-y-4 flex-1 min-w-[200px] opacity-50 grayscale pointer-events-none">
                                         <Label className="text-sm font-black text-[#2D1B08] flex items-center uppercase tracking-widest">
                                             <Video className="h-4 w-4 mr-2 text-[#F2A900]" />
-                                            Vidéo (Max 2min)
+                                            Vidéo (Prochainement)
                                         </Label>
-                                        {video ? (
-                                            <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-[#EBE3D5] group bg-black/5">
-                                                <video src={video} className="w-full h-full object-cover" />
-                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 pointer-events-none">
-                                                    <Play className="text-white h-10 w-10 fill-current" />
-                                                </div>
-                                                <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[9px] font-black px-2 py-0.5 rounded-full backdrop-blur-sm">
-                                                    {Math.floor(videoDuration! / 60)}:{(videoDuration! % 60).toFixed(0).padStart(2, '0')}
-                                                </div>
-                                                <button
-                                                    onClick={removeVideo}
-                                                    className="absolute top-2 right-2 bg-white/90 p-1.5 rounded-full text-red-500 hover:bg-white shadow-md transform translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all"
-                                                >
-                                                    <X className="h-3 w-3" />
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <div className="space-y-3">
-                                                <label className="h-[100px] sm:h-[120px] rounded-2xl border-2 border-dashed border-[#EBE3D5] flex flex-col items-center justify-center cursor-pointer hover:border-[#F2A900] hover:bg-[#F2A900]/5 transition-all group">
-                                                    <Plus className="h-6 w-6 text-[#EBE3D5] group-hover:text-[#F2A900] transform group-hover:rotate-90 transition-all" />
-                                                    <p className="text-[9px] font-black text-gray-400 mt-2 uppercase tracking-widest group-hover:text-[#F2A900]">Ajouter une vidéo</p>
-                                                    <input type="file" accept="video/mp4,video/webm" onChange={handleVideoUpload} className="hidden" />
-                                                </label>
-                                                {uploadProgress > 0 && uploadProgress < 100 && (
-                                                    <div className="space-y-1.5">
-                                                        <div className="flex justify-between items-center text-[9px] font-black text-[#F2A900] uppercase tracking-widest">
-                                                            <span>Préparation...</span>
-                                                            <span>{uploadProgress}%</span>
-                                                        </div>
-                                                        <Progress value={uploadProgress} className="h-1.5" />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
+                                        <div className="h-[100px] sm:h-[120px] rounded-2xl border-2 border-dashed border-[#EBE3D5] flex flex-col items-center justify-center bg-gray-50/50">
+                                            <Video className="h-6 w-6 text-[#EBE3D5]" />
+                                            <p className="text-[8px] font-black text-gray-400 mt-2 uppercase tracking-widest">Indisponible momentanément</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1020,12 +979,11 @@ const DiscoverFeedPage = () => {
                                 </p>
                             </div>
 
-                            {video ? (
-                                <div className="aspect-video bg-black/5 overflow-hidden">
-                                    <video src={video} className="w-full h-full object-cover" controls />
-                                </div>
-                            ) : images.length > 0 && (
-                                <div className={`grid gap - 0.5 ${images.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} `}>
+                            {images.length > 0 && (
+                                <div className={cn(
+                                    "grid gap-0.5 rounded-2xl overflow-hidden",
+                                    images.length === 1 ? "grid-cols-1" : "grid-cols-2"
+                                )}>
                                     {images.map((img, i) => (
                                         <div key={i} className="aspect-square">
                                             <img src={img} alt="" className="w-full h-full object-cover" />

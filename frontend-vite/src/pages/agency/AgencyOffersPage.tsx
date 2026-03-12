@@ -281,14 +281,12 @@ const AgencyOffersPage: React.FC = () => {
                     { label: 'Voyageurs Inscrits', value: totalBooked, color: 'text-[#F2A900]', bg: 'bg-amber-50', border: 'border-amber-200', icon: <Users className="h-5 w-5 text-[#F2A900]" /> },
                     { label: 'Taux de Remplissage', value: `${Math.round((totalBooked / totalCapacity) * 100)}%`, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200', icon: <TrendingUp className="h-5 w-5 text-blue-600" /> },
                 ].map((s, i) => (
-                    <div key={i} className={`${s.bg} border-2 ${s.border} rounded-2xl p-4 flex items-center gap-4`}>
-                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm flex-shrink-0">
+                    <div key={i} className={`${s.bg} border-2 ${s.border} rounded-2xl p-3 flex flex-col items-center justify-center text-center gap-1.5 min-h-[90px]`}>
+                        <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-sm">
                             {s.icon}
                         </div>
-                        <div>
-                            <p className="text-xs text-[#5D4037]/60 font-bold uppercase tracking-wider">{s.label}</p>
-                            <p className={`text-2xl font-black ${s.color} leading-none mt-0.5`}>{s.value}</p>
-                        </div>
+                        <p className={`text-xl font-black leading-none ${s.color} mt-0.5`}>{s.value}</p>
+                        <p className="text-[10px] text-[#5D4037]/60 font-bold uppercase tracking-wide leading-tight">{s.label}</p>
                     </div>
                 ))}
             </div>

@@ -13,7 +13,6 @@ export const MOCK_POSTS: Post[] = [
         },
         content: "Le coucher de soleil sur l'Atlantique n'a jamais été aussi beau. Venez vivre un moment d'exception sur notre terrasse privée. La Teranga n'est pas qu'un mot, c'est une expérience. #Dakar #LuxuryTravel #Senegal",
         images: ['/images/hero_senegal.png'],
-        video: 'https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-shore-4113-large.mp4',
         views: 1250,
         likes: 342,
         comments: 24,
@@ -32,7 +31,7 @@ export const MOCK_POSTS: Post[] = [
             id: 'u7',
             name: 'Amadou, Guide National',
             role: 'Guide Certifié',
-            avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150',
+            avatar: '/images/guide 1.jpeg',
             type: 'guide',
             isVerified: true
         },
@@ -54,8 +53,7 @@ export const MOCK_POSTS: Post[] = [
             isVerified: true
         },
         content: "Un après-midi magique sur les côtes de Dakar. La Teranga est partout ! 🇸🇳✨ #Senegal #Dakar #Travel",
-        images: ['https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-leaves-and-sun-rays-in-autumn-470-large.mp4'],
-        video: 'https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-leaves-and-sun-rays-in-autumn-470-large.mp4',
+        images: ['/images/lac_rose.jpeg'],
         views: 45200,
         likes: 12400,
         comments: 156,
@@ -73,8 +71,7 @@ export const MOCK_POSTS: Post[] = [
             isVerified: false
         },
         content: "L'énergie de la jeunesse dakaroise est inépuisable. On danse même sous la pluie ! 🕺🏾🌧️ #Casamance #Danse #Vibe",
-        images: ['https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-the-rain-in-the-city-4299-large.mp4'],
-        video: 'https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-the-rain-in-the-city-4299-large.mp4',
+        images: ['/images/falaise.jpeg'],
         views: 32100,
         likes: 8500,
         comments: 243,
@@ -92,8 +89,7 @@ export const MOCK_POSTS: Post[] = [
             isVerified: true
         },
         content: "La paix et le calme sur l'île de Gorée. Un moment hors du temps. 🌊🏠 #Goree #History #Peace",
-        images: ['https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-shore-4113-large.mp4'],
-        video: 'https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-shore-4113-large.mp4',
+        images: ['/images/goree.jpeg'],
         views: 89000,
         likes: 25600,
         comments: 1100,
