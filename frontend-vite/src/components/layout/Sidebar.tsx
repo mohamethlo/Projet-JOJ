@@ -1,4 +1,4 @@
-﻿import { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -29,7 +29,9 @@ import {
   MessageCircle,
   Video,
   Utensils,
-  Plane
+  Plane,
+  Palette,
+  ShoppingBag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -47,6 +49,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
       { href: '/accommodation', icon: Building, label: 'Hébergement' },
       { href: '/restaurants', icon: Utensils, label: 'Restauration' },
       { href: '/agencies', icon: Plane, label: 'Agences de Voyage' },
+      { href: '/artisans', icon: Palette, label: 'Artisans' },
       { href: '/history', icon: BookOpen, label: t('history') },
       { href: '/map', icon: Map, label: t('map') },
     ];
@@ -63,7 +66,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
       { href: '/signaler', icon: Flag, label: 'Signaler/Commenter' }
     ].sort((a, b) => {
       // Simple sorting or custom order if needed
-      const order = ['/dashboard', '/echos-senegal', '/videos', '/messages', '/guides', '/events', '/accommodation', '/restaurants', '/agencies', '/mes-tickets', '/history', '/map', '/signaler'];
+      const order = ['/dashboard', '/echos-senegal', '/videos', '/messages', '/guides', '/artisans', '/events', '/accommodation', '/restaurants', '/agencies', '/mes-tickets', '/history', '/map', '/signaler'];
       return order.indexOf(a.href) - order.indexOf(b.href);
     });
 
@@ -75,7 +78,9 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
         { href: '/admin/users', icon: UserCog, label: 'Gestion des Utilisateurs', isAdminSection: true },
         { href: '/admin/statistics', icon: BarChart3, label: 'Statistiques', isAdminSection: true },
         { href: '/admin/articles', icon: FileText, label: 'Gestion des Articles', isAdminSection: true },
-        { href: '/admin/accommodation', icon: Building, label: 'Gestion Hébergements' }
+        {href: '/admin/accommodation', icon: Building, label: 'Gestion Hébergements', isAdminSection: true },
+        { href: '/admin/restaurants', icon: Utensils, label: 'Gestion Restaurants', isAdminSection: true },
+        { href: '/admin/agencies', icon: Plane, label: 'Gestion Agences', isAdminSection: true }
       ];
     }
 
@@ -99,10 +104,10 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
         { href: '/dashboard', icon: Home, label: t('dashboard') },
         { href: '/messages', icon: MessageCircle, label: 'Messages' },
         { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
-        { href: '/agency/bookings', icon: Calendar, label: 'Réservations' },
+        { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
         { href: '/establishment/rooms', icon: Bed, label: 'Chambres' },
-        { href: '/agency/profile', icon: Building, label: 'Profil Hôtel' },
-        { href: '/agency/reviews', icon: Star, label: 'Avis Clients' },
+        { href: '/establishment/profile', icon: Building, label: 'Profil Hôtel' },
+        { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
         { href: '/history', icon: BookOpen, label: t('history') },
         { href: '/profile', icon: User, label: 'Mon Profil' }
       ];
@@ -113,10 +118,10 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
         { href: '/dashboard', icon: Home, label: t('dashboard') },
         { href: '/messages', icon: MessageCircle, label: 'Messages' },
         { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
-        { href: '/agency/bookings', icon: Calendar, label: 'Réservations' },
+        { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
         { href: '/establishment/menu', icon: UtensilsCrossed, label: 'Menu' },
-        { href: '/agency/profile', icon: Building, label: 'Profil Restaurant' },
-        { href: '/agency/reviews', icon: Star, label: 'Avis Clients' },
+        { href: '/establishment/profile', icon: Building, label: 'Profil Restaurant' },
+        { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
         { href: '/history', icon: BookOpen, label: t('history') },
         { href: '/profile', icon: User, label: 'Mon Profil' }
       ];
@@ -146,6 +151,20 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
         { href: '/security/reports', icon: Shield, label: 'Signalements' },
         { href: '/signaler', icon: Flag, label: 'Signaler/Commenter' },
         { href: '/security/scanner', icon: QrCode, label: 'Scanner QR' }
+      ];
+    }
+
+    if (user?.role === 'artisan') {
+      return [
+        { href: '/dashboard', icon: Home, label: t('dashboard') },
+        { href: '/messages', icon: MessageCircle, label: 'Messages' },
+        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
+        { href: '/artisan/orders', icon: Calendar, label: 'Mes Commandes' },
+        { href: '/artisan/products', icon: ShoppingBag, label: 'Mes Produits' },
+        { href: '/artisan/profile', icon: Building, label: 'Mon Échoppe' },
+        { href: '/admin/statistics', icon: BarChart3, label: 'Statistiques' },
+        { href: '/history', icon: BookOpen, label: t('history') },
+        { href: '/profile', icon: User, label: 'Mon Profil' }
       ];
     }
 

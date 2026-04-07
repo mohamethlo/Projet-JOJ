@@ -143,10 +143,14 @@ const AccommodationDetailsModal: React.FC<AccommodationDetailsModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            {getTypeIcon(accommodation.type)}
-            <span>{accommodation.name}</span>
-            <Badge className={getStatusColor(accommodation.availability)}>
+          <DialogTitle className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+            <div className="flex items-center space-x-2 text-xl font-black text-[#2D1B08] uppercase tracking-tighter">
+              <div className="p-2 bg-[#F2A900]/10 text-[#F2A900] rounded-lg">
+                {getTypeIcon(accommodation.type)}
+              </div>
+              <span>{accommodation.name}</span>
+            </div>
+            <Badge variant="outline" className={`font-black uppercase tracking-tighter border-none ${getStatusColor(accommodation.availability)}`}>
               {accommodation.availability}
             </Badge>
           </DialogTitle>
@@ -345,61 +349,75 @@ const AccommodationDetailsModal: React.FC<AccommodationDetailsModalProps> = ({
           )}
         </div>
 
-        <DialogFooter className="flex justify-between">
-          <div className="flex space-x-2">
+        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0 mt-6 pt-4 border-t border-[#EBE3D5]">
+          <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
             {accommodation.availability === 'Disponible' && (
               <Button
                 variant="outline"
-                className="border-yellow-500 text-yellow-600 hover:bg-yellow-50"
+                size="sm"
+                className="text-xs font-black uppercase tracking-tighter border-[#F2A900]/30 text-[#F2A900] hover:bg-[#F2A900] hover:text-white"
                 onClick={() => handleAction('suspend')}
               >
-                <AlertTriangle className="h-4 w-4 mr-2" />
+                <AlertTriangle className="h-3.5 w-3.5 mr-1" />
                 Suspendre
               </Button>
             )}
             {accommodation.availability === 'Suspendu' && (
               <Button
-                className="bg-green-600 hover:bg-green-700"
+                size="sm"
+                className="text-xs font-black uppercase tracking-tighter bg-[#1B5E20] hover:bg-[#15490F] text-white"
                 onClick={() => handleAction('activate')}
               >
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className="h-3.5 w-3.5 mr-1" />
                 Réactiver
               </Button>
             )}
             {accommodation.availability === 'Indisponible' && (
               <Button
-                className="bg-green-600 hover:bg-green-700"
+                size="sm"
+                className="text-xs font-black uppercase tracking-tighter bg-[#1B5E20] hover:bg-[#15490F] text-white"
                 onClick={() => handleAction('activate')}
               >
-                <CheckCircle className="h-4 w-4 mr-2" />
+                <CheckCircle className="h-3.5 w-3.5 mr-1" />
                 Activer
               </Button>
             )}
           </div>
 
-          <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => handleAction('edit')}>
-              <Edit className="h-4 w-4 mr-2" />
+          <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-xs font-black uppercase tracking-tighter border-[#EBE3D5] text-[#2D1B08] hover:bg-[#EBE3D5]/50"
+              onClick={() => handleAction('edit')}
+            >
+              <Edit className="h-3.5 w-3.5 mr-1" />
               Modifier
             </Button>
             <Button
               variant="outline"
-              className="border-red-500 text-red-600 hover:bg-red-50"
+              size="sm"
+              className="text-xs font-black uppercase tracking-tighter border-[#E11D48]/30 text-[#E11D48] hover:bg-[#E11D48] hover:text-white"
               onClick={() => handleAction('delete')}
             >
-              <Trash2 className="h-4 w-4 mr-2" />
+              <Trash2 className="h-3.5 w-3.5 mr-1" />
               Supprimer
             </Button>
             {isAccommodation && (
               <Button
-                className="bg-[#1B5E20] hover:bg-[#15490F]"
+                size="sm"
+                className="text-xs font-black uppercase tracking-tighter bg-[#1B5E20] hover:bg-[#15490F] text-white"
                 onClick={handleViewRooms}
               >
-                <Bed className="h-4 w-4 mr-2" />
-                Voir les chambres
+                <Bed className="h-3.5 w-3.5 mr-1" />
+                Chambres
               </Button>
             )}
-            <Button onClick={onClose}>
+            <Button 
+              size="sm"
+              className="text-xs font-black uppercase tracking-tighter bg-[#2D1B08] hover:bg-[#5D4037] text-white"
+              onClick={onClose}
+            >
               Fermer
             </Button>
           </div>

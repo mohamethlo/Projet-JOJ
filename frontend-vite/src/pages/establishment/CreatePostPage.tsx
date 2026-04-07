@@ -64,6 +64,8 @@ const CreatePostPage: React.FC = () => {
             setIsSubmitting(false);
             if (user?.role === 'hotel' || user?.role === 'restaurant') {
                 navigate('/establishment/profile');
+            } else if (user?.role === 'artisan') {
+                navigate('/artisan/profile');
             } else {
                 navigate('/echos-senegal');
             }

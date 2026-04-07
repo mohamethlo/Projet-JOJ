@@ -25,11 +25,13 @@ import {
 } from 'lucide-react';
 import AccommodationCard from '@/components/cards/AccommodationCard';
 import { mockAccommodations } from '@/lib/mockData';
+import { useRestaurants } from '@/context/RestaurantContext';
 
 // ─── Types de cuisine / restauration ─────────────────────────
 const RESTAURANT_TYPES = ['Restaurant', 'Fast Food', 'Café', 'Boulangerie', 'Snack'];
 
 const RestaurantPage: React.FC = () => {
+    const { restaurants: contextRestaurants } = useRestaurants();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedLocation, setSelectedLocation] = useState('');
     const [selectedCuisine, setSelectedCuisine] = useState('');
@@ -44,12 +46,16 @@ const RestaurantPage: React.FC = () => {
     const priceRanges = ['Tous', '0-5000', '5000-10000', '10000-20000', '20000+'];
     const ratings = ['Tous', '4.5+', '4.0+', '3.5+', '3.0+'];
 
-    // Filtrer uniquement les établissements de restauration
-    const restaurants = mockAccommodations.filter(
-        (a) => RESTAURANT_TYPES.includes(a.type) || a.type === 'Restaurant'
-    );
+    // Fusionner les restaurants du contexte et ceux de mockAccommodations (en évitant les doublons par ID)
+    const allRestaurants: any[] = [
+        ...contextRestaurants,
+        ...mockAccommodations.filter(a => 
+            (RESTAURANT_TYPES.includes(a.type) || a.type === 'Restaurant') &&
+            !contextRestaurants.find(cr => cr.id === a.id)
+        )
+    ];
 
-    const filtered = restaurants.filter((r) => {
+    const filtered = allRestaurants.filter((r) => {
         const matchesSearch =
             r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             r.description.toLowerCase().includes(searchTerm.toLowerCase());

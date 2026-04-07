@@ -47,21 +47,21 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'suspended': return 'bg-red-100 text-red-800';
-      case 'inactive': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active': return 'bg-[#1B5E20]/10 text-[#1B5E20]';
+      case 'suspended': return 'bg-red-50 text-red-600';
+      case 'inactive': return 'bg-[#EBE3D5]/30 text-[#5D4037]/60';
+      default: return 'bg-[#EBE3D5]/20 text-[#5D4037]';
     }
   };
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'admin': return 'bg-purple-100 text-purple-800';
-      case 'guide': return 'bg-blue-100 text-blue-800';
-      case 'organizer': return 'bg-orange-100 text-orange-800';
-      case 'security': return 'bg-red-100 text-red-800';
-      case 'tourist': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'admin': return 'bg-[#2D1B08] text-white';
+      case 'guide': return 'bg-[#F2A900]/10 text-[#F2A900] border-[#F2A900]/20';
+      case 'organizer': return 'bg-[#F2A900] text-white';
+      case 'security': return 'bg-red-600 text-white';
+      case 'tourist': return 'bg-[#1B5E20] text-white';
+      default: return 'bg-[#EBE3D5] text-[#5D4037]';
     }
   };
 
@@ -87,29 +87,34 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            <User className="h-5 w-5" />
-            <span>Détails de l'utilisateur</span>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto border-none bg-[#FFFDFB] rounded-3xl shadow-2xl p-0">
+        <DialogHeader className="p-8 border-b border-[#EBE3D5]/50 bg-[#EBE3D5]/10">
+          <DialogTitle className="flex items-center space-x-3 text-2xl font-black uppercase tracking-tighter text-[#2D1B08]">
+            <div className="bg-[#F2A900] p-2 rounded-xl text-white">
+              <User className="h-6 w-6" />
+            </div>
+            <span>Détails Profil</span>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="p-8 space-y-8">
           {/* En-tête avec avatar et informations principales */}
-          <div className="flex items-start space-x-6">
-            <Avatar className="h-20 w-20">
+          <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8">
+            <Avatar className="h-32 w-32 border-4 border-[#F2A900]/20 shadow-xl">
               <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="text-lg">
+              <AvatarFallback className="bg-[#EBE3D5]/20 text-[#5D4037] text-2xl font-black">
                 {user.name.split(' ').map((n: string) => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
 
-            <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-2">
-                <h2 className="text-2xl font-bold text-gray-900">{user.name}</h2>
+            <div className="flex-1 text-center md:text-left">
+              <div className="flex flex-col md:flex-row items-center gap-3 mb-4">
+                <h2 className="text-3xl font-black text-[#2D1B08] uppercase tracking-tighter">{user.name}</h2>
                 {user.verified && (
-                  <CheckCircle className="h-6 w-6 text-green-500" />
+                  <Badge className="bg-[#1B5E20]/10 text-[#1B5E20] border-none font-black text-[10px] items-center h-6">
+                    <CheckCircle className="h-3.5 w-3.5 mr-1" />
+                    VÉRIFIÉ
+                  </Badge>
                 )}
               </div>
 
@@ -269,13 +274,13 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
           </div>
         </div>
 
-        <DialogFooter className="flex justify-between">
-          <div className="flex space-x-2">
+        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-4 px-8 pb-8">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             {user.status === 'active' ? (
               <Button
                 variant="outline"
                 onClick={onSuspend}
-                className="border-orange-500 text-orange-600 hover:bg-orange-50"
+                className="w-full sm:w-auto border-orange-500 text-orange-600 hover:bg-orange-50"
               >
                 <UserX className="h-4 w-4 mr-2" />
                 Suspendre
@@ -284,7 +289,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
               <Button
                 variant="outline"
                 onClick={onActivate}
-                className="border-green-500 text-green-600 hover:bg-green-50"
+                className="w-full sm:w-auto border-green-500 text-green-600 hover:bg-green-50"
               >
                 <UserCheck className="h-4 w-4 mr-2" />
                 Activer
@@ -295,7 +300,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
               <Button
                 variant="outline"
                 onClick={onVerify}
-                className="border-blue-500 text-blue-600 hover:bg-blue-50"
+                className="w-full sm:w-auto border-blue-500 text-blue-600 hover:bg-blue-50"
               >
                 <CheckCircle className="h-4 w-4 mr-2" />
                 Vérifier
@@ -303,18 +308,18 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
             )}
           </div>
 
-          <div className="flex space-x-2">
-            <Button variant="outline" onClick={onEdit}>
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <Button variant="outline" onClick={onEdit} className="w-full sm:w-auto">
               Modifier
             </Button>
             <Button
               variant="outline"
               onClick={onDelete}
-              className="border-red-500 text-red-600 hover:bg-red-50"
+              className="w-full sm:w-auto border-red-500 text-red-600 hover:bg-red-50"
             >
               Supprimer
             </Button>
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="outline" onClick={onClose} className="w-full sm:w-auto">
               <X className="h-4 w-4 mr-2" />
               Fermer
             </Button>

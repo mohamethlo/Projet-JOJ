@@ -848,3 +848,77 @@ export const mockAgencies = [
     ]
   }
 ];
+
+// Mock data pour les artisans
+export const mockArtisans = [
+  {
+    id: '1',
+    name: 'Moussa Diouf',
+    specialty: 'Sculpture sur bois',
+    category: 'Sculpture',
+    location: 'Saly Portudal',
+    city: 'Saly',
+    rating: 4.8,
+    products: 12,
+    priceRange: 'Standard',
+    image: 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=150',
+    description: 'Artisan sculpteur passionné par les traditions sénégalais avec plus de 20 ans d\'expérience.',
+    productList: [
+      { id: 1, name: "Statue Baobab", price: "35,000 FCFA", image: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=400" },
+      { id: 2, name: "Masque Diola", price: "25,000 FCFA", image: "https://images.pexels.com/photos/1181682/pexels-photo-1181682.jpeg?auto=compress&cs=tinysrgb&w=400" },
+      { id: 3, name: "Tabouret Royal", price: "75,000 FCFA", image: "https://images.pexels.com/photos/1452129/pexels-photo-1452129.jpeg?auto=compress&cs=tinysrgb&w=400" }
+    ]
+  },
+  {
+    id: '2',
+    name: 'Fatou Ndiaye',
+    specialty: 'Couture & Tissage',
+    category: 'Textile',
+    location: 'Dakar, Village Artisanal',
+    city: 'Dakar',
+    rating: 4.9,
+    products: 45,
+    priceRange: 'Premium',
+    image: 'https://images.pexels.com/photos/1181682/pexels-photo-1181682.jpeg?auto=compress&cs=tinysrgb&w=150',
+    description: 'Créatrice de vêtements en tissus traditionnels revisités pour un style contemporain.',
+    productList: [
+      { id: 1, name: "Robe Bogolan", price: "45,000 FCFA", image: "https://images.pexels.com/photos/1181682/pexels-photo-1181682.jpeg?auto=compress&cs=tinysrgb&w=400" },
+      { id: 2, name: "Écharpe Soie", price: "15,000 FCFA", image: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=400" },
+      { id: 3, name: "Ensemble Wax", price: "55,000 FCFA", image: "https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=400" }
+    ]
+  },
+  {
+    id: '3',
+    name: 'Abdou Gueye',
+    specialty: 'Poterie & Céramique',
+    category: 'Artisanat traditionnel',
+    location: 'Kolda',
+    city: 'Kolda',
+    rating: 4.7,
+    products: 28,
+    priceRange: 'Économique',
+    image: 'https://images.pexels.com/photos/1452129/pexels-photo-1452129.jpeg?auto=compress&cs=tinysrgb&w=150',
+    description: 'Céramiste utilisant des techniques ancestrales transmises de génération en génération.',
+    productList: [
+      { id: 1, name: "Vase Kolda", price: "8,500 FCFA", image: "https://images.pexels.com/photos/1452129/pexels-photo-1452129.jpeg?auto=compress&cs=tinysrgb&w=400" },
+      { id: 2, name: "Jarres Eau", price: "12,000 FCFA", image: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=400" }
+    ]
+  },
+  {
+    id: '4',
+    name: 'Awa Sow',
+    specialty: 'Bijoux en argent',
+    category: 'Bijoux',
+    location: 'Saint-Louis',
+    city: 'Saint-Louis',
+    rating: 5.0,
+    products: 15,
+    priceRange: 'Luxe',
+    image: 'https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=150',
+    description: 'Joaillière renommée pour son travail délicat de l\'argent et du filigrane.',
+    productList: [
+      { id: 1, name: "Collier Filigrane", price: "120,000 FCFA", image: "https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=400" },
+      { id: 2, name: "Bague Argent", price: "45,000 FCFA", image: "https://images.pexels.com/photos/1181682/pexels-photo-1181682.jpeg?auto=compress&cs=tinysrgb&w=400" }
+    ]
+  }
+];

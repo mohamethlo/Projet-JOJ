@@ -19,6 +19,8 @@ import OrganizerEventsPage from '@/pages/organizer/events/OrganizerEventsPage'
 import GuideManagementPage from '@/pages/guide/guides/GuideManagementPage'
 import GuideBookingsPage from '@/pages/guide/bookings/GuideBookingsPage'
 import ValidationDashboard from '@/pages/admin/validation/ValidationDashboard'
+import AdminRestaurantsPage from '@/pages/admin/restaurants/RestaurantsPage'
+import AdminAgenciesPage from '@/pages/admin/agencies/AdminAgenciesPage'
 import SignalerPage from '@/pages/signaler/SignalerPage'
 import LandingPage from '@/pages/landing/LandingPage'
 import NotificationsPage from '@/pages/notifications/NotificationsPage'
@@ -43,9 +45,16 @@ import MessagesPage from '@/pages/messages/MessagesPage'
 import VideoFeedPage from '@/pages/videos/VideoFeedPage'
 import UserPublicProfilePage from '@/pages/profile/UserPublicProfilePage'
 import RestaurantPage from '@/pages/restaurant/RestaurantPage'
+import ArtisansPage from '@/pages/artisans/ArtisansPage'
+import ArtisanProductsPage from '@/pages/artisan/ProductsPage'
+import ArtisanProfilePage from '@/pages/artisan/ProfilePage'
+import ArtisanOrdersPage from '@/pages/artisan/OrdersPage'
+import PublicArtisanProfilePage from '@/pages/artisans/PublicArtisanProfilePage'
 
 import { FeedProvider } from '@/context/FeedContext'
 import { VisitorEngagementProvider } from '@/context/VisitorEngagementContext'
+import { RestaurantProvider } from '@/context/RestaurantContext'
+import { AgencyProvider } from '@/context/AgencyContext'
 
 import ExploreLayout from '@/components/layout/ExploreLayout'
 import ProtectedRoute from '@/components/auth/ProtectedRoute'
@@ -65,104 +74,118 @@ const App = () => {
   }
 
   return (
-    <VisitorEngagementProvider>
-      <FeedProvider>
-        <Routes>
-          {/* Routes d'authentification */}
-          <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/auth/register" element={<RegisterPage />} />
+    <AgencyProvider>
+      <RestaurantProvider>
+        <VisitorEngagementProvider>
+          <FeedProvider>
+            <Routes>
+            {/* Routes d'authentification */}
+            <Route path="/auth/login" element={<LoginPage />} />
+            <Route path="/auth/register" element={<RegisterPage />} />
 
-          {/* Route racine */}
-          <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
+            {/* Route racine */}
+            <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
 
-          {/* 🟢 PUBLIC EXPLORATION ROUTES (Accessible sans connexion) */}
-          <Route element={<ExploreLayout />}>
-            <Route path="/echos-senegal" element={<DiscoverFeedPage />} />
-            <Route path="/videos" element={<VideoFeedPage />} />
-            <Route path="/guides" element={<GuidesPage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/accommodation" element={<AccommodationPage />} />
-            <Route path="/restaurants" element={<RestaurantPage />} />
-            <Route path="/agencies" element={<AgencyPage />} />
-            <Route path="/history" element={<HistoryPage />} />
-            <Route path="/map" element={<MapPage />} />
-            <Route path="/establishment/:id" element={<PublicEstablishmentProfilePage />} />
-            <Route path="/user/:id" element={<UserPublicProfilePage />} />
-          </Route>
+            {/* 🟢 PUBLIC EXPLORATION ROUTES (Accessible sans connexion) */}
+            <Route element={<ExploreLayout />}>
+              <Route path="/echos-senegal" element={<DiscoverFeedPage />} />
+              <Route path="/videos" element={<VideoFeedPage />} />
+              <Route path="/guides" element={<GuidesPage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/accommodation" element={<AccommodationPage />} />
+              <Route path="/restaurants" element={<RestaurantPage />} />
+              <Route path="/agencies" element={<AgencyPage />} />
+              <Route path="/artisans" element={<ArtisansPage />} />
+              <Route path="/history" element={<HistoryPage />} />
+              <Route path="/map" element={<MapPage />} />
+              <Route path="/establishment/:id" element={<PublicEstablishmentProfilePage />} />
+              <Route path="/artisan/:id" element={<PublicArtisanProfilePage />} />
+              <Route path="/user/:id" element={<UserPublicProfilePage />} />
+            </Route>
 
-          {/* 🔒 PROTECTED APP ROUTES (Authentification requise) */}
-          <Route element={<ProtectedRoute><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/messages" element={<MessagesPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/mes-tickets" element={<MesTicketsPage />} />
-            <Route path="/mes-tickets/:id" element={<TicketDetailsPage />} />
-            <Route path="/signaler" element={<SignalerPage />} />
-          </Route>
+            {/* 🔒 PROTECTED APP ROUTES (Authentification requise) */}
+            <Route element={<ProtectedRoute><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/messages" element={<MessagesPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/mes-tickets" element={<MesTicketsPage />} />
+              <Route path="/mes-tickets/:id" element={<TicketDetailsPage />} />
+              <Route path="/signaler" element={<SignalerPage />} />
+            </Route>
 
-          {/* Admin Routes */}
-          <Route element={<ProtectedRoute roles={['admin']}><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/admin/validation" element={<ValidationDashboard />} />
-            <Route path="/admin/moderation" element={<ModerationPage />} />
-            <Route path="/admin/users" element={<UsersPage />} />
-            <Route path="/admin/accommodation" element={<AdminAccommodationPage />} />
-            <Route path="/admin/articles" element={<ArticlesPage />} />
-          </Route>
+            {/* Admin Routes */}
+            <Route element={<ProtectedRoute roles={['admin']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/admin/validation" element={<ValidationDashboard />} />
+              <Route path="/admin/moderation" element={<ModerationPage />} />
+              <Route path="/admin/users" element={<UsersPage />} />
+              <Route path="/admin/accommodation" element={<AdminAccommodationPage />} />
+              <Route path="/admin/restaurants" element={<AdminRestaurantsPage />} />
+              <Route path="/admin/agencies" element={<AdminAgenciesPage />} />
+              <Route path="/admin/articles" element={<ArticlesPage />} />
+            </Route>
 
-          {/* Organizer Routes */}
-          <Route element={<ProtectedRoute roles={['organizer']}><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/organizer/events" element={<OrganizerEventsPage />} />
-          </Route>
+            {/* Organizer Routes */}
+            <Route element={<ProtectedRoute roles={['organizer']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/organizer/events" element={<OrganizerEventsPage />} />
+            </Route>
 
-          {/* Guide Routes */}
-          <Route element={<ProtectedRoute roles={['guide']}><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/guide/tours" element={<GuideManagementPage />} />
-            <Route path="/guide/bookings" element={<GuideBookingsPage />} />
-          </Route>
+            {/* Guide Routes */}
+            <Route element={<ProtectedRoute roles={['guide']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/guide/tours" element={<GuideManagementPage />} />
+              <Route path="/guide/bookings" element={<GuideBookingsPage />} />
+            </Route>
 
-          {/* Security Routes */}
-          <Route element={<ProtectedRoute roles={['security']}><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/security/dashboard" element={<SecurityDashboardPage />} />
-            <Route path="/security/reports" element={<SecurityReportsPage />} />
-            <Route path="/security/scanner" element={<ScannerPage />} />
-          </Route>
+            {/* Security Routes */}
+            <Route element={<ProtectedRoute roles={['security']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/security/dashboard" element={<SecurityDashboardPage />} />
+              <Route path="/security/reports" element={<SecurityReportsPage />} />
+              <Route path="/security/scanner" element={<ScannerPage />} />
+            </Route>
 
-          {/* Establishment Routes */}
-          <Route element={<ProtectedRoute roles={['hotel', 'restaurant']}><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/establishment/bookings" element={<BookingsPage />} />
-            <Route path="/establishment/profile" element={<EstablishmentProfilePage />} />
-            <Route path="/establishment/reviews" element={<ReviewsPage />} />
-          </Route>
+            {/* Establishment Routes */}
+            <Route element={<ProtectedRoute roles={['hotel', 'restaurant']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/establishment/bookings" element={<BookingsPage />} />
+              <Route path="/establishment/profile" element={<EstablishmentProfilePage />} />
+              <Route path="/establishment/reviews" element={<ReviewsPage />} />
+            </Route>
 
-          <Route element={<ProtectedRoute roles={['hotel']}><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/establishment/rooms" element={<RoomsPage />} />
-          </Route>
+            <Route element={<ProtectedRoute roles={['hotel']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/establishment/rooms" element={<RoomsPage />} />
+            </Route>
 
-          <Route element={<ProtectedRoute roles={['restaurant']}><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/establishment/menu" element={<MenuPage />} />
-          </Route>
+            <Route element={<ProtectedRoute roles={['restaurant']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/establishment/menu" element={<MenuPage />} />
+            </Route>
 
-          <Route element={<ProtectedRoute roles={['agency']}><Layout><Outlet /></Layout></ProtectedRoute>}>
-            <Route path="/establishment/offers" element={<AgencyOffersPage />} />
-            <Route path="/agency/bookings" element={<AgencyBookingsPage />} />
-            <Route path="/agency/profile" element={<AgencyProfilePage />} />
-            <Route path="/agency/reviews" element={<AgencyReviewsPage />} />
-          </Route>
+            <Route element={<ProtectedRoute roles={['agency']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/establishment/offers" element={<AgencyOffersPage />} />
+              <Route path="/agency/bookings" element={<AgencyBookingsPage />} />
+              <Route path="/agency/profile" element={<AgencyProfilePage />} />
+              <Route path="/agency/reviews" element={<AgencyReviewsPage />} />
+            </Route>
 
-          <Route path="*" element={
-            <Layout>
-              <div className="text-center py-12">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">Page non trouvée</h1>
-                <p className="text-gray-600">La page que vous recherchez n'existe pas ou nous l'avons déplacée.</p>
-                <Navigate to="/" replace />
-              </div>
-            </Layout>
-          } />
-        </Routes>
-        <Toaster position="top-right" />
-      </FeedProvider >
-    </VisitorEngagementProvider>
+            <Route element={<ProtectedRoute roles={['artisan']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/artisan/orders" element={<ArtisanOrdersPage />} />
+              <Route path="/artisan/products" element={<ArtisanProductsPage />} />
+              <Route path="/artisan/profile" element={<ArtisanProfilePage />} />
+            </Route>
+
+            <Route path="*" element={
+              <Layout>
+                <div className="text-center py-12">
+                  <h1 className="text-2xl font-bold text-gray-900 mb-4">Page non trouvée</h1>
+                  <p className="text-gray-600">La page que vous recherchez n'existe pas ou nous l'avons déplacée.</p>
+                  <Navigate to="/" replace />
+                </div>
+              </Layout>
+            } />
+          </Routes>
+          <Toaster position="top-right" />
+        </FeedProvider >
+      </VisitorEngagementProvider>
+    </RestaurantProvider>
+  </AgencyProvider>
   )
 }
 

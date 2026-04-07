@@ -1,149 +1,181 @@
-RAPPORT D'ACTIVITÉ HEBDOMADAIRE - PROJET DISCOVER SÉNÉGAL
-Période : Du 24 Février au 1er Mars 2026
+RAPPORT HEBDOMADAIRE - PROJET DISCOVER SÉNÉGAL
+Période : Du 31 Mars au 6 Avril 2026
+Rédigé le : 7 Avril 2026
 
-OBJET : Mise en place de l'espace Agences de Voyage, système d'engagement visiteur, amélioration des interfaces et corrections diverses
+OBJET : FINALISATION DU SYSTÈME D'AUTHENTIFICATION, MODÉRATION COMMUNAUTAIRE
+         ET REFONTE COMPLÈTE DU TABLEAU DE BORD ADMINISTRATEUR
 
-═══════════════════════════════════════════════════════════════
-I. FONCTIONNALITÉ MAJEURE : ESPACE AGENCES DE VOYAGE
-═══════════════════════════════════════════════════════════════
+==============================================================================
 
-La réalisation principale de cette semaine est la création d'un espace dédié
-aux agences de voyage, similaire à ce qui existe déjà pour les hôtels et les
-restaurants.
+1. RÉSUMÉ DES ACTIVITÉS
 
-1.1 Nouveau Rôle Utilisateur "Agency"
-   * Un nouveau rôle `agency` a été ajouté au système d'authentification.
-   * Un compte de test est disponible : agence@test.com
-   * Les agences ont un dashboard personnalisé distinct de celui des hôtels.
+Cette semaine a été marquée par trois chantiers majeurs menés en parallèle :
+la finalisation de l'expérience de connexion, l'implémentation d'un système
+de signalement de publications pour la modération communautaire, et une refonte
+complète du tableau de bord administrateur avec des graphiques analytiques
+de haut niveau.
 
-1.2 Page Publique des Agences (/agencies)
-   * Création d'une nouvelle page de listing des agences accessibles à tous
-     les visiteurs, sans connexion requise.
-   * Interface avec filtres par type de circuit (Safari, Éco-Tourisme, etc.)
-   * Cartes d'agences avec photo, description, note et spécialités.
+==============================================================================
 
-1.3 Profils Détaillés des Agences
-   * La page de profil d'établissement a été adaptée pour afficher un onglet
-     "Offres & Circuits" à la place de l'onglet "Chambres" habituellement
-     réservé aux hôtels.
+2. RÉALISATIONS MAJEURES
 
-1.4 Dashboard Agence - Page "Nos Offres & Circuits"
-   * Création de la page AgencyOffersPage.tsx entièrement dédiée aux agences.
-   * Remplacement de la vue "Gestion des Chambres" (qui s'affichait par erreur)
-     par une interface métier adaptée aux voyages organisés.
-   * Interface avec 7 offres mockées variées (Safari, Culturel, Aventure,
-     Éco-Tourisme, Photo & Art, Détente, Grand Tour).
+------------------------------------------------------------------------------
+A. FINALISATION DE LA PAGE DE CONNEXION (LoginPage.tsx)
+------------------------------------------------------------------------------
 
-═══════════════════════════════════════════════════════════════
-II. AMÉLIORATIONS DES CARTES D'OFFRES
-═══════════════════════════════════════════════════════════════
+- Refonte Premium de la page de connexion : adoption du design "Terre & Or"
+  avec bordures arrondies (3rem), ombres profondes et effets d'animation sur
+  le logo (rotation et réinitialisation au survol).
 
-2.1 Redesign Premium des Cartes
-   * Badges de type colorés selon la catégorie (Safari en amber, Culturel en
-     violet, Aventure en rouge, Éco-Tourisme en teal, Détente en rose).
-   * Affichage des notes et avis directement sur l'image hero de chaque carte.
-   * Localisation (destination) visible en superposition sur la photo.
-   * Barre de taux de remplissage (nombre d'inscrits vs capacité maximum).
-   * Effet zoom sur l'image au survol de la carte.
-   * Tags "services inclus" plus compacts, avec icône de vérification.
-   * Bouton "Ajouter une offre" sous forme de carte fantôme interactive.
+- Système "Mot de Passe Oublié" avec flux multi-étapes :
+    * Vue 1 : Formulaire de connexion standard
+    * Vue 2 : Saisie de l'adresse e-mail de récupération
+    * Vue 3 : Confirmation d'envoi du lien de réinitialisation
+  Le tout géré par un état React, sans rechargement de page, pour une
+  expérience fluide et moderne.
 
-2.2 Tableau de Bord Statistique
-   * 4 indicateurs clés en haut de page : Total Offres, Offres Actives,
-     Voyageurs Inscrits, Taux de Remplissage global.
+- Correction de bug critique : résolution de l'erreur "Badge is not defined"
+  qui empêchait l'affichage de la page de connexion.
 
-2.3 Bouton "Détail" sur les Cartes
-   * Chaque carte dispose désormais de 3 actions : Détail, Modifier, Supprimer.
-   * Le bouton "Détail" ouvre un modal immersif complet comprenant :
-     - Image hero grande avec navigation de galerie (flèches + indicateurs)
-     - Badge de type, destination et note
-     - Prix mis en avant dans un encadré
-     - 3 statistiques clés (Durée, Capacité, Inscrits)
-     - Barre de taux de remplissage avec couleur dynamique
-     - Description complète du circuit
-     - Tous les services inclus (liste exhaustive)
-     - Boutons "Modifier" et "Fermer" en bas
+- Correction de l'inclinaison du logo signalée visuellement.
 
-═══════════════════════════════════════════════════════════════
-III. SYSTÈME D'ENGAGEMENT VISITEUR INTELLIGENT (MODE INVITÉ)
-═══════════════════════════════════════════════════════════════
+------------------------------------------------------------------------------
+B. SYSTÈME DE SIGNALEMENT DE PUBLICATIONS (ReportPostModal.tsx)
+------------------------------------------------------------------------------
 
-L'une des fonctionnalités les plus stratégiques de la semaine est la mise en
-place d'un système complet de conversion des visiteurs anonymes en membres
-inscrits, sans bloquer leur navigation.
+Fonctionnalité permettant aux utilisateurs de signaler un contenu
+inapproprié directement depuis le flux "Échos du Sénégal".
 
-3.1 Popup de Connexion sur Toutes les Actions Protégées
-   * En mode invité, chaque tentative d'interaction (liker, sauvegarder,
-     réserver, contacter un guide, commenter, etc.) déclenche automatiquement
-     un popup élégant invitant à se connecter ou à créer un compte.
-   * Le popup s'affiche de manière non-bloquante : le visiteur reste sur la
-     page et peut continuer à explorer même après sa fermeture.
-   * Implémenté via le hook useProtectedAction.ts et le composant AuthModal.tsx,
-     intégrés sur tous les boutons interactifs clés de la plateforme
-     (Hébergements, Événements, Flux, Profils, Vidéos).
+Composant créé : ReportPostModal.tsx
+  - Interface interactive et immersive (design Terre & Or)
+  - 6 catégories de signalement avec icônes distinctives :
+      * Spam ou contenu indésirable
+      * Harcèlement ou discours de haine
+      * Contenu inapproprié ou sexuel
+      * Fausses informations ou tromperie
+      * Violence ou contenu graphique
+      * Autre raison
+  - Champ de texte libre pour les précisions facultatives
+  - État de chargement simulé ("Envoi en cours...")
+  - Écran de confirmation animé avec message de succès
 
-3.2 Page Immersive de Conversion (VisitorEngagementModal)
-   * Après 2 tentatives d'actions protégées (ou après un certain scroll),
-     une page immersive plein écran s'affiche automatiquement, invitant
-     le visiteur à rejoindre DiscoverSénégal.
-   * Design Terre & Or premium avec animation pour capter l'attention.
-   * Message personnalisé mettant en avant les bénéfices de l'inscription.
-   * L'utilisateur peut toujours choisir de fermer la page et continuer
-     à explorer en mode invité.
-   * Implémenté via le contexte VisitorEngagementContext.tsx qui tracke
-     les interactions et le scroll (déclencheur à 6 scrolls ou 2 actions).
+Intégration dans DiscoverFeedPage.tsx :
+  - Connexion du bouton "SIGNALER LA PUBLICATION" (menu à trois points)
+    pour ouvrir la modale avec les informations du post sélectionné
+  - Gestion des états : isReportModalOpen et postToReport
+  - Notification Toast via Sonner à la soumission
 
-   => IMPACT BUSINESS : Ce système crée un "besoin organique" d'inscription.
-      Le visiteur découvre du contenu de valeur, tente d'interagir, et
-      s'inscrit pour ne pas perdre ses actions. Ce mécanisme garantit une
-      base d'utilisateurs plus qualifiée et engagée que les inscriptions
-      forcées à l'entrée du site.
+Correction UX : la hauteur de la modale dépassait l'écran sur petits
+  écrans. Résolution par l'ajout de max-h-[95vh], flex flex-col et
+  overflow-y-auto sur la zone de contenu pour un défilement interne.
 
+------------------------------------------------------------------------------
+C. REFONTE COMPLÈTE DU TABLEAU DE BORD ADMINISTRATEUR
+------------------------------------------------------------------------------
 
-═══════════════════════════════════════════════════════════════
-IV. AUTRES CORRECTIONS ET AMÉLIORATIONS
-═══════════════════════════════════════════════════════════════
+Refonte architecturale totale du composant AdminDashboard.tsx, découpé
+en modules indépendants pour une maintenabilité optimale.
 
-4.1 Bouton Menu sur les Cartes Restaurants
-   * Ajout d'un bouton "Menu" sur les cartes de restaurants dans le flux.
-   * Redirection directe vers l'onglet Menu de la page publique du restaurant.
+Installation de la bibliothèque recharts (graphiques interactifs).
 
-4.2 Bouton Partager Fonctionnel
-   * Le bouton "Partager" dans le flux de découverte est maintenant actif.
-   * Utilise l'API Web Share native du navigateur.
-   * Fallback automatique : copie du lien dans le presse-papiers si Web Share
-     n'est pas supporté par le navigateur.
+Composants créés :
 
-4.3 Onglet Menu sur les Pages Publiques de Restaurants
-   * Les profils publics des restaurants disposent maintenant d'un onglet "Menu"
-     affichant les plats par catégorie avec photos, descriptions et prix.
+  1. DashboardContent.tsx (composant parent orchestrateur)
+     Intègre les 5 sections verticales du tableau de bord.
 
-4.4 Correction du Rechargement des Images
-   * Résolution d'un problème d'affichage des images sur la page d'accueil
-     (ERR_CONNECTION_REFUSED) dû à l'interruption du serveur de développement.
+  2. StatCard.tsx (Cartes de statistiques)
+     - 6 indicateurs clés : Utilisateurs totaux, Nouveaux (7 jours),
+       Publications, Vidéos, Artisans, Messages échangés
+     - Indicateurs de tendance (flèche verte/rouge + pourcentage)
+     - Barre de progression visuelle en gradient Or/Brun
 
-═══════════════════════════════════════════════════════════════
-V. ÉTAT TECHNIQUE ET PERSPECTIVE
-═══════════════════════════════════════════════════════════════
+  3. ChartCard.tsx (Conteneur des graphiques)
+     - Graphique 1 – Évolution des utilisateurs (AreaChart, courbe)
+       avec dégradé doré sous la courbe
+     - Graphique 2 – Activité plateforme (BarChart) : volumes de
+       posts et commentaires par jour de la semaine
+     - Graphique 3 – Répartition des rôles (PieChart/Donut) :
+       répartition Touristes, Artisans, Agences, Guides
+     - Tooltips personnalisés aux couleurs du thème
+     - Graphiques 100% responsifs
 
-FICHIERS MODIFIÉS CETTE SEMAINE :
-  - src/context/AuthContext.tsx      (ajout rôle 'agency')
-  - src/components/layout/Sidebar.tsx (liens agences)
-  - src/App.tsx                       (nouvelles routes)
-  - src/lib/mockData.ts               (données agences)
-  - src/pages/agency/AgencyPage.tsx   (nouveau - listing public)
-  - src/pages/agency/AgencyOffersPage.tsx (nouveau - dashboard)
-  - src/pages/establishment/EstablishmentProfilePage.tsx (onglet offres)
-  - src/pages/feed/DiscoverFeedPage.tsx  (bouton partager)
-  - src/pages/accommodation/AccommodationPage.tsx (bouton Menu)
+  4. ActivityFeed.tsx (Flux d'activité récente)
+     - Affichage chronologique des nouveaux inscrits, publications,
+       artisans et agences avec avatars dynamiques
+     - Icônes de catégorie (utilisateur, publication, artisan, agence)
 
-PROCHAINES PISTES ENVISAGEABLES :
-  - Connexion backend réelle pour les agences (actuellement mocké)
-  - Système de réservation spécifique aux circuits
-  - Page de profil public détaillée pour chaque agence
-  - Filtres avancés sur la page /agencies (prix, durée, destination)
+  5. TopPerformers.tsx (Meilleures performances)
+     - Artisans les plus actifs (avec nombre de likes)
+     - Publications les plus vues
+     - Guides les plus demandés (avec notes et nombres de visites)
 
-═══════════════════════════════════════════════════════════════
+  6. AlertList.tsx (Alertes et modération)
+     - Affichage des signalements avec priorité (Critique / Attention)
+     - Badges colorés rouge et orange selon l'urgence
+     - Bouton "Voir détails" par alerte
+     - Lien direct vers le centre de modération complet
 
-Rédigé par l'Assistant IA Antigravity
-Date de rédaction : 01 Mars 2026
+En-tête Premium conservé dans AdminDashboard.tsx :
+  - Bannière en dégradé immersif (#2D1B08 → #5D4037)
+  - Affichage du prénom de l'administrateur
+  - Bouton "Alertes" avec compteur dynamique
+
+------------------------------------------------------------------------------
+D. CORRECTIONS & STABILISATION
+------------------------------------------------------------------------------
+
+- Correction de l'erreur "Newspaper is not defined" dans AdminDashboard.tsx
+  après la première implémentation (import Lucide manquant).
+
+- Suppression des imports inutilisés dans ActivityFeed.tsx (Badge)
+  et DashboardContent.tsx (PieChart as PieChartIcon) pour éviter les
+  avertissements TypeScript.
+
+- Vérification de la cohérence des routes dans App.tsx pour s'assurer
+  que tous les liens du Hub de gestion Admin pointent vers les bonnes pages.
+
+==============================================================================
+
+3. ÉTAT D'AVANCEMENT PAR MODULE
+
+  Page de Connexion & Mot de Passe Oublié    : 100% Fonctionnel
+  Signalement de Publications (Frontend)      : 100% Fonctionnel (simulation)
+  Tableau de Bord Admin - En-tête Premium     : 100% Fonctionnel
+  Tableau de Bord Admin - Statistiques        : 100% Fonctionnel
+  Tableau de Bord Admin - Graphiques Recharts : 100% Fonctionnel
+  Tableau de Bord Admin - Flux d'Activité     : 100% Fonctionnel
+  Tableau de Bord Admin - Top Performances    : 100% Fonctionnel
+  Tableau de Bord Admin - Centre Alertes      : 100% Fonctionnel
+
+==============================================================================
+
+4. POINTS EN ATTENTE / PROCHAINES ÉTAPES
+
+  - Connexion Backend : les signalements de publications sont simulés
+    côté frontend. Une route API devra être créée pour les enregistrer
+    en base de données et les faire remonter dans la page de modération Admin.
+
+  - Authentification réelle : le flux "Mot de Passe Oublié" envoie
+    une simulation. L'intégration avec un service d'e-mail transactionnel
+    (ex : SendGrid, Nodemailer) est à prévoir côté backend.
+
+  - Données réelles Dashboard : les statistiques et graphiques Admin
+    utilisent des données mockées. L'étape suivante est de les brancher
+    aux vrais endpoints API d'agrégation.
+
+==============================================================================
+
+5. TECHNOLOGIES UTILISÉES CETTE SEMAINE
+
+  - React 19 + TypeScript
+  - Recharts (installé cette semaine) : graphiques analytiques
+  - Lucide-React : iconographie
+  - Sonner : notifications Toast
+  - Shadcn UI (Dialog, Button, Badge, Textarea, etc.)
+  - Tailwind CSS : design responsive et système de tokens
+
+==============================================================================
+
+--------------------------------------------------
+Rapport rédigé par Antigravity pour le Projet Discover Sénégal.
+Semaine du 31 Mars au 6 Avril 2026.

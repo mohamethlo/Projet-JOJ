@@ -8,12 +8,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import {
   User,
-  Mail,
   Phone,
   MapPin,
   Shield,
   Save,
-  X,
   Upload,
   Eye,
   EyeOff
@@ -235,110 +233,124 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            <User className="h-5 w-5" />
-            <span>{mode === 'create' ? 'Créer un utilisateur' : 'Modifier l\'utilisateur'}</span>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto border-none bg-[#FFFDFB] rounded-3xl shadow-2xl p-0">
+        <DialogHeader className="p-8 border-b border-[#EBE3D5]/50 bg-[#EBE3D5]/10">
+          <DialogTitle className="flex items-center space-x-3 text-2xl font-black uppercase tracking-tighter text-[#2D1B08]">
+            <div className="bg-[#F2A900] p-2 rounded-xl text-white">
+              <User className="h-6 w-6" />
+            </div>
+            <span>{mode === 'create' ? 'Nouvel Utilisateur' : 'Édition Profil'}</span>
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="p-8 space-y-8">
           {/* Avatar et informations de base */}
-          <div className="flex items-center space-x-6">
-            <div className="flex flex-col items-center space-y-2">
-              <Avatar className="h-20 w-20">
-                <AvatarImage src={formData.avatar} alt={formData.name} />
-                <AvatarFallback>
-                  {formData.name ? formData.name.split(' ').map(n => n[0]).join('') : 'U'}
-                </AvatarFallback>
-              </Avatar>
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+            <div className="flex flex-col items-center space-y-3">
+              <div className="relative group">
+                <Avatar className="h-28 w-28 border-4 border-[#F2A900]/20 shadow-lg transition-transform group-hover:scale-105">
+                  <AvatarImage src={formData.avatar} alt={formData.name} />
+                  <AvatarFallback className="bg-[#EBE3D5]/20 text-[#5D4037] text-xl font-black">
+                    {formData.name ? formData.name.split(' ').map(n => n[0]).join('') : 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                  <Upload className="h-6 w-6 text-white" />
+                </div>
+              </div>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="text-xs"
+                className="text-[10px] font-black uppercase tracking-widest border-[#EBE3D5] text-[#5D4037] h-8 rounded-lg px-4"
                 onClick={() => {
                   const url = prompt('URL de l\'avatar:');
                   if (url) handleInputChange('avatar', url);
                 }}
               >
-                <Upload className="h-3 w-3 mr-1" />
-                Changer
+                Changer Photo
               </Button>
             </div>
 
-            <div className="flex-1 space-y-4">
-              <div>
-                <Label htmlFor="name">Nom complet *</Label>
+            <div className="flex-1 w-full space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60 ml-1">Nom complet *</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className={errors.name ? 'border-red-500' : ''}
-                  placeholder="Nom et prénom"
+                  className={`bg-white border-2 border-[#EBE3D5] rounded-xl h-12 focus:border-[#F2A900] transition-all font-bold ${errors.name ? 'border-red-500' : ''}`}
+                  placeholder="Ex: Babacar Diop"
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.name && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.name}</p>}
               </div>
 
-              <div>
-                <Label htmlFor="email">Email *</Label>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60 ml-1">Adresse Email *</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  className={errors.email ? 'border-red-500' : ''}
-                  placeholder="email@exemple.com"
+                  className={`bg-white border-2 border-[#EBE3D5] rounded-xl h-12 focus:border-[#F2A900] transition-all font-bold ${errors.email ? 'border-red-500' : ''}`}
+                  placeholder="contact@exemple.com"
                 />
-                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                {errors.email && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.email}</p>}
               </div>
             </div>
           </div>
 
           {/* Informations de contact */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="phone">Téléphone *</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                className={errors.phone ? 'border-red-500' : ''}
-                placeholder="+221 77 123 45 67"
-              />
-              {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60 ml-1">Téléphone *</Label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#F2A900]">
+                  <Phone className="h-4 w-4" />
+                </div>
+                <Input
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  className={`bg-white border-2 border-[#EBE3D5] rounded-xl h-12 pl-12 focus:border-[#F2A900] transition-all font-bold ${errors.phone ? 'border-red-500' : ''}`}
+                  placeholder="+221 ..."
+                />
+              </div>
+              {errors.phone && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.phone}</p>}
             </div>
 
-            <div>
-              <Label htmlFor="location">Localisation *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="location" className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60 ml-1">Localisation *</Label>
               <Select value={formData.location} onValueChange={(value) => handleInputChange('location', value)}>
-                <SelectTrigger className={errors.location ? 'border-red-500' : ''}>
-                  <SelectValue placeholder="Sélectionner une ville" />
+                <SelectTrigger className={`bg-white border-2 border-[#EBE3D5] rounded-xl h-12 focus:border-[#F2A900] transition-all font-bold ${errors.location ? 'border-red-500' : ''}`}>
+                  <div className="flex items-center">
+                    <MapPin className="h-4 w-4 mr-2 text-[#F2A900]" />
+                    <SelectValue placeholder="Sélectionner" />
+                  </div>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl border-[#EBE3D5] shadow-xl">
                   {locations.map(location => (
-                    <SelectItem key={location} value={location}>{location}</SelectItem>
+                    <SelectItem key={location} value={location} className="font-bold focus:bg-[#F2A900]/10 focus:text-[#F2A900]">{location}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
+              {errors.location && <p className="text-red-500 text-[10px] font-bold mt-1 ml-1">{errors.location}</p>}
             </div>
           </div>
 
           {/* Rôle et statut */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="role">Rôle</Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="role" className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60 ml-1">Rôle</Label>
               <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white border-2 border-[#EBE3D5] rounded-xl h-12 focus:border-[#F2A900] transition-all font-bold">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl border-[#EBE3D5] shadow-xl">
                   {roles.map(role => (
-                    <SelectItem key={role.value} value={role.value}>
+                    <SelectItem key={role.value} value={role.value} className="font-bold">
                       <div className="flex items-center space-x-2">
-                        <Shield className="h-4 w-4" />
+                        <Shield className="h-4 w-4 text-[#F2A900]" />
                         <span>{role.label}</span>
                       </div>
                     </SelectItem>
@@ -347,16 +359,21 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
               </Select>
             </div>
 
-            <div>
-              <Label htmlFor="status">Statut</Label>
+            <div className="space-y-2">
+              <Label htmlFor="status" className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60 ml-1">Statut</Label>
               <Select value={formData.status} onValueChange={(value) => handleInputChange('status', value)}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white border-2 border-[#EBE3D5] rounded-xl h-12 focus:border-[#F2A900] transition-all font-bold">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl border-[#EBE3D5] shadow-xl">
                   {statuses.map(status => (
-                    <SelectItem key={status.value} value={status.value}>
-                      <Badge variant={status.value === 'active' ? 'default' : status.value === 'suspended' ? 'destructive' : 'secondary'}>
+                    <SelectItem key={status.value} value={status.value} className="font-bold">
+                      <Badge className={`
+                        ${status.value === 'active' ? 'bg-[#1B5E20]/10 text-[#1B5E20]' : 
+                          status.value === 'suspended' ? 'bg-red-50 text-red-600' : 
+                          'bg-[#EBE3D5]/30 text-[#5D4037]/60'} 
+                        border-none font-black text-[10px] uppercase tracking-tighter
+                      `}>
                         {status.label}
                       </Badge>
                     </SelectItem>
@@ -420,15 +437,15 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
           )}
 
           {/* Vérification */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3 p-4 bg-[#1B5E20]/5 rounded-2xl border border-[#1B5E20]/10">
             <input
               type="checkbox"
               id="verified"
               checked={formData.verified}
               onChange={(e) => handleInputChange('verified', e.target.checked)}
-              className="rounded border-gray-300"
+              className="w-5 h-5 rounded-lg border-2 border-[#1B5E20]/20 text-[#1B5E20] focus:ring-[#1B5E20] transition-all cursor-pointer"
             />
-            <Label htmlFor="verified" className="text-sm">
+            <Label htmlFor="verified" className="text-xs font-black uppercase tracking-widest text-[#1B5E20] cursor-pointer">
               Utilisateur vérifié
             </Label>
           </div>
@@ -635,14 +652,13 @@ const UserEditModal: React.FC<UserEditModalProps> = ({
             </div>
           )}
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              <X className="h-4 w-4 mr-2" />
+          <DialogFooter className="pt-8 border-t border-[#EBE3D5]/50 flex flex-col sm:flex-row gap-3">
+            <Button type="button" variant="ghost" onClick={onClose} className="text-[#5D4037] font-black uppercase text-[10px] h-12 px-8 rounded-xl">
               Annuler
             </Button>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+            <Button type="submit" className="bg-[#2D1B08] text-white hover:bg-[#3D2B18] font-black uppercase text-[10px] h-12 px-8 rounded-xl shadow-lg shadow-[#2D1B08]/20 flex items-center">
               <Save className="h-4 w-4 mr-2" />
-              {mode === 'create' ? 'Créer' : 'Sauvegarder'}
+              {mode === 'create' ? 'Créer le profil' : 'Enregistrer'}
             </Button>
           </DialogFooter>
         </form>

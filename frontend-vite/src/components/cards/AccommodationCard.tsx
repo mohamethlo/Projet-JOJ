@@ -17,7 +17,8 @@ import {
   Car,
   Waves,
   Dumbbell,
-  Wind
+  Wind,
+  Image as ImageIcon
 } from 'lucide-react';
 import { AccommodationDetailsModal, AccommodationBookingModal, ReviewModal, ReviewsModal } from '@/components/modals';
 import useProtectedAction from '../../hooks/useProtectedAction';
@@ -127,12 +128,19 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
         onClick={handleViewDetails}
       >
         <div className="flex flex-col md:flex-row">
-          <div className="relative w-full md:w-80 h-64 md:h-auto flex-shrink-0 overflow-hidden">
-            <img
-              src={accommodation.image}
-              alt={accommodation.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            />
+          <div className="relative w-full md:w-80 h-64 md:h-auto flex-shrink-0 overflow-hidden bg-[#F8F5F0] flex items-center justify-center">
+            {accommodation.image ? (
+              <img
+                src={accommodation.image}
+                alt={accommodation.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center text-[#5D4037]/20">
+                <ImageIcon className="w-12 h-12 mb-2" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Aucune photo</span>
+              </div>
+            )}
             {accommodation.featured && (
               <Badge className="absolute top-4 left-4 bg-[#F2A900] text-white font-black uppercase tracking-tighter shadow-lg border-none px-3 py-1">
                 Recommandé
@@ -244,12 +252,19 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
         className="hover:shadow-2xl transition-all duration-500 cursor-pointer group overflow-hidden border-2 border-[#EBE3D5] hover:border-[#F2A900] bg-white flex flex-col h-full rounded-2xl"
         onClick={handleViewDetails}
       >
-        <div className="relative h-64 overflow-hidden">
-          <img
-            src={accommodation.image}
-            alt={accommodation.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-          />
+        <div className="relative h-64 overflow-hidden bg-[#F8F5F0] flex items-center justify-center">
+          {accommodation.image ? (
+            <img
+              src={accommodation.image}
+              alt={accommodation.name}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center text-[#5D4037]/20">
+              <ImageIcon className="w-12 h-12 mb-2" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Aucune photo</span>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
           {accommodation.featured && (
             <Badge className="absolute top-4 left-4 bg-[#F2A900] text-white font-black uppercase tracking-tighter border-none px-3 py-1 shadow-lg">

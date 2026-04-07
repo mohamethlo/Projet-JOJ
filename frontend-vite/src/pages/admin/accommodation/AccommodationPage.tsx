@@ -24,8 +24,7 @@ import {
   User,
   Star,
   MapPin,
-  Clock,
-  DollarSign
+  Clock
 } from 'lucide-react';
 import { AccommodationDetailsModal, AccommodationEditModal } from '@/components/modals';
 import { toast } from 'sonner';
@@ -553,90 +552,86 @@ const AccommodationPage: React.FC = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Disponible':
-        return 'bg-green-100 text-green-700';
-      case 'Indisponible':
-        return 'bg-red-100 text-red-700';
-      case 'En attente':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'Suspendu':
-        return 'bg-gray-100 text-gray-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-[calc(100vh-4rem)] bg-[#FFFDFB]">
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
           {/* Header */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Gestion des Hébergements</h1>
-              <p className="text-gray-600 mt-1">Administrez tous les établissements de la plateforme</p>
+              <h1 className="text-2xl sm:text-3xl font-black text-[#2D1B08] uppercase tracking-tighter leading-none">Gestion des Hébergements</h1>
+              <p className="text-[#5D4037]/70 mt-2 text-sm sm:text-base font-medium">Administrez tous les établissements de la plateforme</p>
             </div>
-            <div className="flex items-center space-x-4">
-              <Badge className="bg-blue-100 text-blue-700 text-sm">
+            <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+              <Badge className="bg-[#5D4037]/5 text-[#5D4037] border-none font-black uppercase text-xs tracking-tighter py-1.5 px-3">
                 {sortedAccommodations.length} établissement(s)
               </Badge>
               <Button
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-[#2D1B08] hover:bg-[#F2A900] text-white font-black uppercase tracking-tighter transition-colors w-full sm:w-auto text-xs py-2 h-auto"
                 onClick={handleCreateAccommodation}
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Ajouter un établissement
+                Ajouter
               </Button>
             </div>
           </div>
 
           {/* Onglets */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="list" className="flex items-center space-x-2">
-                <Building className="h-4 w-4" />
-                <span>Liste des établissements</span>
-              </TabsTrigger>
-              <TabsTrigger value="stats" className="flex items-center space-x-2">
-                <BarChart3 className="h-4 w-4" />
-                <span>Statistiques</span>
-              </TabsTrigger>
-              <TabsTrigger value="deleted" className="flex items-center space-x-2">
-                <Trash2 className="h-4 w-4" />
-                <span>Établissements supprimés</span>
-                {deletedAccommodations.length > 0 && (
-                  <Badge variant="destructive" className="ml-1 text-xs">
-                    {deletedAccommodations.length}
-                  </Badge>
-                )}
-              </TabsTrigger>
-            </TabsList>
+            <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+              <TabsList className="bg-[#FFFDFB] border border-[#EBE3D5] p-1 h-auto flex w-max sm:w-full rounded-xl gap-2 mb-2">
+                <TabsTrigger 
+                  value="list" 
+                  className="flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg data-[state=active]:bg-[#F2A900] data-[state=active]:text-white data-[state=inactive]:text-[#5D4037]/70 font-black uppercase tracking-tighter text-xs transition-colors"
+                >
+                  <Building className="h-4 w-4" />
+                  <span>Liste</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="stats" 
+                  className="flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg data-[state=active]:bg-[#F2A900] data-[state=active]:text-white data-[state=inactive]:text-[#5D4037]/70 font-black uppercase tracking-tighter text-xs transition-colors"
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  <span>Statistiques</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="deleted" 
+                  className="flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg data-[state=active]:bg-[#E11D48] data-[state=active]:text-white data-[state=inactive]:text-[#5D4037]/70 font-black uppercase tracking-tighter text-xs transition-colors"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  <span>Supprimés</span>
+                  {deletedAccommodations.length > 0 && (
+                    <Badge className="ml-1 text-[10px] bg-white text-[#E11D48] border-none px-1.5 py-0.5 rounded-full">
+                      {deletedAccommodations.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="list" className="space-y-6">
               {/* Barre de recherche et filtres */}
-              <Card className="shadow-sm">
-                <CardContent className="p-6">
+              <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl shadow-sm">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex flex-col lg:flex-row gap-4">
                     <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#5D4037]/40 h-5 w-5" />
                       <Input
                         placeholder="Rechercher un établissement..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-12 h-12 text-lg"
+                        className="pl-12 h-12 text-base sm:text-lg border-2 border-[#EBE3D5] focus-visible:ring-[#F2A900] rounded-xl text-[#2D1B08] placeholder:text-[#5D4037]/40 font-medium"
                       />
                     </div>
 
-                    <div className="flex gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[auto_auto_auto_auto] gap-3">
                       <Select value={selectedType} onValueChange={setSelectedType}>
-                        <SelectTrigger className="w-48">
+                        <SelectTrigger className="w-full lg:w-36 border-2 border-[#EBE3D5] h-12 rounded-xl text-[#2D1B08] font-bold text-sm">
                           <SelectValue placeholder="Type" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="border-2 border-[#EBE3D5] rounded-xl">
                           {types.map(type => (
-                            <SelectItem key={type} value={type}>
+                            <SelectItem key={type} value={type} className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">
                               <div className="flex items-center space-x-2">
                                 {getTypeIcon(type)}
                                 <span>{type}</span>
@@ -647,34 +642,34 @@ const AccommodationPage: React.FC = () => {
                       </Select>
 
                       <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                        <SelectTrigger className="w-48">
+                        <SelectTrigger className="w-full lg:w-36 border-2 border-[#EBE3D5] h-12 rounded-xl text-[#2D1B08] font-bold text-sm">
                           <SelectValue placeholder="Statut" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="border-2 border-[#EBE3D5] rounded-xl">
                           {statuses.map(status => (
-                            <SelectItem key={status} value={status}>{status}</SelectItem>
+                            <SelectItem key={status} value={status} className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">{status}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
 
                       <Select value={sortBy} onValueChange={setSortBy}>
-                        <SelectTrigger className="w-40">
+                        <SelectTrigger className="w-full lg:w-36 border-2 border-[#EBE3D5] h-12 rounded-xl text-[#2D1B08] font-bold text-sm">
                           <SelectValue placeholder="Trier par" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="name">Nom</SelectItem>
-                          <SelectItem value="type">Type</SelectItem>
-                          <SelectItem value="location">Localisation</SelectItem>
-                          <SelectItem value="rating">Note</SelectItem>
-                          <SelectItem value="price">Prix</SelectItem>
-                          <SelectItem value="reviews">Avis</SelectItem>
+                        <SelectContent className="border-2 border-[#EBE3D5] rounded-xl">
+                          <SelectItem value="name" className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">Nom</SelectItem>
+                          <SelectItem value="type" className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">Type</SelectItem>
+                          <SelectItem value="location" className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">Localisation</SelectItem>
+                          <SelectItem value="rating" className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">Note</SelectItem>
+                          <SelectItem value="price" className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">Prix</SelectItem>
+                          <SelectItem value="reviews" className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">Avis</SelectItem>
                         </SelectContent>
                       </Select>
 
                       <Button
                         variant="outline"
                         onClick={() => setShowFilters(!showFilters)}
-                        className="px-4"
+                        className="w-full lg:w-auto px-4 h-12 border-2 border-[#EBE3D5] text-[#2D1B08] hover:bg-[#EBE3D5]/30 font-black uppercase text-xs tracking-tighter rounded-xl"
                       >
                         <Filter className="h-4 w-4 mr-2" />
                         Filtres
@@ -684,28 +679,30 @@ const AccommodationPage: React.FC = () => {
 
                   {/* Filtres avancés */}
                   {showFilters && (
-                    <div className="mt-6 pt-6 border-t">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">Localisation</label>
-                          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Localisation" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {locations.map(location => (
-                                <SelectItem key={location} value={location}>{location}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                    <div className="mt-4 pt-4 border-t-2 border-[#EBE3D5]/50 flex flex-col sm:flex-row gap-4">
+                      <div className="flex-1 max-w-sm">
+                        <label className="text-[10px] font-black uppercase text-[#5D4037]/70 tracking-tighter mb-2 block">Localisation</label>
+                        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                          <SelectTrigger className="border-2 border-[#EBE3D5] h-11 rounded-xl text-[#2D1B08] font-bold text-sm">
+                            <SelectValue placeholder="Localisation" />
+                          </SelectTrigger>
+                          <SelectContent className="border-2 border-[#EBE3D5] rounded-xl">
+                            {locations.map(location => (
+                              <SelectItem key={location} value={location} className="font-medium text-[#2D1B08] focus:bg-[#EBE3D5]/30">{location}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                        <div className="flex items-end">
-                          <Button variant="outline" className="w-full" onClick={clearFilters}>
-                            <X className="h-4 w-4 mr-2" />
-                            Réinitialiser
-                          </Button>
-                        </div>
+                      <div className="sm:mt-6 flex items-end">
+                        <Button 
+                          variant="outline" 
+                          className="w-full sm:w-auto h-11 border-2 border-[#E11D48]/30 text-[#E11D48] hover:bg-[#E11D48] hover:text-white font-black uppercase tracking-tighter text-xs rounded-xl px-6" 
+                          onClick={clearFilters}
+                        >
+                          <X className="h-4 w-4 mr-2" />
+                          Réinitialiser
+                        </Button>
                       </div>
                     </div>
                   )}
@@ -714,128 +711,181 @@ const AccommodationPage: React.FC = () => {
 
               {/* Liste des établissements */}
               {sortedAccommodations.length > 0 ? (
-                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                   {sortedAccommodations.map((accommodation) => (
-                    <Card key={accommodation.id} className="hover:shadow-lg transition-shadow overflow-hidden">
+                    <Card key={accommodation.id} className="hover:shadow-lg transition-all overflow-hidden border-2 border-[#EBE3D5] bg-[#FFFDFB] rounded-2xl flex flex-col group">
                       {/* Image de l'établissement */}
                       {accommodation.image && (
-                        <div className="w-full h-48 bg-gray-200 overflow-hidden">
+                        <div className="w-full h-40 sm:h-48 bg-[#EBE3D5]/20 overflow-hidden relative">
                           <img 
                             src={accommodation.image} 
                             alt={accommodation.name}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#2D1B08]/80 to-transparent p-4 flex items-end">
+                             <span className="font-black text-white text-lg drop-shadow-md tracking-tighter">{accommodation.price}</span>
+                          </div>
                         </div>
                       )}
                       
-                      <CardContent className="p-4">
-                        <div className="space-y-3">
-                              <div className="flex items-center space-x-2 mb-2">
-                                {getTypeIcon(accommodation.type)}
-                            <Badge variant="outline" className="text-xs">{accommodation.type}</Badge>
-                            <Badge className={`${getStatusColor(accommodation.availability)} text-xs`}>
-                                  {accommodation.availability}
-                                </Badge>
-                              </div>
+                      <CardContent className="p-4 sm:p-5 flex-1 flex flex-col">
+                        <div className="space-y-3 flex-1">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
+                            <Badge className="bg-[#5D4037]/5 text-[#5D4037] border-none font-black uppercase text-[10px] tracking-tighter flex items-center">
+                              {getTypeIcon(accommodation.type)}
+                              <span className="ml-1">{accommodation.type}</span>
+                            </Badge>
+                            <Badge className={`${
+                              accommodation.availability === 'Disponible' ? 'bg-[#1B5E20]/10 text-[#1B5E20]' :
+                              accommodation.availability === 'En attente' ? 'bg-[#F2A900]/10 text-[#F2A900]' :
+                              accommodation.availability === 'Suspendu' ? 'bg-[#5D4037]/10 text-[#5D4037]/60' :
+                              'bg-[#E11D48]/10 text-[#E11D48]'
+                            } border-none font-black uppercase text-[9px] tracking-tighter`}>
+                              {accommodation.availability}
+                            </Badge>
+                          </div>
                           
                           <div>
-                            <h3 className="font-semibold text-lg mb-1 line-clamp-1">{accommodation.name}</h3>
-                            <p className="text-gray-600 text-sm mb-2 flex items-center">
-                              <MapPin className="h-3 w-3 mr-1" />
-                              {accommodation.location}
+                            <h3 className="font-black text-lg text-[#2D1B08] mb-1 leading-tight line-clamp-1">{accommodation.name}</h3>
+                            <p className="text-[#5D4037]/70 text-xs mb-2 flex items-center font-bold">
+                              <MapPin className="h-3.5 w-3.5 mr-1 text-[#F2A900] flex-shrink-0" />
+                              <span className="truncate">{accommodation.location} • {accommodation.address}</span>
                             </p>
-                              <p className="text-gray-700 text-sm mb-3 line-clamp-2">{accommodation.description}</p>
+                            <p className="text-[#5D4037]/80 text-sm mb-3 line-clamp-2 leading-relaxed">{accommodation.description}</p>
                           </div>
 
-                          <div className="flex items-center justify-between text-sm">
-                            <div className="flex items-center space-x-3">
-                              <span className="text-yellow-600 font-medium flex items-center">
-                                <Star className="h-3 w-3 mr-1" />
+                          <div className="flex items-center justify-between mt-auto pt-2">
+                            <div className="flex items-center space-x-2 bg-[#F2A900]/10 px-2.5 py-1 rounded-md">
+                              <span className="text-[#F2A900] font-black flex items-center text-sm">
+                                <Star className="h-4 w-4 mr-1 fill-current" />
                                 {accommodation.rating}
                               </span>
-                              <span className="text-gray-500">({accommodation.reviews} avis)</span>
+                              <span className="text-[#5D4037]/60 text-xs font-bold">({accommodation.reviews} avis)</span>
                             </div>
-                            <span className="font-semibold text-green-600">{accommodation.price}</span>
                           </div>
+                        </div>
 
-                          <div className="grid grid-cols-3 gap-2 pt-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="text-xs"
-                              onClick={() => handleViewAccommodation(accommodation)}
-                            >
-                              <Eye className="h-3 w-3 mr-1" />
-                              Voir
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="text-xs"
-                              onClick={() => handleEditAccommodation(accommodation)}
-                            >
-                              <Edit className="h-3 w-3 mr-1" />
-                              Modifier
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="text-xs border-red-500 text-red-600 hover:bg-red-50"
-                              onClick={() => {
-                                if (window.confirm('Êtes-vous sûr de vouloir supprimer cet établissement ?')) {
-                                  handleDeleteAccommodation(accommodation.id);
-                                }
-                              }}
-                            >
-                              <Trash2 className="h-3 w-3 mr-1" />
-                              Supprimer
-                            </Button>
-                          </div>
+                        {/* Boutons d'actions Desktop */}
+                        <div className="hidden xl:grid grid-cols-3 gap-2 pt-4 mt-4 border-t border-[#EBE3D5]">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-[10px] font-black uppercase tracking-tighter border-[#EBE3D5] text-[#2D1B08] hover:bg-[#EBE3D5]/50 h-9"
+                            onClick={() => handleViewAccommodation(accommodation)}
+                          >
+                            <Eye className="h-3 w-3 mr-1" />
+                            Voir
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-[10px] font-black uppercase tracking-tighter border-[#F2A900] text-[#F2A900] hover:bg-[#F2A900] hover:text-white h-9"
+                            onClick={() => handleEditAccommodation(accommodation)}
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Modif.
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-[10px] font-black uppercase tracking-tighter border-[#E11D48]/30 text-[#E11D48] hover:bg-[#E11D48] hover:text-white h-9"
+                            onClick={() => {
+                              if (window.confirm('Êtes-vous sûr de vouloir supprimer cet établissement ?')) {
+                                handleDeleteAccommodation(accommodation.id);
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Suppr.
+                          </Button>
+                        </div>
+                        
+                        {/* Boutons d'actions Mobile & Tablet */}
+                        <div className="xl:hidden flex gap-2 w-full pt-4 mt-4 border-t border-[#EBE3D5]">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1 border-[#EBE3D5] text-[#2D1B08] hover:bg-[#EBE3D5]/50 font-black uppercase text-[10px] tracking-tighter h-9"
+                            onClick={() => handleViewAccommodation(accommodation)}
+                          >
+                            <Eye className="h-4 w-4 sm:mr-1.5" />
+                            <span className="hidden sm:inline">Voir</span>
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1 border-[#F2A900] text-[#F2A900] hover:bg-[#F2A900] hover:text-white font-black uppercase text-[10px] tracking-tighter h-9"
+                            onClick={() => handleEditAccommodation(accommodation)}
+                          >
+                            <Edit className="h-4 w-4 sm:mr-1.5" />
+                            <span className="hidden sm:inline">Modif.</span>
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1 border-[#E11D48]/30 text-[#E11D48] hover:bg-[#E11D48] hover:text-white font-black uppercase text-[10px] tracking-tighter h-9"
+                            onClick={() => {
+                              if (window.confirm('Êtes-vous sûr de vouloir supprimer cet établissement ?')) {
+                                handleDeleteAccommodation(accommodation.id);
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4 sm:mr-1.5" />
+                            <span className="hidden sm:inline">Suppr.</span>
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
               ) : (
-                <Card className="p-12 text-center">
-                  <div className="text-gray-500">
-                    <Building className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <h3 className="text-lg font-semibold mb-2">Aucun établissement trouvé</h3>
-                    <p>Essayez de modifier vos critères de recherche ou vos filtres.</p>
-                    <Button 
-                      variant="outline" 
-                      onClick={clearFilters}
-                      className="mt-4"
-                    >
-                      Réinitialiser les filtres
-                    </Button>
-                  </div>
+                <Card className="border-2 border-dashed border-[#EBE3D5] bg-transparent shadow-none rounded-2xl">
+                  <CardContent className="p-12 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <div className="w-16 h-16 bg-[#EBE3D5]/50 rounded-full flex items-center justify-center mb-2">
+                        <Building className="h-8 w-8 text-[#5D4037]/40" />
+                      </div>
+                      <h3 className="text-xl font-black text-[#2D1B08] tracking-tighter uppercase">Aucun établissement trouvé</h3>
+                      <p className="text-[#5D4037]/70 font-medium">Essayez de modifier vos critères de recherche ou vos filtres.</p>
+                      <Button 
+                        variant="outline" 
+                        onClick={clearFilters}
+                        className="mt-4 border-[#F2A900] text-[#F2A900] hover:bg-[#F2A900] hover:text-white font-black uppercase tracking-tighter"
+                      >
+                        Réinitialiser les filtres
+                      </Button>
+                    </div>
+                  </CardContent>
                 </Card>
               )}
             </TabsContent>
 
             <TabsContent value="stats" className="space-y-6">
               {/* Statistiques générales */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <Building className="h-8 w-8 text-blue-600" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm hover:shadow-md transition-shadow rounded-2xl">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                        <Building className="h-6 w-6 sm:h-8 sm:w-8" />
+                      </div>
                       <div>
-                        <p className="text-sm text-gray-600">Total établissements</p>
-                        <p className="text-2xl font-bold">{accommodations.length}</p>
+                        <p className="text-xs sm:text-sm font-black uppercase tracking-tighter text-[#5D4037]/70">Total établissements</p>
+                        <p className="text-2xl sm:text-3xl font-black text-[#2D1B08]">{accommodations.length}</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle className="h-8 w-8 text-green-600" />
+                <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm hover:shadow-md transition-shadow rounded-2xl">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-[#1B5E20]/10 text-[#1B5E20] rounded-xl">
+                        <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8" />
+                      </div>
                       <div>
-                        <p className="text-sm text-gray-600">Disponibles</p>
-                        <p className="text-2xl font-bold">
+                        <p className="text-xs sm:text-sm font-black uppercase tracking-tighter text-[#5D4037]/70">Disponibles</p>
+                        <p className="text-2xl sm:text-3xl font-black text-[#2D1B08]">
                           {accommodations.filter(a => a.availability === 'Disponible').length}
                         </p>
                       </div>
@@ -843,13 +893,15 @@ const AccommodationPage: React.FC = () => {
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <AlertCircle className="h-8 w-8 text-yellow-600" />
+                <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm hover:shadow-md transition-shadow rounded-2xl">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-[#F2A900]/10 text-[#F2A900] rounded-xl">
+                        <AlertCircle className="h-6 w-6 sm:h-8 sm:w-8" />
+                      </div>
                       <div>
-                        <p className="text-sm text-gray-600">En attente</p>
-                        <p className="text-2xl font-bold">
+                        <p className="text-xs sm:text-sm font-black uppercase tracking-tighter text-[#5D4037]/70">En attente</p>
+                        <p className="text-2xl sm:text-3xl font-black text-[#2D1B08]">
                           {accommodations.filter(a => a.availability === 'En attente').length}
                         </p>
                       </div>
@@ -857,13 +909,15 @@ const AccommodationPage: React.FC = () => {
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-2">
-                      <BarChart3 className="h-8 w-8 text-purple-600" />
+                <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm hover:shadow-md transition-shadow rounded-2xl">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
+                        <Star className="h-6 w-6 sm:h-8 sm:w-8" />
+                      </div>
                       <div>
-                        <p className="text-sm text-gray-600">Note moyenne</p>
-                        <p className="text-2xl font-bold">
+                        <p className="text-xs sm:text-sm font-black uppercase tracking-tighter text-[#5D4037]/70">Note moyenne</p>
+                        <p className="text-2xl sm:text-3xl font-black text-[#2D1B08]">
                           {accommodations.length > 0 ? (accommodations.reduce((acc, a) => acc + a.rating, 0) / accommodations.length).toFixed(1) : '0.0'}
                         </p>
                       </div>
@@ -873,23 +927,23 @@ const AccommodationPage: React.FC = () => {
               </div>
 
               {/* Statistiques détaillées */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Établissements par type */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
+                <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm rounded-2xl">
+                  <CardHeader className="p-4 sm:p-6 border-b border-[#EBE3D5]">
+                    <CardTitle className="flex items-center space-x-2 text-lg font-black uppercase tracking-tighter text-[#2D1B08]">
                       <Building className="h-5 w-5 text-blue-600" />
                       <span>Établissements par type</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="space-y-4">
                       {types.slice(1).map(type => {
                         const count = accommodations.filter(a => a.type === type).length;
                         const percentage = accommodations.length > 0 ? Math.round((count / accommodations.length) * 100) : 0;
                         return (
                           <div key={type} className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-3">
                               <div className={`w-3 h-3 rounded-full ${
                                 type === 'Hôtel' ? 'bg-blue-500' :
                                 type === 'Restaurant' ? 'bg-orange-500' :
@@ -898,11 +952,11 @@ const AccommodationPage: React.FC = () => {
                                 type === 'Résidence' ? 'bg-pink-500' :
                                 'bg-gray-500'
                               }`}></div>
-                              <span className="text-sm font-medium">{type}</span>
+                              <span className="text-sm font-bold text-[#2D1B08]">{type}</span>
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm text-gray-600">{count}</span>
-                              <span className="text-xs text-gray-500">({percentage}%)</span>
+                            <div className="flex items-center space-x-3">
+                              <span className="text-sm font-black text-[#5D4037]/70">{count}</span>
+                              <span className="text-xs font-bold text-[#5D4037]/50 w-12 text-right">{percentage}%</span>
                             </div>
                           </div>
                         );
@@ -912,32 +966,32 @@ const AccommodationPage: React.FC = () => {
                 </Card>
 
                 {/* Établissements par statut */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <BarChart3 className="h-5 w-5 text-green-600" />
+                <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm rounded-2xl">
+                  <CardHeader className="p-4 sm:p-6 border-b border-[#EBE3D5]">
+                    <CardTitle className="flex items-center space-x-2 text-lg font-black uppercase tracking-tighter text-[#2D1B08]">
+                      <BarChart3 className="h-5 w-5 text-[#1B5E20]" />
                       <span>Établissements par statut</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="space-y-4">
                       {['Disponible', 'En attente', 'Suspendu', 'Indisponible'].map(status => {
                         const count = accommodations.filter(a => a.availability === status).length;
                         const percentage = accommodations.length > 0 ? Math.round((count / accommodations.length) * 100) : 0;
                         return (
                           <div key={status} className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-3">
                               <div className={`w-3 h-3 rounded-full ${
-                                status === 'Disponible' ? 'bg-green-500' :
-                                status === 'En attente' ? 'bg-yellow-500' :
+                                status === 'Disponible' ? 'bg-[#1B5E20]' :
+                                status === 'En attente' ? 'bg-[#F2A900]' :
                                 status === 'Suspendu' ? 'bg-red-500' :
                                 'bg-gray-500'
                               }`}></div>
-                              <span className="text-sm font-medium">{status}</span>
+                              <span className="text-sm font-bold text-[#2D1B08]">{status}</span>
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm text-gray-600">{count}</span>
-                              <span className="text-xs text-gray-500">({percentage}%)</span>
+                            <div className="flex items-center space-x-3">
+                              <span className="text-sm font-black text-[#5D4037]/70">{count}</span>
+                              <span className="text-xs font-bold text-[#5D4037]/50 w-12 text-right">{percentage}%</span>
                             </div>
                           </div>
                         );
@@ -948,34 +1002,34 @@ const AccommodationPage: React.FC = () => {
               </div>
 
               {/* Top établissements et localisations */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Top établissements par note */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
+                <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm rounded-2xl">
+                  <CardHeader className="p-4 sm:p-6 border-b border-[#EBE3D5]">
+                    <CardTitle className="flex items-center space-x-2 text-lg font-black uppercase tracking-tighter text-[#2D1B08]">
                       <Star className="h-5 w-5 text-purple-600" />
                       <span>Top établissements par note</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="space-y-4">
                       {accommodations
                         .sort((a, b) => b.rating - a.rating)
                         .slice(0, 5)
                         .map((accommodation, index) => (
                           <div key={accommodation.id} className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                              <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
-                                <span className="text-xs font-bold text-purple-600">#{index + 1}</span>
+                              <div className="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center">
+                                <span className="text-xs font-black text-purple-600">#{index + 1}</span>
                               </div>
                               <div>
-                                <p className="text-sm font-medium line-clamp-1">{accommodation.name}</p>
-                                <p className="text-xs text-gray-500">{accommodation.type} • {accommodation.location}</p>
+                                <p className="text-sm font-bold text-[#2D1B08] line-clamp-1">{accommodation.name}</p>
+                                <p className="text-[10px] font-black uppercase tracking-tighter text-[#5D4037]/60">{accommodation.type} • {accommodation.location}</p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm font-bold text-purple-600">{accommodation.rating}/5</p>
-                              <p className="text-xs text-gray-500">{accommodation.reviews} avis</p>
+                              <p className="text-sm font-black text-purple-600">{accommodation.rating}/5</p>
+                              <p className="text-[10px] font-black uppercase tracking-tighter text-[#5D4037]/50">{accommodation.reviews} avis</p>
                             </div>
                           </div>
                         ))}
@@ -984,15 +1038,15 @@ const AccommodationPage: React.FC = () => {
                 </Card>
 
                 {/* Top localisations */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
+                <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm rounded-2xl">
+                  <CardHeader className="p-4 sm:p-6 border-b border-[#EBE3D5]">
+                    <CardTitle className="flex items-center space-x-2 text-lg font-black uppercase tracking-tighter text-[#2D1B08]">
                       <MapPin className="h-5 w-5 text-blue-600" />
                       <span>Top localisations</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="space-y-4">
                       {Object.entries(
                         accommodations.reduce((acc, accommodation) => {
                           acc[accommodation.location] = (acc[accommodation.location] || 0) + 1;
@@ -1004,17 +1058,17 @@ const AccommodationPage: React.FC = () => {
                         .map(([location, count], index) => (
                           <div key={location} className="flex items-center justify-between">
                             <div className="flex items-center space-x-3">
-                              <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                                <span className="text-xs font-bold text-blue-600">#{index + 1}</span>
+                              <div className="w-8 h-8 bg-blue-50 rounded-xl flex items-center justify-center">
+                                <span className="text-xs font-black text-blue-600">#{index + 1}</span>
                               </div>
                               <div>
-                                <p className="text-sm font-medium">{location}</p>
-                                <p className="text-xs text-gray-500">Ville</p>
+                                <p className="text-sm font-bold text-[#2D1B08]">{location}</p>
+                                <p className="text-[10px] font-black uppercase tracking-tighter text-[#5D4037]/60">Ville</p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-sm font-bold text-blue-600">{count}</p>
-                              <p className="text-xs text-gray-500">établissement{count > 1 ? 's' : ''}</p>
+                              <p className="text-sm font-black text-blue-600">{count}</p>
+                              <p className="text-[10px] font-black uppercase tracking-tighter text-[#5D4037]/50">établissement{count > 1 ? 's' : ''}</p>
                             </div>
                           </div>
                         ))}
@@ -1024,43 +1078,43 @@ const AccommodationPage: React.FC = () => {
               </div>
 
               {/* Statistiques d'engagement */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+              <Card className="border-2 border-[#EBE3D5] bg-white shadow-sm rounded-2xl">
+                <CardHeader className="p-4 sm:p-6 border-b border-[#EBE3D5]">
+                  <CardTitle className="flex items-center space-x-2 text-lg font-black uppercase tracking-tighter text-[#2D1B08]">
+                    <CheckCircle className="h-5 w-5 text-[#1B5E20]" />
                     <span>Statistiques d'engagement</span>
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                    <div className="text-center p-6 bg-[#1B5E20]/5 border border-[#1B5E20]/10 rounded-2xl">
+                      <div className="text-3xl font-black text-[#1B5E20] mb-2">
                         {accommodations.reduce((acc, a) => acc + a.reviews, 0).toLocaleString()}
                       </div>
-                      <div className="text-sm text-green-600">Avis total</div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        Moyenne: {accommodations.length > 0 ? Math.round(accommodations.reduce((acc, a) => acc + a.reviews, 0) / accommodations.length) : 0} par établissement
+                      <div className="text-sm font-bold text-[#1B5E20]/80 uppercase tracking-tighter">Avis total</div>
+                      <div className="text-xs font-bold text-[#5D4037]/50 mt-2">
+                        Moy.: {accommodations.length > 0 ? Math.round(accommodations.reduce((acc, a) => acc + a.reviews, 0) / accommodations.length) : 0} / étab.
                       </div>
                     </div>
                     
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-600">
+                    <div className="text-center p-6 bg-blue-50 border border-blue-100 rounded-2xl">
+                      <div className="text-3xl font-black text-blue-600 mb-2">
                         {accommodations.length > 0 ? (accommodations.reduce((acc, a) => acc + a.rating, 0) / accommodations.length).toFixed(1) : '0.0'}
                       </div>
-                      <div className="text-sm text-blue-600">Note moyenne</div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-sm font-bold text-blue-600/80 uppercase tracking-tighter">Note moyenne</div>
+                      <div className="text-xs font-bold text-[#5D4037]/50 mt-2">
                         Sur 5 étoiles
                       </div>
                     </div>
                     
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <div className="text-2xl font-bold text-purple-600">
+                    <div className="text-center p-6 bg-purple-50 border border-purple-100 rounded-2xl">
+                      <div className="text-3xl font-black text-purple-600 mb-2">
                         {accommodations.filter(a => a.availability === 'Disponible').length > 0 ? 
                           Math.round((accommodations.filter(a => a.availability === 'Disponible').length / accommodations.length) * 100) : 0}%
                       </div>
-                      <div className="text-sm text-purple-600">Taux de disponibilité</div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        Établissements disponibles / Total
+                      <div className="text-sm font-bold text-purple-600/80 uppercase tracking-tighter">Disponibilité</div>
+                      <div className="text-xs font-bold text-[#5D4037]/50 mt-2">
+                        Taux d'établissements actifs
                       </div>
                     </div>
                   </div>
@@ -1070,124 +1124,118 @@ const AccommodationPage: React.FC = () => {
 
             <TabsContent value="deleted" className="space-y-6">
               {/* Header pour les établissements supprimés */}
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
+              <Card className="border-2 border-[#EBE3D5] bg-[#FFFDFB] shadow-sm rounded-2xl">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Établissements supprimés</h3>
-                      <p className="text-gray-600 mt-1">
-                        {deletedAccommodations.length} établissement(s) supprimé(s)
+                      <h3 className="text-lg sm:text-xl font-black text-[#2D1B08] uppercase tracking-tighter">Établissements supprimés</h3>
+                      <p className="text-[#5D4037]/70 mt-1 font-medium text-sm">
+                        Ces établissements sont dans la corbeille.
                       </p>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="destructive" className="text-sm">
-                        <Trash2 className="h-3 w-3 mr-1" />
-                        {deletedAccommodations.length} supprimé(s)
-                      </Badge>
-                    </div>
+                    <Badge variant="outline" className="text-xs font-black uppercase tracking-tighter border-[#E11D48]/30 text-[#E11D48] bg-[#E11D48]/5 py-1.5 px-3">
+                      <Trash2 className="h-3.5 w-3.5 mr-1" />
+                      {deletedAccommodations.length} supprimé(s)
+                    </Badge>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Liste des établissements supprimés */}
               {deletedAccommodations.length > 0 ? (
-                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                   {deletedAccommodations.map((accommodation) => (
-                    <Card key={accommodation.id} className="hover:shadow-lg transition-shadow overflow-hidden border-red-200 bg-red-50">
+                    <Card key={accommodation.id} className="hover:shadow-lg transition-all overflow-hidden border-2 border-[#E11D48]/20 bg-red-50/10 rounded-2xl flex flex-col group">
                       {/* Image de l'établissement */}
                       {accommodation.image && (
-                        <div className="w-full h-48 bg-gray-200 overflow-hidden relative">
+                        <div className="w-full h-40 sm:h-48 bg-[#EBE3D5]/20 overflow-hidden relative">
                           <img 
                             src={accommodation.image} 
                             alt={accommodation.name}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 opacity-75"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 grayscale opacity-80"
                           />
                           {/* Overlay de suppression */}
-                          <div className="absolute inset-0 bg-red-900 bg-opacity-30 flex items-center justify-center">
-                            <div className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                              <Trash2 className="h-4 w-4 inline mr-1" />
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <div className="bg-[#E11D48] text-white px-3 py-1.5 rounded-full text-xs font-black uppercase tracking-tighter flex items-center -mr-1 shadow-lg">
+                              <Trash2 className="h-3.5 w-3.5 mr-1" />
                               Supprimé
                             </div>
                           </div>
                         </div>
                       )}
                       
-                      <CardContent className="p-4">
-                        <div className="space-y-3">
-                          <div className="flex items-center space-x-2 mb-2">
-                            {getTypeIcon(accommodation.type)}
-                            <Badge variant="outline" className="text-xs">{accommodation.type}</Badge>
-                            <Badge className="bg-red-100 text-red-700 text-xs">
-                              Supprimé
+                      <CardContent className="p-4 sm:p-5 flex-1 flex flex-col">
+                        <div className="space-y-3 flex-1">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
+                            <Badge className="bg-[#5D4037]/5 text-[#5D4037] border-none font-black uppercase text-[10px] tracking-tighter flex items-center">
+                              {getTypeIcon(accommodation.type)}
+                              <span className="ml-1">{accommodation.type}</span>
+                            </Badge>
+                            <Badge className="bg-[#E11D48]/10 text-[#E11D48] border-none font-black uppercase text-[10px] tracking-tighter">
+                              Corbeille
                             </Badge>
                           </div>
                           
                           <div>
-                            <h3 className="font-semibold text-lg mb-1 line-clamp-1">{accommodation.name}</h3>
-                            <p className="text-gray-600 text-sm mb-2 flex items-center">
-                              <MapPin className="h-3 w-3 mr-1" />
-                              {accommodation.location}
+                            <h3 className="font-black text-lg text-[#2D1B08] mb-1 leading-tight line-clamp-1 opacity-80">{accommodation.name}</h3>
+                            <p className="text-[#5D4037]/70 text-xs mb-2 flex items-center font-bold">
+                              <MapPin className="h-3 w-3 mr-1 text-[#F2A900] flex-shrink-0" />
+                              <span className="truncate">{accommodation.location}</span>
                             </p>
-                            <p className="text-gray-700 text-sm mb-3 line-clamp-2">{accommodation.description}</p>
+                            <p className="text-[#5D4037]/70 text-sm mb-3 line-clamp-2 leading-relaxed italic">{accommodation.description}</p>
                           </div>
 
                           {/* Informations de suppression */}
-                          <div className="bg-red-100 p-3 rounded-lg">
-                            <div className="text-xs text-red-700 space-y-1">
+                          <div className="bg-[#E11D48]/5 border border-[#E11D48]/10 p-3 rounded-xl mt-auto">
+                            <div className="text-[10px] uppercase font-bold tracking-tighter text-[#E11D48] space-y-1.5">
                               <div className="flex items-center">
-                                <Clock className="h-3 w-3 mr-1" />
+                                <Clock className="h-3.5 w-3.5 mr-1.5" />
                                 Supprimé le: {new Date(accommodation.deletedAt).toLocaleDateString('fr-FR')}
                               </div>
                               <div className="flex items-center">
-                                <User className="h-3 w-3 mr-1" />
+                                <User className="h-3.5 w-3.5 mr-1.5" />
                                 Par: {accommodation.deletedBy}
                               </div>
                             </div>
                           </div>
+                        </div>
 
-                          <div className="flex items-center justify-between text-sm">
-                            <div className="flex items-center space-x-3">
-                              <span className="text-yellow-600 font-medium flex items-center">
-                                <Star className="h-3 w-3 mr-1" />
-                                {accommodation.rating}
-                              </span>
-                              <span className="text-gray-500">({accommodation.reviews} avis)</span>
-                            </div>
-                            <span className="font-semibold text-green-600">{accommodation.price}</span>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-2 pt-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="text-xs border-green-500 text-green-600 hover:bg-green-50"
-                              onClick={() => handleRestoreAccommodation(accommodation.id)}
-                            >
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              Restaurer
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="text-xs border-red-500 text-red-600 hover:bg-red-50"
-                              onClick={() => handlePermanentDeleteAccommodation(accommodation.id)}
-                            >
-                              <Trash2 className="h-3 w-3 mr-1" />
-                              Supprimer définitivement
-                            </Button>
-                          </div>
+                        {/* Boutons d'actions */}
+                        <div className="grid grid-cols-2 gap-2 pt-4 mt-4 border-t border-[#E11D48]/10">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-[10px] sm:text-xs font-black uppercase tracking-tighter border-[#1B5E20]/30 text-[#1B5E20] hover:bg-[#1B5E20] hover:text-white h-9"
+                            onClick={() => handleRestoreAccommodation(accommodation.id)}
+                          >
+                            <CheckCircle className="h-3.5 w-3.5 mr-1 sm:mr-1.5" />
+                            Restaurer
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-[10px] sm:text-xs font-black uppercase tracking-tighter border-[#E11D48]/30 text-[#E11D48] hover:bg-[#E11D48] hover:text-white h-9"
+                            onClick={() => handlePermanentDeleteAccommodation(accommodation.id)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5 mr-1 sm:mr-1.5" />
+                            Détruire
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
               ) : (
-                <Card className="p-12 text-center">
-                  <div className="text-gray-500">
-                    <Trash2 className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <h3 className="text-lg font-semibold mb-2">Aucun établissement supprimé</h3>
-                    <p>Aucun établissement n'a été supprimé pour le moment.</p>
-                  </div>
+                <Card className="border-2 border-dashed border-[#EBE3D5] bg-transparent shadow-none rounded-2xl">
+                  <CardContent className="p-12 text-center">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <div className="w-16 h-16 bg-[#E11D48]/10 rounded-full flex items-center justify-center mb-2">
+                        <Trash2 className="h-8 w-8 text-[#E11D48]/40" />
+                      </div>
+                      <h3 className="text-xl font-black text-[#2D1B08] tracking-tighter uppercase">Corbeille vide</h3>
+                      <p className="text-[#5D4037]/70 font-medium">Aucun établissement n'a été supprimé pour le moment.</p>
+                    </div>
+                  </CardContent>
                 </Card>
               )}
             </TabsContent>

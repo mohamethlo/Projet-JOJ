@@ -19,3 +19,5 @@ export { default as UserEditModal } from './UserEditModal';
 export { default as UserDetailsModal } from './UserDetailsModal';
 export { default as EventEditModal } from './EventEditModal';
 export { default as GuideEditModal } from './GuideEditModal';
+export { default as RestaurantDetailsModal } from './RestaurantDetailsModal';
+export { default as RestaurantEditModal } from './RestaurantEditModal';

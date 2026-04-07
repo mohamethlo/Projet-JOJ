@@ -641,43 +641,46 @@ const UsersPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FFFDFB]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <Users className="h-8 w-8 mr-3 text-blue-600" />
-                Gestion des Utilisateurs
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center">
+                <Users className="h-6 w-6 sm:h-8 sm:w-8 mr-3 text-[#F2A900]" />
+                <span className="uppercase tracking-tighter">Gestion des Utilisateurs</span>
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-[#5D4037]/70 mt-1 font-medium text-sm sm:text-base">
                 Gérez les utilisateurs, leurs rôles et leurs permissions
               </p>
             </div>
-            <Button onClick={handleCreateUser} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={handleCreateUser} className="bg-[#1B5E20] hover:bg-[#144718] text-white font-black uppercase tracking-tighter rounded-lg h-10 sm:h-11 shadow-md shadow-emerald-900/10 w-full sm:w-auto">
               <UserPlus className="h-4 w-4 mr-2" />
-              Nouvel utilisateur
+              Nouveau
             </Button>
           </div>
         </div>
 
         {/* Onglets */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="list" className="flex items-center space-x-2">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 bg-[#EBE3D5]/20 p-1 h-12 rounded-xl">
+            <TabsTrigger value="list" className="flex items-center space-x-2 font-black uppercase tracking-tighter data-[state=active]:bg-[#F2A900] data-[state=active]:text-white rounded-lg transition-all">
               <Users className="h-4 w-4" />
-              <span>Liste des utilisateurs</span>
+              <span className="hidden sm:inline">Liste des utilisateurs</span>
+              <span className="sm:hidden">Liste</span>
             </TabsTrigger>
-            <TabsTrigger value="stats" className="flex items-center space-x-2">
+            <TabsTrigger value="stats" className="flex items-center space-x-2 font-black uppercase tracking-tighter data-[state=active]:bg-[#F2A900] data-[state=active]:text-white rounded-lg transition-all">
               <BarChart3 className="h-4 w-4" />
-              <span>Statistiques</span>
+              <span className="hidden sm:inline">Statistiques</span>
+              <span className="sm:hidden">Stats</span>
             </TabsTrigger>
-            <TabsTrigger value="deleted" className="flex items-center space-x-2">
+            <TabsTrigger value="deleted" className="flex items-center space-x-2 font-black uppercase tracking-tighter data-[state=active]:bg-[#E11D48] data-[state=active]:text-white rounded-lg transition-all">
               <Trash2 className="h-4 w-4" />
-              <span>Utilisateurs supprimés</span>
+              <span className="hidden sm:inline">Corbeille</span>
+              <span className="sm:hidden">Corbeille</span>
               {deletedUsers.length > 0 && (
-                <Badge variant="destructive" className="ml-1 text-xs">
+                <Badge className="ml-1 bg-white text-[#E11D48] border-none text-[10px] font-black h-5 w-5 flex items-center justify-center p-0 rounded-full">
                   {deletedUsers.length}
                 </Badge>
               )}
@@ -686,199 +689,217 @@ const UsersPage: React.FC = () => {
 
           <TabsContent value="list" className="space-y-6">
             {/* Barre de recherche et filtres */}
-            <Card className="shadow-sm">
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl overflow-hidden shadow-sm">
+              <CardContent className="p-4 sm:p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#F2A900] h-4 w-4" />
                     <Input
-                      placeholder="Rechercher un utilisateur..."
+                      placeholder="Rechercher..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 border-[#EBE3D5] focus:border-[#F2A900] focus:ring-[#F2A900] rounded-xl h-11 font-medium"
                     />
                   </div>
                   <Select value={selectedRole} onValueChange={setSelectedRole}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Filtrer par rôle" />
+                    <SelectTrigger className="border-[#EBE3D5] focus:ring-[#F2A900] rounded-xl h-11 font-bold uppercase text-xs tracking-tighter">
+                      <SelectValue placeholder="Rôle" />
                     </SelectTrigger>
                     <SelectContent>
                       {roles.map(role => (
-                        <SelectItem key={role} value={role}>{role}</SelectItem>
+                        <SelectItem key={role} value={role} className="uppercase font-bold text-[10px]">{role}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Filtrer par statut" />
+                    <SelectTrigger className="border-[#EBE3D5] focus:ring-[#F2A900] rounded-xl h-11 font-bold uppercase text-xs tracking-tighter">
+                      <SelectValue placeholder="Statut" />
                     </SelectTrigger>
                     <SelectContent>
                       {statuses.map(status => (
-                        <SelectItem key={status} value={status}>{status}</SelectItem>
+                        <SelectItem key={status} value={status} className="uppercase font-bold text-[10px]">{status}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Filter className="h-4 w-4 mr-2" />
-                    {filteredUsers.length} utilisateur(s) trouvé(s)
+                  <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60">
+                    <Filter className="h-3 w-3 mr-2 text-[#F2A900]" />
+                    {filteredUsers.length} utilisateur(s)
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Liste des utilisateurs */}
-            <Card>
+            <div className="lg:hidden space-y-4">
+              {filteredUsers.map((user) => (
+                <Card key={user.id} className="border-2 border-[#EBE3D5] bg-white rounded-2xl overflow-hidden shadow-sm">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <Avatar className="h-12 w-12 border-2 border-[#F2A900]/20">
+                          <AvatarImage src={user.avatar} alt={user.name} />
+                          <AvatarFallback className="bg-[#FFFDFB] text-[#5D4037] font-black">
+                            {user.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="flex items-center gap-1.5 font-black text-[#2D1B08] uppercase tracking-tighter">
+                            {user.name}
+                            {user.verified && <CheckCircle className="h-4 w-4 text-[#1B5E20]" />}
+                          </div>
+                          <div className="text-[10px] font-bold text-[#5D4037]/60 lowercase">{user.email}</div>
+                        </div>
+                      </div>
+                      <Badge 
+                        className={`font-black uppercase tracking-tighter text-[9px] px-2 py-0.5 border-none shadow-sm ${
+                          user.status === 'active' ? 'bg-[#1B5E20]/10 text-[#1B5E20]' : 
+                          user.status === 'suspended' ? 'bg-[#E11D48]/10 text-[#E11D48]' : 
+                          'bg-[#EBE3D5] text-[#5D4037]'
+                        }`}
+                      >
+                        {user.status}
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="space-y-1">
+                        <div className="text-[9px] font-black uppercase tracking-widest text-[#5D4037]/40">Rôle</div>
+                        <div className="flex items-center gap-1 text-[10px] font-black text-[#F2A900] uppercase">
+                          <Shield className="h-3 w-3" />
+                          {user.role}
+                        </div>
+                      </div>
+                      <div className="space-y-1 text-right">
+                        <div className="text-[9px] font-black uppercase tracking-widest text-[#5D4037]/40">Localisation</div>
+                        <div className="flex items-center justify-end gap-1 text-[11px] font-bold text-[#5D4037]">
+                          <MapPin className="h-3 w-3 text-[#1B5E20]" />
+                          {user.location}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-[#EBE3D5] flex items-center justify-between">
+                      <div className="flex -space-x-2">
+                         <div className="bg-[#1B5E20]/5 px-2 py-1 rounded-full text-[9px] font-black text-[#1B5E20] border border-[#1B5E20]/10">
+                           {user.totalBookings} RES
+                         </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => handleViewUser(user)}
+                          className="h-8 w-8 p-0 rounded-lg border-[#EBE3D5] text-[#5D4037]"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => handleEditUser(user)}
+                          className="h-8 w-8 p-0 rounded-lg border-[#EBE3D5] text-[#F2A900]"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="h-8 w-8 p-0 rounded-lg border-[#EBE3D5] text-[#E11D48]"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Liste des utilisateurs - Version Desktop (Tableau Premium) */}
+            <Card className="hidden lg:block border-2 border-[#EBE3D5] bg-white rounded-2xl overflow-hidden shadow-sm">
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 border-b">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Utilisateur
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Rôle
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Statut
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Localisation
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Inscription
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Activité
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Actions
-                        </th>
+                    <thead>
+                      <tr className="bg-[#EBE3D5]/20 border-b-2 border-[#EBE3D5]">
+                        <th className="px-6 py-4 text-left text-[10px] font-black text-[#5D4037]/60 uppercase tracking-widest">Utilisateur</th>
+                        <th className="px-6 py-4 text-left text-[10px] font-black text-[#5D4037]/60 uppercase tracking-widest">Rôle & Statut</th>
+                        <th className="px-6 py-4 text-left text-[10px] font-black text-[#5D4037]/60 uppercase tracking-widest">Infos</th>
+                        <th className="px-6 py-4 text-left text-[10px] font-black text-[#5D4037]/60 uppercase tracking-widest">Statistiques</th>
+                        <th className="px-6 py-4 text-right text-[10px] font-black text-[#5D4037]/60 uppercase tracking-widest">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="divide-y divide-[#EBE3D5]">
                       {filteredUsers.map((user) => (
-                        <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                        <tr key={user.id} className="hover:bg-[#FFFDFB] transition-colors group">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
-                              <Avatar className="h-10 w-10">
+                              <Avatar className="h-10 w-10 border-2 border-[#F2A900]/10 transition-transform group-hover:scale-110">
                                 <AvatarImage src={user.avatar} alt={user.name} />
-                                <AvatarFallback className="text-sm">
+                                <AvatarFallback className="bg-[#EBE3D5]/20 text-[#5D4037]">
                                   {user.name.split(' ').map(n => n[0]).join('')}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="ml-4">
-                                <div className="flex items-center space-x-2">
-                                  <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                                  {user.verified && (
-                                    <CheckCircle className="h-4 w-4 text-green-500" />
-                                  )}
+                                <div className="flex items-center gap-1.5 text-sm font-black text-[#2D1B08] uppercase tracking-tighter">
+                                  {user.name}
+                                  {user.verified && <CheckCircle className="h-3.5 w-3.5 text-[#1B5E20]" />}
                                 </div>
-                                <div className="text-sm text-gray-500">{user.email}</div>
-                                <div className="text-xs text-gray-400">{user.phone}</div>
+                                <div className="text-[10px] font-bold text-[#5D4037]/50 lowercase">{user.email}</div>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <Badge variant="outline" className="capitalize">
-                              <Shield className="h-3 w-3 mr-1" />
-                              {user.role}
-                            </Badge>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <Badge
-                              variant={user.status === 'active' ? 'default' : user.status === 'suspended' ? 'destructive' : 'secondary'}
-                              className="capitalize"
-                            >
-                              {user.status === 'active' ? 'Actif' : user.status === 'suspended' ? 'Suspendu' : 'Inactif'}
-                            </Badge>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center text-sm text-gray-900">
-                              <MapPin className="h-4 w-4 mr-1 text-gray-400" />
-                              {user.location}
+                            <div className="flex flex-col gap-1.5">
+                              <Badge variant="outline" className="w-fit border-[#EBE3D5] text-[#F2A900] bg-[#FFF8E1] font-black uppercase text-[9px] tracking-tighter">
+                                <Shield className="h-3 w-3 mr-1" />
+                                {user.role}
+                              </Badge>
+                              <Badge 
+                                className={`w-fit font-black uppercase tracking-tighter text-[8px] px-2 py-0 border-none rounded-full ${
+                                  user.status === 'active' ? 'bg-[#1B5E20]/10 text-[#1B5E20]' : 
+                                  user.status === 'suspended' ? 'bg-[#E11D48]/10 text-[#E11D48]' : 
+                                  'bg-[#EBE3D5]/30 text-[#5D4037]/60'
+                                }`}
+                              >
+                                {user.status}
+                              </Badge>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              {new Date(user.joinDate).toLocaleDateString('fr-FR')}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              Dernière connexion: {new Date(user.lastLogin).toLocaleDateString('fr-FR')}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              <div className="flex items-center space-x-3">
-                                <span className="text-blue-600 font-medium">
-                                  {user.totalBookings} réservations
-                                </span>
-                                <span className="text-green-600 font-medium">
-                                  {user.totalReviews} avis
-                                </span>
+                            <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#5D4037]">
+                                <MapPin className="h-3.5 w-3.5 text-[#1B5E20]" />
+                                {user.location}
+                              </div>
+                              <div className="flex items-center gap-1.5 text-[10px] font-medium text-[#5D4037]/50">
+                                <Clock className="h-3.5 w-3.5" />
+                                Membre depuis {new Date(user.joinDate).getFullYear()}
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleViewUser(user)}
-                                className="text-xs"
-                              >
-                                <Eye className="h-3 w-3 mr-1" />
-                                Voir
+                            <div className="flex gap-3">
+                              <div className="flex flex-col">
+                                <span className="text-xs font-black text-[#2D1B08] tracking-tighter">{user.totalBookings}</span>
+                                <span className="text-[9px] font-black uppercase tracking-widest text-[#5D4037]/40">Réserv.</span>
+                              </div>
+                              <div className="flex flex-col border-l border-[#EBE3D5] pl-3">
+                                <span className="text-xs font-black text-[#2D1B08] tracking-tighter">{user.totalReviews}</span>
+                                <span className="text-[9px] font-black uppercase tracking-widest text-[#5D4037]/40">Avis</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button variant="ghost" size="sm" onClick={() => handleViewUser(user)} className="h-9 w-9 p-0 rounded-xl hover:bg-[#EBE3D5]/20 text-[#5D4037]">
+                                <Eye className="h-4 w-4" />
                               </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleEditUser(user)}
-                                className="text-xs"
-                              >
-                                <Edit className="h-3 w-3 mr-1" />
-                                Modifier
+                              <Button variant="ghost" size="sm" onClick={() => handleEditUser(user)} className="h-9 w-9 p-0 rounded-xl hover:bg-[#F2A900]/10 text-[#F2A900]">
+                                <Edit className="h-4 w-4" />
                               </Button>
-                              {user.status === 'active' ? (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="text-xs border-orange-500 text-orange-600 hover:bg-orange-50"
-                                  onClick={() => handleSuspendUser(user.id)}
-                                >
-                                  <UserX className="h-3 w-3 mr-1" />
-                                  Suspendre
-                                </Button>
-                              ) : (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="text-xs border-green-500 text-green-600 hover:bg-green-50"
-                                  onClick={() => handleActivateUser(user.id)}
-                                >
-                                  <UserCheck className="h-3 w-3 mr-1" />
-                                  Activer
-                                </Button>
-                              )}
-                              {!user.verified && (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="text-xs border-blue-500 text-blue-600 hover:bg-blue-50"
-                                  onClick={() => handleVerifyUser(user.id)}
-                                >
-                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                  Vérifier
-                                </Button>
-                              )}
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="text-xs border-red-500 text-red-600 hover:bg-red-50"
-                                onClick={() => handleDeleteUser(user.id)}
-                              >
-                                <Trash2 className="h-3 w-3 mr-1" />
-                                Supprimer
+                              <Button variant="ghost" size="sm" onClick={() => handleDeleteUser(user.id)} className="h-9 w-9 p-0 rounded-xl hover:bg-[#E11D48]/10 text-[#E11D48]">
+                                <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
                           </td>
@@ -887,77 +908,87 @@ const UsersPage: React.FC = () => {
                     </tbody>
                   </table>
                 </div>
-
-                {filteredUsers.length === 0 && (
-                  <div className="text-center py-12">
-                    <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <h3 className="text-lg font-semibold mb-2 text-gray-500">Aucun utilisateur trouvé</h3>
-                    <p className="text-gray-400">Aucun utilisateur ne correspond à vos critères de recherche.</p>
-                  </div>
-                )}
               </CardContent>
             </Card>
+
+            {filteredUsers.length === 0 && (
+              <Card className="border-2 border-dashed border-[#EBE3D5] bg-[#FFFDFB] p-12 text-center rounded-2xl">
+                <Users className="h-12 w-12 mx-auto mb-4 text-[#EBE3D5]" />
+                <h3 className="text-lg font-black uppercase tracking-tighter text-[#5D4037]/60">Aucun utilisateur</h3>
+                <p className="text-sm font-medium text-[#5D4037]/40">Aucun résultat ne correspond à votre recherche.</p>
+              </Card>
+            )}
           </TabsContent>
 
           <TabsContent value="stats" className="space-y-6">
             {/* Statistiques générales */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              <Card>
-                <CardContent className="p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+              <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl shadow-sm">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Total utilisateurs</p>
-                      <p className="text-2xl font-bold text-gray-900">{totalUsers}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60">Total</p>
+                      <p className="text-2xl sm:text-3xl font-black text-[#2D1B08] tracking-tighter">{totalUsers}</p>
                     </div>
-                    <Users className="h-8 w-8 text-blue-600" />
+                    <div className="bg-[#F2A900]/10 p-2 sm:p-3 rounded-xl">
+                      <Users className="h-5 w-5 sm:h-6 sm:w-6 text-[#F2A900]" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
+              <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl shadow-sm">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Utilisateurs actifs</p>
-                      <p className="text-2xl font-bold text-green-600">{activeUsers}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60">Actifs</p>
+                      <p className="text-2xl sm:text-3xl font-black text-[#1B5E20] tracking-tighter">{activeUsers}</p>
                     </div>
-                    <UserCheck className="h-8 w-8 text-green-600" />
+                    <div className="bg-[#1B5E20]/10 p-2 sm:p-3 rounded-xl">
+                      <UserCheck className="h-5 w-5 sm:h-6 sm:w-6 text-[#1B5E20]" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
+              <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl shadow-sm">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Utilisateurs suspendus</p>
-                      <p className="text-2xl font-bold text-red-600">{suspendedUsers}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60">Suspendus</p>
+                      <p className="text-2xl sm:text-3xl font-black text-[#E11D48] tracking-tighter">{suspendedUsers}</p>
                     </div>
-                    <UserX className="h-8 w-8 text-red-600" />
+                    <div className="bg-[#E11D48]/10 p-2 sm:p-3 rounded-xl">
+                      <UserX className="h-5 w-5 sm:h-6 sm:w-6 text-[#E11D48]" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
+              <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl shadow-sm">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Utilisateurs vérifiés</p>
-                      <p className="text-2xl font-bold text-blue-600">{verifiedUsers}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60">Vérifiés</p>
+                      <p className="text-2xl sm:text-3xl font-black text-[#F2A900] tracking-tighter">{verifiedUsers}</p>
                     </div>
-                    <Shield className="h-8 w-8 text-blue-600" />
+                    <div className="bg-[#F2A900]/10 p-2 sm:p-3 rounded-xl">
+                      <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-[#F2A900]" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardContent className="p-6">
+              <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl shadow-sm">
+                <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Utilisateurs supprimés</p>
-                      <p className="text-2xl font-bold text-orange-600">{totalDeletedUsers}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-[#5D4037]/60">Supprimés</p>
+                      <p className="text-2xl sm:text-3xl font-black text-[#5D4037]/60 tracking-tighter">{totalDeletedUsers}</p>
                     </div>
-                    <Trash2 className="h-8 w-8 text-orange-600" />
+                    <div className="bg-[#EBE3D5]/40 p-2 sm:p-3 rounded-xl">
+                      <Trash2 className="h-5 w-5 sm:h-6 sm:w-6 text-[#5D4037]" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -965,24 +996,32 @@ const UsersPage: React.FC = () => {
 
             {/* Statistiques détaillées */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <BarChart3 className="h-5 w-5 mr-2" />
+              <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl shadow-sm">
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="flex items-center font-black uppercase tracking-tighter text-base sm:text-lg text-[#2D1B08]">
+                    <BarChart3 className="h-5 w-5 mr-2 sm:mr-3 text-[#F2A900]" />
                     Répartition par rôle
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
+                <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+                  <div className="space-y-5">
                     {Object.entries(usersByRole).map(([role, count]) => {
                       const percentage = ((count / totalUsers) * 100).toFixed(1);
                       return (
-                        <div key={role} className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <Badge variant="outline">{role}</Badge>
-                            <span className="text-sm text-gray-600">{count} utilisateurs</span>
+                        <div key={role} className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <Badge variant="outline" className="border-[#EBE3D5] bg-[#FFF8E1] text-[#F2A900] font-black uppercase text-[10px] tracking-tighter">{role}</Badge>
+                              <span className="text-xs font-bold text-[#5D4037]/60">{count} UTILISATEURS</span>
+                            </div>
+                            <span className="text-sm font-black text-[#2D1B08]">{percentage}%</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-900">{percentage}%</span>
+                          <div className="w-full bg-[#EBE3D5]/30 h-2 rounded-full overflow-hidden">
+                            <div 
+                              className="bg-[#F2A900] h-full rounded-full transition-all duration-1000" 
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
                         </div>
                       );
                     })}
@@ -990,39 +1029,45 @@ const UsersPage: React.FC = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <TrendingUp className="h-5 w-5 mr-2" />
-                    Activité récente
+              <Card className="border-2 border-[#EBE3D5] bg-white rounded-2xl shadow-sm">
+                <CardHeader className="p-4 sm:p-6">
+                  <CardTitle className="flex items-center font-black uppercase tracking-tighter text-base sm:text-lg text-[#2D1B08]">
+                    <TrendingUp className="h-5 w-5 mr-2 sm:mr-3 text-[#1B5E20]" />
+                    Activité & Croissance
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm text-gray-600">Nouveaux utilisateurs (30 derniers jours)</span>
+                <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between p-4 bg-[#F2A900]/5 rounded-xl border border-[#F2A900]/10 transition-colors hover:bg-[#F2A900]/10">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-white p-2 rounded-lg shadow-sm">
+                          <Clock className="h-5 w-5 text-[#F2A900]" />
+                        </div>
+                        <span className="text-xs font-black uppercase tracking-widest text-[#5D4037]/70">Nouveaux (30j)</span>
                       </div>
-                      <span className="text-lg font-bold text-blue-600">{recentUsers}</span>
+                      <span className="text-2xl font-black text-[#F2A900] tracking-tighter">{recentUsers}</span>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Activity className="h-4 w-4 text-green-600" />
-                        <span className="text-sm text-gray-600">Taux d'activité</span>
+                    <div className="flex items-center justify-between p-4 bg-[#1B5E20]/5 rounded-xl border border-[#1B5E20]/10 transition-colors hover:bg-[#1B5E20]/10">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-white p-2 rounded-lg shadow-sm">
+                          <Activity className="h-5 w-5 text-[#1B5E20]" />
+                        </div>
+                        <span className="text-xs font-black uppercase tracking-widest text-[#5D4037]/70">Taux d'activité</span>
                       </div>
-                      <span className="text-lg font-bold text-green-600">
+                      <span className="text-2xl font-black text-[#1B5E20] tracking-tighter">
                         {((activeUsers / totalUsers) * 100).toFixed(1)}%
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <CheckCircle className="h-4 w-4 text-purple-600" />
-                        <span className="text-sm text-gray-600">Taux de vérification</span>
+                    <div className="flex items-center justify-between p-4 bg-[#2D1B08]/5 rounded-xl border border-[#2D1B08]/10 transition-colors hover:bg-[#2D1B08]/10">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-white p-2 rounded-lg shadow-sm">
+                          <CheckCircle className="h-5 w-5 text-[#2D1B08]" />
+                        </div>
+                        <span className="text-xs font-black uppercase tracking-widest text-[#5D4037]/70">Vérification</span>
                       </div>
-                      <span className="text-lg font-bold text-purple-600">
+                      <span className="text-2xl font-black text-[#2D1B08] tracking-tighter">
                         {((verifiedUsers / totalUsers) * 100).toFixed(1)}%
                       </span>
                     </div>
@@ -1033,171 +1078,153 @@ const UsersPage: React.FC = () => {
           </TabsContent>
 
           <TabsContent value="deleted" className="space-y-6">
-            {/* Header pour les utilisateurs supprimés */}
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
+            {/* Header Corbeille */}
+            <Card className="border-2 border-red-100 bg-red-50/30 rounded-2xl overflow-hidden">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Utilisateurs supprimés</h3>
-                    <p className="text-gray-600 mt-1">
-                      {deletedUsers.length} utilisateur(s) supprimé(s)
+                    <h3 className="text-base sm:text-lg font-black uppercase tracking-tighter text-[#2D1B08]">Corbeille des utilisateurs</h3>
+                    <p className="text-[10px] sm:text-xs font-bold text-[#5D4037]/60 mt-1">
+                      {deletedUsers.length} UTILISATEUR(S) SUPPRIMÉ(S) — RESTAURATION POSSIBLE
                     </p>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="destructive" className="text-sm">
-                      <Trash2 className="h-3 w-3 mr-1" />
-                      {deletedUsers.length} supprimé(s)
-                    </Badge>
-                  </div>
+                  <Badge className="bg-red-100 text-[#E11D48] border-none font-black uppercase text-[10px] tracking-tighter px-3 h-8 shadow-sm">
+                    <Trash2 className="h-3 w-3 mr-2" />
+                    {deletedUsers.length} en attente
+                  </Badge>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Liste des utilisateurs supprimés */}
+            {/* Liste Mobile Corbeille */}
             {deletedUsers.length > 0 ? (
-              <Card>
-                <CardContent className="p-0">
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-red-50 border-b">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Utilisateur
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Rôle
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Statut
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Localisation
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Suppression
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Activité
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {deletedUsers.map((user) => (
-                          <tr key={user.id} className="hover:bg-red-50 transition-colors border-l-4 border-red-200">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="relative">
-                                  <Avatar className="h-10 w-10 opacity-75">
+              <>
+                <div className="lg:hidden space-y-4">
+                  {deletedUsers.map((user) => (
+                    <Card key={user.id} className="border-2 border-red-100 bg-white rounded-2xl overflow-hidden shadow-sm relative border-l-8 border-l-red-200">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="relative">
+                            <Avatar className="h-12 w-12 grayscale opacity-60">
+                              <AvatarImage src={user.avatar} alt={user.name} />
+                              <AvatarFallback className="bg-red-50 text-red-300 font-black">
+                                {user.name.split(' ').map(n => n[0]).join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-1 border-2 border-white">
+                              <Trash2 className="h-2.5 w-2.5 text-white" />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="font-black text-[#2D1B08] uppercase tracking-tighter line-through decoration-red-300 opacity-60">
+                              {user.name}
+                            </div>
+                            <div className="text-[9px] font-black uppercase tracking-widest text-red-400">
+                              Supprimé par {user.deletedBy}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4 text-[10px]">
+                           <div className="space-y-1">
+                             <div className="font-black text-[#5D4037]/40 uppercase tracking-widest text-[8px]">Date suppression</div>
+                             <div className="font-bold text-[#5D4037]">{new Date(user.deletedAt).toLocaleDateString()}</div>
+                           </div>
+                           <div className="space-y-1 text-right">
+                             <div className="font-black text-[#5D4037]/40 uppercase tracking-widest text-[8px]">Rôle</div>
+                             <div className="font-bold uppercase text-[#F2A900]">{user.role}</div>
+                           </div>
+                        </div>
+
+                        <div className="pt-4 border-t border-red-50 flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleRestoreUser(user.id)}
+                            className="flex-1 bg-[#1B5E20]/5 border-[#1B5E20]/20 text-[#1B5E20] font-black uppercase h-9 rounded-xl text-[10px]"
+                          >
+                            <UserCheck className="h-3.5 w-3.5 mr-2" />
+                            Restaurer
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handlePermanentDeleteUser(user.id)}
+                            className="h-9 w-9 p-0 bg-red-50 border-red-100 text-red-600 rounded-xl"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Liste Desktop Corbeille */}
+                <Card className="hidden lg:block border-2 border-red-50 bg-white rounded-2xl overflow-hidden shadow-sm">
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-red-50/50 border-b border-red-100">
+                            <th className="px-6 py-4 text-left text-[10px] font-black text-red-400 uppercase tracking-widest">Utilisateur</th>
+                            <th className="px-6 py-4 text-left text-[10px] font-black text-red-400 uppercase tracking-widest">Infos Suppression</th>
+                            <th className="px-6 py-4 text-left text-[10px] font-black text-red-400 uppercase tracking-widest">Rôle</th>
+                            <th className="px-6 py-4 text-right text-[10px] font-black text-red-400 uppercase tracking-widest">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-red-50">
+                          {deletedUsers.map((user) => (
+                            <tr key={user.id} className="hover:bg-red-50/20 transition-colors group">
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center opacity-70">
+                                  <Avatar className="h-9 w-9 border border-red-100 grayscale transition-all group-hover:grayscale-0">
                                     <AvatarImage src={user.avatar} alt={user.name} />
-                                    <AvatarFallback className="text-sm">
+                                    <AvatarFallback className="text-sm font-black text-red-300">
                                       {user.name.split(' ').map(n => n[0]).join('')}
                                     </AvatarFallback>
                                   </Avatar>
-                                  {/* Overlay de suppression */}
-                                  <div className="absolute inset-0 bg-red-900 bg-opacity-30 rounded-full flex items-center justify-center">
-                                    <Trash2 className="h-4 w-4 text-white" />
+                                  <div className="ml-4">
+                                    <div className="text-sm font-black text-[#2D1B08] uppercase tracking-tighter line-through decoration-[#E11D48]/30">{user.name}</div>
+                                    <div className="text-[10px] font-bold text-[#5D4037]/50 lowercase">{user.email}</div>
                                   </div>
                                 </div>
-                                <div className="ml-4">
-                                  <div className="flex items-center space-x-2">
-                                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                                    {user.verified && (
-                                      <CheckCircle className="h-4 w-4 text-green-500" />
-                                    )}
-                                  </div>
-                                  <div className="text-sm text-gray-500">{user.email}</div>
-                                  <div className="text-xs text-gray-400">{user.phone}</div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex flex-col gap-0.5">
+                                  <div className="text-[11px] font-bold text-red-600">Le {new Date(user.deletedAt).toLocaleDateString()}</div>
+                                  <div className="text-[9px] font-black uppercase text-[#5D4037]/40 tracking-widest">Par {user.deletedBy}</div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <Badge variant="outline" className="capitalize">
-                                <Shield className="h-3 w-3 mr-1" />
-                                {user.role}
-                              </Badge>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <Badge
-                                variant={user.status === 'active' ? 'default' : user.status === 'suspended' ? 'destructive' : 'secondary'}
-                                className="capitalize"
-                              >
-                                {user.status === 'active' ? 'Actif' : user.status === 'suspended' ? 'Suspendu' : 'Inactif'}
-                              </Badge>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center text-sm text-gray-900">
-                                <MapPin className="h-4 w-4 mr-1 text-gray-400" />
-                                {user.location}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900">
-                                {new Date(user.deletedAt).toLocaleDateString('fr-FR')}
-                              </div>
-                              <div className="text-xs text-gray-500">
-                                Par: {user.deletedBy}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm text-gray-900">
-                                <div className="flex items-center space-x-3">
-                                  <span className="text-blue-600 font-medium">
-                                    {user.totalBookings} réservations
-                                  </span>
-                                  <span className="text-green-600 font-medium">
-                                    {user.totalReviews} avis
-                                  </span>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <Badge variant="outline" className="border-red-100 bg-red-50 text-red-500 font-black uppercase text-[9px] tracking-tighter">
+                                  {user.role}
+                                </Badge>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <Button variant="ghost" size="sm" onClick={() => handleRestoreUser(user.id)} className="h-9 px-3 rounded-xl hover:bg-[#1B5E20]/10 text-[#1B5E20] font-black uppercase text-[10px]">
+                                    <UserCheck className="h-3.5 w-3.5 mr-2" />
+                                    Restaurer
+                                  </Button>
+                                  <Button variant="ghost" size="sm" onClick={() => handlePermanentDeleteUser(user.id)} className="h-9 w-9 p-0 rounded-xl hover:bg-red-100 text-red-600">
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center space-x-2">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleViewUser(user)}
-                                  className="text-xs"
-                                >
-                                  <Eye className="h-3 w-3 mr-1" />
-                                  Voir
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleRestoreUser(user.id)}
-                                  className="text-xs border-green-500 text-green-600 hover:bg-green-50"
-                                >
-                                  <UserCheck className="h-3 w-3 mr-1" />
-                                  Restaurer
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handlePermanentDeleteUser(user.id)}
-                                  className="text-xs border-red-500 text-red-600 hover:bg-red-50"
-                                >
-                                  <Trash2 className="h-3 w-3 mr-1" />
-                                  Supprimer définitivement
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
             ) : (
-              <Card className="p-12 text-center">
-                <div className="text-gray-500">
-                  <Trash2 className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-lg font-semibold mb-2">Aucun utilisateur supprimé</h3>
-                  <p>Aucun utilisateur n'a été supprimé pour le moment.</p>
-                </div>
+              <Card className="border-2 border-dashed border-[#EBE3D5] bg-[#FFFDFB] p-12 text-center rounded-2xl">
+                <Trash2 className="h-12 w-12 mx-auto mb-4 text-[#EBE3D5]" />
+                <h3 className="text-lg font-black uppercase tracking-tighter text-[#5D4037]/60">La corbeille est vide</h3>
+                <p className="text-sm font-medium text-[#5D4037]/40">Aucun utilisateur n'a été supprimé récemment.</p>
               </Card>
             )}
           </TabsContent>

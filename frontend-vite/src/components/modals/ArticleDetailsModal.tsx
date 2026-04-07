@@ -16,7 +16,6 @@ import {
   Clock,
   BarChart3,
   Heart,
-  MessageSquare,
   ExternalLink,
   Image as ImageIcon
 } from 'lucide-react';
@@ -60,37 +59,7 @@ const ArticleDetailsModal: React.FC<ArticleDetailsModalProps> = ({
 }) => {
   const [showFullContent, setShowFullContent] = useState(false);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Publié':
-        return 'bg-green-100 text-green-700';
-      case 'En attente':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'Brouillon':
-        return 'bg-gray-100 text-gray-700';
-      case 'Archivé':
-        return 'bg-red-100 text-red-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'Tourisme':
-        return 'bg-blue-100 text-blue-700';
-      case 'Gastronomie':
-        return 'bg-orange-100 text-orange-700';
-      case 'Histoire':
-        return 'bg-purple-100 text-purple-700';
-      case 'Culture':
-        return 'bg-pink-100 text-pink-700';
-      case 'Événements':
-        return 'bg-green-100 text-green-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
 
   const handleDownload = () => {
     const articleData = `
@@ -164,48 +133,53 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
 
         <div className="space-y-6">
           {/* En-tête de l'article */}
-          <div className="flex items-start space-x-6">
-            <div className="w-32 h-32 bg-gray-200 rounded-lg flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+            <div className="w-full sm:w-40 h-48 sm:h-40 bg-[#EBE3D5]/20 rounded-xl flex-shrink-0 overflow-hidden shadow-sm">
               <img 
                 src={article.image} 
                 alt={article.title}
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-cover"
               />
             </div>
             
-            <div className="flex-1">
-              <div className="flex items-center space-x-3 mb-3">
-                <Badge className={getCategoryColor(article.category)}>
+            <div className="flex-1 w-full min-w-0">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <Badge className="bg-[#5D4037]/5 text-[#5D4037] border-none font-black uppercase text-[10px] tracking-tighter">
                   {article.category}
                 </Badge>
-                <Badge className={getStatusColor(article.status)}>
+                <Badge className={`${
+                  article.status === 'Publié' ? 'bg-[#1B5E20]/10 text-[#1B5E20]' :
+                  article.status === 'En attente' ? 'bg-[#F2A900]/10 text-[#F2A900]' :
+                  article.status === 'Brouillon' ? 'bg-[#5D4037]/10 text-[#5D4037]/60' :
+                  'bg-red-50 text-red-600'
+                } border-none font-black uppercase text-[10px] tracking-tighter`}>
                   {article.status}
                 </Badge>
                 {article.readTime && (
-                  <Badge variant="outline">
+                  <Badge className="bg-[#EBE3D5]/30 text-[#2D1B08] border-none font-bold text-[10px] tracking-tighter">
                     <Clock className="h-3 w-3 mr-1" />
                     {article.readTime} min
                   </Badge>
                 )}
               </div>
               
-              <h1 className="text-2xl font-bold mb-3">{article.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-black text-[#2D1B08] tracking-tighter mb-3 leading-tight break-words">{article.title}</h1>
               
-              <div className="flex items-center space-x-6 text-sm text-gray-600 mb-4">
-                <div className="flex items-center space-x-1">
-                  <User className="h-4 w-4" />
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold text-[#5D4037]/70 mb-4">
+                <div className="flex items-center space-x-1.5 bg-[#EBE3D5]/20 px-2 py-1 rounded-md border border-[#EBE3D5]/50">
+                  <User className="h-3.5 w-3.5 text-[#F2A900]" />
                   <span>{article.author}</span>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Calendar className="h-4 w-4" />
+                <div className="flex items-center space-x-1.5 bg-[#FFFDFB] px-2 py-1 rounded-md border border-[#EBE3D5]/50">
+                  <Calendar className="h-3.5 w-3.5" />
                   <span>{article.publishDate}</span>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Eye className="h-4 w-4" />
+                <div className="flex items-center space-x-1.5">
+                  <Eye className="h-3.5 w-3.5" />
                   <span>{article.views} vues</span>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Heart className="h-4 w-4" />
+                <div className="flex items-center space-x-1.5">
+                  <Heart className="h-3.5 w-3.5 text-[#E11D48]" />
                   <span>{article.likes} likes</span>
                 </div>
               </div>
@@ -214,7 +188,7 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
               {article.tags && article.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {article.tags.map((tag, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
+                    <Badge key={index} className="bg-[#FFFDFB] text-[#5D4037]/60 border border-[#EBE3D5] font-bold text-[10px]">
                       #{tag}
                     </Badge>
                   ))}
@@ -224,39 +198,39 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
           </div>
 
           {/* Statistiques détaillées */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-3 flex items-center">
-                <BarChart3 className="h-5 w-5 text-purple-500 mr-2" />
+          <Card className="border-2 border-[#EBE3D5] shadow-sm rounded-2xl overflow-hidden">
+            <CardContent className="p-4 sm:p-5">
+              <h3 className="font-black text-[#2D1B08] uppercase tracking-tighter mb-4 flex items-center text-sm">
+                <BarChart3 className="h-5 w-5 text-[#F2A900] mr-2" />
                 Statistiques de performance
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="text-center p-3 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{article.views}</div>
-                  <div className="text-sm text-blue-600">Vues</div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                <div className="text-center p-3 bg-blue-50/50 rounded-xl border border-blue-100">
+                  <div className="text-2xl font-black text-blue-600 mb-1">{article.views}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-tighter text-blue-600/70">Vues</div>
                 </div>
-                <div className="text-center p-3 bg-red-50 rounded-lg">
-                  <div className="text-2xl font-bold text-red-600">{article.likes}</div>
-                  <div className="text-sm text-red-600">Likes</div>
+                <div className="text-center p-3 bg-red-50/50 rounded-xl border border-red-100">
+                  <div className="text-2xl font-black text-red-600 mb-1">{article.likes}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-tighter text-red-600/70">Likes</div>
                 </div>
-                <div className="text-center p-3 bg-green-50 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">{article.comments || 0}</div>
-                  <div className="text-sm text-green-600">Commentaires</div>
+                <div className="text-center p-3 bg-green-50/50 rounded-xl border border-green-100">
+                  <div className="text-2xl font-black text-green-600 mb-1">{article.comments || 0}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-tighter text-green-600/70">Commentaires</div>
                 </div>
-                <div className="text-center p-3 bg-purple-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">{article.shares || 0}</div>
-                  <div className="text-sm text-purple-600">Partages</div>
+                <div className="text-center p-3 bg-purple-50/50 rounded-xl border border-purple-100">
+                  <div className="text-2xl font-black text-purple-600 mb-1">{article.shares || 0}</div>
+                  <div className="text-[10px] font-bold uppercase tracking-tighter text-purple-600/70">Partages</div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Contenu de l'article */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="font-semibold mb-3">Contenu de l'article</h3>
+          <Card className="border-2 border-[#EBE3D5] shadow-sm rounded-2xl overflow-hidden">
+            <CardContent className="p-4 sm:p-5">
+              <h3 className="font-black text-[#2D1B08] uppercase tracking-tighter mb-3 text-sm">Contenu de l'article</h3>
               <div className="prose max-w-none">
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-[#5D4037]/80 leading-relaxed text-sm sm:text-base whitespace-pre-line">
                   {showFullContent ? article.content : `${article.content.substring(0, 500)}...`}
                 </p>
                 {article.content.length > 500 && (
@@ -264,7 +238,7 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
                     variant="outline"
                     size="sm"
                     onClick={() => setShowFullContent(!showFullContent)}
-                    className="mt-3"
+                    className="mt-4 border-[#F2A900] text-[#F2A900] hover:bg-[#F2A900] hover:text-white font-black uppercase tracking-tighter text-[10px]"
                   >
                     {showFullContent ? 'Voir moins' : 'Lire la suite'}
                   </Button>
@@ -310,19 +284,8 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
           )}
 
           {/* Actions */}
-          <div className="flex justify-between items-center">
-            <div className="flex space-x-3">
-              <Button
-                variant="outline"
-                onClick={handleViewOnline}
-                className="flex items-center space-x-2"
-              >
-                <ExternalLink className="h-4 w-4" />
-                <span>Voir en ligne</span>
-              </Button>
-            </div>
-            
-            <div className="flex space-x-3">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 pt-2 border-t border-[#EBE3D5]">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
               {onEdit && (
                 <Button
                   variant="outline"
@@ -330,7 +293,7 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
                     onEdit(article.id);
                     onClose();
                   }}
-                  className="flex items-center space-x-2"
+                  className="flex-1 sm:flex-none justify-center items-center space-x-2 border-[#EBE3D5] text-[#2D1B08] hover:bg-[#EBE3D5]/30 font-black uppercase text-xs tracking-tighter h-11"
                 >
                   <Edit className="h-4 w-4" />
                   <span>Modifier</span>
@@ -343,9 +306,9 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
                     onPublish(article.id);
                     onClose();
                   }}
-                  className="bg-green-600 hover:bg-green-700 flex items-center space-x-2"
+                  className="flex-1 sm:flex-none justify-center bg-[#1B5E20] hover:bg-[#1B5E20]/90 text-white font-black uppercase text-xs tracking-tighter h-11"
                 >
-                  <CheckCircle className="h-4 w-4" />
+                  <CheckCircle className="h-4 w-4 mr-2" />
                   <span>Publier</span>
                 </Button>
               )}
@@ -357,9 +320,9 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
                     onArchive(article.id);
                     onClose();
                   }}
-                  className="border-orange-500 text-orange-600 hover:bg-orange-50 flex items-center space-x-2"
+                  className="flex-1 sm:flex-none justify-center border-[#E11D48]/30 text-[#E11D48] hover:bg-[#E11D48]/10 font-black uppercase text-xs tracking-tighter h-11"
                 >
-                  <Clock className="h-4 w-4" />
+                  <Clock className="h-4 w-4 mr-2" />
                   <span>Archiver</span>
                 </Button>
               )}
@@ -373,12 +336,23 @@ ${article.tags ? `Tags: ${article.tags.join(', ')}` : ''}
                       onClose();
                     }
                   }}
-                  className="border-red-500 text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                  className="flex-1 sm:flex-none justify-center border-[#E11D48] text-[#E11D48] hover:bg-[#E11D48] hover:text-white font-black uppercase text-xs tracking-tighter h-11"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4 mr-2" />
                   <span>Supprimer</span>
                 </Button>
               )}
+            </div>
+            
+            <div className="flex w-full sm:w-auto mt-2 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-0 border-[#EBE3D5]">
+              <Button
+                variant="outline"
+                onClick={handleViewOnline}
+                className="w-full sm:w-auto justify-center items-center space-x-2 border-[#F2A900] text-[#F2A900] hover:bg-[#F2A900] hover:text-white font-black uppercase text-xs tracking-tighter h-11"
+              >
+                <ExternalLink className="h-4 w-4" />
+                <span>Voir sur le site</span>
+              </Button>
             </div>
           </div>
         </div>

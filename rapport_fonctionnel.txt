@@ -1,0 +1,135 @@
+RAPPORT FONCTIONNEL DÉTAILLÉ - DISCOVERSENEGAL
+
+Ce document présente l'intégralité des fonctionnalités développées et intégrées sur la plateforme frontend DiscoverSenegal. Il détaille pour chaque espace l'utilité métier et l'expérience utilisateur (UX/UI) proposée, ainsi que les perspectives d'évolution purement frontend pour enrichir l'application.
+
+=========================================
+1. FONCTIONNALITÉS PUBLIQUES (ESPACE VISITEUR)
+=========================================
+L'espace public est conçu pour captiver l'utilisateur dès les premières secondes et lui permettre d'explorer l'offre touristique sénégalaise de manière intuitive.
+
+- Page d'accueil (Landing Page) :
+  C'est la vitrine principale du site. Elle propose une immersion immédiate grâce à un hero section intégrant une vidéo d'arrière-plan de haute qualité. Elle met en valeur la culture locale via des bannières interactives ("Vivez à la Sénégalaise"), présente des statistiques clés animées sur le tourisme, et offre des carrousels de raccourcis visuels vers les principales catégories (Hébergements, Agences, Artisanat). Son but est de rediriger efficacement le trafic vers les différentes sections exploratoires.
+
+- Échos du Sénégal (Discover Feed) :
+  Pensée comme un réseau social thématique, cette section permet aux utilisateurs de faire défiler un fil d'actualité riche composé de photos, de vidéos et de récits de voyage postés par la communauté ou les professionnels. L'utilité est de créer de l'engagement (likes, commentaires, partages) et d'inspirer les futurs voyageurs à travers des expériences réelles vécues au Sénégal.
+
+- Vidéos (Video Feed) :
+  Inspiré des formats très populaires actuels (type TikTok ou Instagram Reels), ce fil permet un défilement vertical infini de courtes vidéos immersives. Chaque vidéo s'affiche en plein écran, maximisant l'impact visuel des paysages, de la gastronomie et des événements culturels sénégalais. Les utilisateurs peuvent y interagir et s'abonner aux créateurs.
+
+- Annuaires & Explorations Thématiques :
+  Chaque section (Hébergements, Restaurants, Agences de voyage, Événements, Guides Locaux) dispose de sa propre page d'exploration. Ces pages intègrent des grilles de cartes (cards) riches visuellement, présentant les entités avec leurs images, notes, localisations et tarifs de base. Des filtres dynamiques (par catégorie, prix ou nom) permettent une recherche affinée afin d'aider l'utilisateur à trouver rapidement l'offre qui lui correspond.
+
+- Carte Interactive (Map Explorer) :
+  Une visualisation géolocalisée enrichie. Elle permet à l'utilisateur de situer visuellement tous les points d'intérêt (restaurants, hôtels, agences, sites touristiques) répartis sur le territoire sénégalais. C'est un outil essentiel de planification de voyage pour évaluer les distances et découvrir les richesses de chaque région.
+
+- Profils Publics des Partenaires (Vitrines) :
+  Lorsqu'un visiteur clique sur un hôtel, un restaurant ou une agence, il est redirigé vers une page vitrine complète. Cette page affiche les éléments de couverture et de branding du partenaire, une section "À propos", une galerie de photos, un système de notation et de recueil d'avis détaillés. Surtout, elle présente l'inventaire cliquable du partenaire (un onglet "Chambres" pour un hôtel, "Menu" pour un restaurant, ou "Circuits/Offres" pour une agence) permettant l'action immédiate de réservation.
+
+- Mode Invité Intelligent (Visitor Engagement) :
+  Afin de maximiser les inscriptions sans frustrer l'utilisateur, ce système intercepte discrètement les actions nécessitant un compte (comme cliquer sur "Réserver" ou "Aimer"). À la première action bloquée, un popup ou "bottom sheet" élégant s'affiche pour inviter à se connecter. À la deuxième tentative d'action protégée, l'utilisateur est redirigé vers une page d'atterrissage immersive l'invitant à "Rejoindre DiscoverSenegal", expliquant clairement les avantages de l'inscription.
+
+=========================================
+2. FONCTIONNALITÉS UTILISATEURS CONNECTÉS (TOURISTES / LOCAUX)
+=========================================
+Une fois connecté, l'utilisateur a accès à un espace de gestion personnel conçu pour faciliter son parcours et centraliser ses interactions.
+
+- Authentification & Inscription :
+  Système fluide prenant en compte plusieurs rôles (Touriste, Agence, Hôtel, Admin). L'interface guide l'utilisateur selon son statut pour lui afficher ensuite l'espace adéquat.
+  
+- Tableau de bord commun :
+  Vue synthétique de l'activité du compte. L'utilisateur y retrouve un résumé de ses prochaines réservations, de ses billets d'événements et de ses notifications récentes.
+
+- Messagerie Interne :
+  Composant d'échange crucial pour faciliter la mise en relation. Il permet aux voyageurs de discuter non seulement directement avec les agences de voyages ou les hôtels pour des demandes spécifiques, mais aussi de discuter entre utilisateurs (touristes, locaux) pour échanger des bons plans ou organiser des rencontres, le tout dans une interface reprenant les codes des applications de messagerie modernes.
+
+- Mes Tickets :
+  Espace centralisé où l'utilisateur accède facilement et rapidement aux différents billets électroniques (billets d'événements, bons de réservations de chambres, tickets pour des circuits) qu'il a pu se procurer au cours de ses réservations sur la plateforme. Cela facilite le passage aux contrôles sans avoir à fouiller dans ses emails.
+
+- Mon Profil :
+  Espace de configuration personnelle pour modifier ses informations de base, son avatar, son mot de passe, et ses préférences de communication.
+
+=========================================
+3. FONCTIONNALITÉS PARTENAIRES (ESPACES B2B SPÉCIFIQUES)
+=========================================
+Chaque type de partenaire accède à un espace de gestion ("Dashboard") sur mesure, pensé pour son cœur de métier et facilitant l'interaction avec les clients.
+
+A. AGENCES DE VOYAGE
+L'agence de voyage dispose d'outils complets pour gérer son activité d'excursions et safaris.
+- Réservations de circuits : Un tableau récapitulatif permettant de valider, refuser ou consulter le détail des réservations initiées par les touristes, avec le montant total et les informations des voyageurs (AgencyBookingsPage).
+- Nos Offres : Une interface de type CRUD (Créer, Lire, Mettre à jour, Supprimer) où l'agence construit ses packages touristiques, en définissant le titre, la description, les images, le nombre de places et le prix (AgencyOffersPage).
+- Profil Agence : Formulaire riche pour administrer la vitrine publique (AgencyProfilePage). L'agence y configure son logo, sa photo de couverture, ses informations légales (N° licence) et ses spécialités (Safaris, Écotourisme, etc.).
+- Avis Clients : Interface d'analyse affichant les derniers commentaires reçus, la moyenne des notes, la répartition des étoiles et les axes d'amélioration (AgencyReviewsPage).
+
+B. HÔTELS & RESTAURANTS
+- Gestion des Réservations : Tableau des réservations spécifique gérant des spécificités comme les "Nuitées" pour un hôtel ou les "Couerts/Heures" pour un restaurant.
+- Chambres / Menu : Outils de catalogue dédiés. L'Hôtelier configure ses types de chambres (standards, suites) avec leurs prix et équipements. Le Restaurateur gère sa carte, avec la possibilité de séparer par catégories (Entrées, Plats, Desserts) et de mettre en avant des spécialités.
+- Profil & Avis : Mêmes fonctionnalités de personnalisation vitrine et de réponse aux commentaires que l'agence de voyage.
+
+C. GUIDES TOURISTIQUES
+- Gestion des Tours : Création d'itinéraires guidés, définition des jours de disponibilité, des langues parlées et de la taille maximale des groupes.
+- Suivi des Réservations : Liste des inscrits pour un tour précis afin de faciliter l'organisation sur le terrain.
+
+D. ORGANISATEURS D'ÉVÉNEMENTS
+- Gestion des Événements : Espace de création d'événements. L'organisateur définit le lieu, les dates clés, le visuel de l'affiche et configure les différentes catégories de billets (Standard, VIP) avec leurs tarifs.
+
+E. SÉCURITÉ / CONTRÔLEURS
+- Scanner (QR Code) : Une interface critique généralement utilisée sur mobile par les agents de sécurité à l'entrée des lieux. Elle simule la lecture de QR codes pour valider instantanément qu'un ticket ou une réservation est authentique et valide.
+- Rapports en direct : Dashboard affichant les statistiques de flux (billets scannés, rejets) pour anticiper les engorgements.
+
+=========================================
+4. FONCTIONNALITÉS D'ADMINISTRATION (BACK-OFFICE)
+=========================================
+L'espace super-administrateur permet de contrôler l'intégralité de la plateforme, de modérer les contenus et de filtrer les nouveaux affiliés.
+
+- Tableau de bord Admin : Synthèse avec des graphiques des indicateurs clés de performance de la plateforme (Nombre total d'inscriptions, revenus générés, activité globale).
+- Validation (KYC : Know Your Customer) : Module de vérification des professionnels. Lorsqu'une nouvelle agence ou un hôtel s'inscrit, son compte est mis en attente. L'admin vérifie depuis cet espace ses documents (NINEA, Licences), valide ou rejette sa demande avant d'autoriser sa publication sur le site.
+- Modération : Interface de tri des signalements remontés par les utilisateurs. Elle liste les commentaires jugés offensants, les profils suspicieux ou les fausses annonces, en permettant de les supprimer ou de les masquer.
+- Gestion des Utilisateurs : Datatable complète référençant tous les acteurs. L'admin peut y modifier les rôles (ex: passer un utilisateur simple en "Organisateur"), suspendre ou bannir des comptes.
+- Gestion des Articles : Éditeur de texte riche (WYSIWYG) intégré permettant à l'équipe de DiscoverSenegal de rédiger et publier des guides, des retours d'expériences ou des annonces sur le blog intégré au site.
+
+=========================================
+5. TECHNOLOGIES UTILISÉES
+=========================================
+La plateforme DiscoverSenegal repose sur une stack technologique moderne assurant performance, scalabilité et une expérience utilisateur de haute qualité.
+
+- Architecture Frontend :
+  - Framework & Build : Vite + React.js pour un développement ultra-rapide et un rendu fluide.
+  - Langage : TypeScript pour une robustesse de code accrue et une meilleure maintenance.
+  - Design & Styling : Tailwind CSS permettant une personnalisation totale et un design responsive mobile-first.
+  - Bibliothèque de Composants : Shadcn/UI (basée sur Radix UI) pour des éléments d'interface accessibles et esthétiques.
+  - Iconographie : Lucide React pour des visuels épurés et cohérents.
+  - Gestion d'État : React Context API pour la synchronisation des données (Flux, Auth, Notifications).
+
+
+
+=========================================
+6. PERSPECTIVES ET FONCTIONNALITÉS FUTURES
+=========================================
+Pour enrichir l'expérience sur la plateforme DiscoverSenegal et offrir un service complet à chaque acteur, voici les développements prévus, classés par type d'utilisateur :
+
+A. ADMINISTRATEURS (BACK-OFFICE)
+- Gestion complète des restaurants : Créer une interface permettant d'ajouter, éditer, valider ou supprimer des restaurants inscrits sur la plateforme, incluant la vérification de leurs menus et offres.
+- Modération du Réseau Social (Échos du Sénégal) : Mettre en place des outils avancés (tableaux de bord de signalements) permettant aux admins de censurer ou supprimer rapidement des publications/vidéos inappropriées et de sanctionner les auteurs.
+- Gestion des offres des Agences de voyages : Mettre à disposition de l'admin une vue globale pour auditer tous les circuits et safaris proposés par l'ensemble des agences, avec possibilité d'activer/désactiver des offres.
+- Gestion des Produits Artisanaux : Tableau de bord de supervision des produits mis en ligne par les artisans pour valider leur conformité avant l'affichage public.
+- Responsive Global : S'assurer, suite à un audit complet, que 100% des interfaces (notamment les tables de données d'administration) s'affichent et fonctionnent parfaitement sur mobiles et petites tablettes.
+- Amélioration Continue : Compléter les pages existantes (Filtres de recherche avancés sur les listes utilisateurs, exports de données en CSV/Excel).
+
+B. GUIDES TOURISTIQUES
+- Agenda Interactif Quotidien : Intégrer un module d'agenda riche type "Google Calendar". Les guides devront le remplir régulièrement pour y spécifier leurs jours de repos, leurs créneaux réservés et leurs temps libres. Cela automatisera et fiabilisera les prises de réservation directes par les clients.
+- Enrichissement de l'Espace Guide : Ajouter des statistiques pertinentes sur les pages existantes, telles qu'un suivi des revenus, l'historique détaillé des clients encadrés, et des graphiques d'évolution d'activité.
+
+C. ARTISANS LOCAUX (NOUVEL ESPACE)
+- Plateforme E-commerce / Marketplace : Créer un portail B2B exclusif pour les artisans. Ils disposeront de leur propre tableau de bord pour exposer leurs créations (bijoux, sculptures, prêt-à-porter, décoration). Ainsi, un touriste pourra ajouter des souvenirs à son panier et les payer de manière sécurisée directement depuis DiscoverSenegal.
+
+D. VISITEURS / TOURISTES (ESPACE PUBLIC & RÉSEAU SOCIAL)
+- Flux Vidéos Amélioré (TikTok / Reels) : Scinder la page des vidéos verticales en deux vues intuitives :
+    - Mode "Pour toi" (For You) : Utilisant un algorithme pour suggérer de nouvelles découvertes (bars, safaris, culture) en fonction des likes passés.
+    - Mode "Suivis" (Following) : N'affichant que le contenu exclusif des créateurs locaux ou agences auxquelles l'utilisateur s'est explicitement abonné.
+- Système de Panier d'Achat : Mise en place d'un panier global (unifié) permettant au visiteur d'ajouter plusieurs prestations différentes (un circuit de l'agence, une création d'un artisan, une réservation d'hôtel) et de payer le tout en une seule transaction.
+- Complétion des espaces existants : Revue UI/UX de toutes les sections de l'utilisateur final et de l'annuaire public pour ajouter des tris (par popularité, avis récents) favorisant une prise de décision éclairée.
+
+E. FONCTIONNALITÉS GLOBALES (TRANSVERSALES)
+- Thématisation (Mode Clair / Sombre) : Ajouter un commutateur permettant à tous les utilisateurs d'alterner manuellement entre un mode clair et un mode sombre (Dark Mode) pour un meilleur confort visuel, selon leurs préférences.
+- Multilinguisme : Implémenter la possibilité de changer la langue de l'interface du site de manière dynamique, en commençant par le support de 2 langues principales (ex: Français, Anglais).
+- Multidevises : Intégrer un convertisseur automatique pour permettre le changement de la devise affichée sur toute la plateforme, en se limitant au départ à 2 devises clés (ex: Franc CFA (XOF), Euro (€)) pour faciliter la compréhension des tarifs par les touristes internationaux.

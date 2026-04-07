@@ -56,6 +56,7 @@ import { Comment, Post } from '@/types/feed';
 import { MOCK_POSTS } from '@/data/mockFeedData';
 import { useFeed } from '@/context/FeedContext';
 import useProtectedAction from '../../hooks/useProtectedAction';
+import ReportPostModal from '@/components/modals/ReportPostModal';
 
 const CATEGORIES = [
     { id: 'culture', label: 'Culture', color: 'from-orange-500 to-amber-600' },
@@ -66,7 +67,7 @@ const CATEGORIES = [
 
 // Categories for the tabs
 
-const PostCard = ({ post }: { post: Post }) => {
+const PostCard = ({ post, onReport }: { post: Post, onReport: (post: Post) => void }) => {
     const { user: currentUser } = useAuth();
     const { addNotification } = useNotifications();
     const { performAction, AuthModalComponent } = useProtectedAction();
@@ -302,7 +303,10 @@ const PostCard = ({ post }: { post: Post }) => {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-white border-[#EBE3D5] shadow-xl">
-                        <DropdownMenuItem className="text-xs font-bold text-[#2D1B08] flex items-center gap-2 cursor-pointer hover:bg-[#F2A900]/10">
+                        <DropdownMenuItem 
+                            onClick={() => onReport(post)}
+                            className="text-xs font-bold text-[#2D1B08] flex items-center gap-2 cursor-pointer hover:bg-[#F2A900]/10"
+                        >
                             <Flag size={14} className="text-[#F2A900]" /> SIGNALER LA PUBLICATION
                         </DropdownMenuItem>
                         <DropdownMenuItem className="text-xs font-bold text-[#2D1B08] flex items-center gap-2 cursor-pointer hover:bg-[#F2A900]/10">
@@ -467,6 +471,8 @@ const DiscoverFeedPage = () => {
         (searchParams.get('tab') as 'all' | 'saved' | 'create' | 'my-posts') || 'all'
     );
     const [savedPostIds, setSavedPostIds] = useState<string[]>([]);
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+    const [postToReport, setPostToReport] = useState<Post | null>(null);
 
     // State for MyPostsTab (Moved up to prevent hook errors)
     const [myPosts, setMyPosts] = useState<Post[]>(MOCK_POSTS.filter(p => p.author.id === 'u1'));
@@ -519,6 +525,11 @@ const DiscoverFeedPage = () => {
     const filteredPosts = activeTab === 'all'
         ? posts
         : posts.filter(post => savedPostIds.includes(post.id));
+
+    const handleOpenReport = (post: Post) => {
+        setPostToReport(post);
+        setIsReportModalOpen(true);
+    };
 
     const handleTabChange = (tab: 'all' | 'saved' | 'create' | 'my-posts') => {
         setActiveTab(tab);
@@ -601,7 +612,8 @@ const DiscoverFeedPage = () => {
                     name: currentUser?.name || 'Utilisateur',
                     role: currentUser?.role || 'Visiteur',
                     avatar: currentUser?.avatar || '/images/nouveau_logo.jpeg',
-                    type: currentUser?.role === 'hotel' ? 'hotel' : 'cultural',
+                    type: (currentUser?.role === 'hotel' || currentUser?.role === 'restaurant') ? 'hotel' : 
+                          (currentUser?.role === 'artisan') ? 'hotel' : 'cultural', // Reusing 'hotel' icon style for professional artisans
                     isVerified: true
                 },
                 content: content,
@@ -619,7 +631,7 @@ const DiscoverFeedPage = () => {
             toast.success('Publication créée avec succès !');
 
             // Notify followers (Simulation)
-            if (currentUser?.role === 'hotel' || currentUser?.role === 'restaurant') {
+            if (currentUser?.role === 'hotel' || currentUser?.role === 'restaurant' || currentUser?.role === 'artisan') {
                 addNotification({
                     type: 'publish',
                     title: 'Nouvelle Publication',
@@ -1129,7 +1141,11 @@ const DiscoverFeedPage = () => {
                     renderMyPostsTab()
                 ) : filteredPosts.length > 0 ? (
                     filteredPosts.map(post => (
-                        <PostCard key={post.id} post={post} />
+                        <PostCard 
+                            key={post.id} 
+                            post={post} 
+                            onReport={handleOpenReport}
+                        />
                     ))
                 ) : (
                     <div className="flex flex-col items-center justify-center py-24 text-center animate-in fade-in zoom-in duration-700">
@@ -1161,6 +1177,15 @@ const DiscoverFeedPage = () => {
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-[#5D4037]">Chargement de nouveaux récits...</p>
             </div>
             {AuthModalComponent}
+
+            {/* Report Modal */}
+            {postToReport && (
+                <ReportPostModal
+                    isOpen={isReportModalOpen}
+                    onClose={() => setIsReportModalOpen(false)}
+                    postAuthor={postToReport.author.name}
+                />
+            )}
         </div>
     );
 };
