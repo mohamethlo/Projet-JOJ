@@ -29,9 +29,9 @@ const StatCard: React.FC<StatCardProps> = ({ icon: Icon, value, label, trend }) 
             {trend.value}%
           </div>
         </div>
-        <div className="space-y-1">
-          <h3 className="text-3xl font-black text-[#2D1B08] tracking-tighter">{value}</h3>
-          <p className="text-[10px] font-black text-[#5D4037]/50 uppercase tracking-[0.2em]">{label}</p>
+        <div className="space-y-0.5 md:space-y-1">
+          <h3 className="text-xl md:text-3xl font-black text-[#2D1B08] tracking-tighter truncate">{value}</h3>
+          <p className="text-[8px] md:text-[10px] font-black text-[#5D4037]/50 uppercase tracking-widest md:tracking-[0.2em] truncate">{label}</p>
         </div>
         <div className="mt-4 h-1 w-full bg-gray-50 rounded-full overflow-hidden">
           <div 

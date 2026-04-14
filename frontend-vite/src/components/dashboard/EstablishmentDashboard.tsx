@@ -1,485 +1,297 @@
 import React from 'react';
+import { 
+  Building2, 
+  Bed, 
+  UtensilsCrossed, 
+  Calendar, 
+  Star, 
+  TrendingUp, 
+  Clock, 
+  CheckCircle, 
+  ArrowRight, 
+  Plus, 
+  MessageSquare, 
+  Award, 
+  Briefcase,
+  Users,
+  ChevronRight,
+  Home,
+  FileText
+} from 'lucide-react';
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  Cell,
+  PieChart,
+  Pie
+} from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Building2,
-  Bed,
-  UtensilsCrossed,
-  Calendar,
-  Star,
-  DollarSign,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  ArrowRight,
-  Plus,
-  MessageSquare,
-  Award,
-  AlertCircle,
-  FileText,
-  Home
-} from 'lucide-react';
+import StatCard from './StatCard';
+import ChartCard from './ChartCard';
+import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 
 interface EstablishmentDashboardProps {
   user: any;
 }
 
+const OCCUPANCY_DATA = [
+  { day: 'Lun', rate: 65 },
+  { day: 'Mar', rate: 68 },
+  { day: 'Mer', rate: 72 },
+  { day: 'Jeu', rate: 75 },
+  { day: 'Ven', rate: 88 },
+  { day: 'Sam', rate: 95 },
+  { day: 'Dim', rate: 92 },
+];
+
+const ROOM_TYPE_DATA = [
+  { name: 'Suites', value: 25, color: '#2D1B08' },
+  { name: 'Double', value: 55, color: '#F2A900' },
+  { name: 'Simple', value: 20, color: '#6B4226' },
+];
+
+const RECENT_BOOKINGS = [
+  { id: '1', guest: 'Jean Dupont', type: 'Suite Royale', price: '125,000 FCFA', status: 'Confirmée', date: '15-18 Avril' },
+  { id: '2', guest: 'Sokhna Diop', type: 'Chambre Double', price: '45,000 FCFA', status: 'En attente', date: '16-17 Avril' },
+  { id: '3', guest: 'Marc Vallet', type: 'Chambre Simple', price: '32,000 FCFA', status: 'Confirmée', date: 'Hoy' },
+];
+
 const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user }) => {
-  const establishmentType = user.role === 'hotel' ? 'hotel' : 'restaurant';
-
-  const mockStats = {
-    totalBookings: 124,
-    activeBookings: 18,
-    totalRevenue: '3,450,000 FCFA',
-    averageRating: 4.8,
-    totalRooms: 25,
-    occupiedRooms: 18,
-    pendingReservations: 7,
-    responseTime: '1h',
-    monthlyRevenue: '850,000 FCFA',
-    occupancyRate: 72
-  };
-
-  const mockRecentBookings = [
-    {
-      id: '1',
-      guestName: 'Jean Dupont',
-      type: 'Chambre Double',
-      checkIn: '15/04/2024',
-      checkOut: '18/04/2024',
-      status: 'Confirmée',
-      price: '75,000 FCFA',
-      nights: 3
-    },
-    {
-      id: '2',
-      guestName: 'Maria Garcia',
-      type: 'Suite Deluxe',
-      checkIn: '20/04/2024',
-      checkOut: '23/04/2024',
-      status: 'En attente',
-      price: '150,000 FCFA',
-      nights: 3
-    },
-    {
-      id: '3',
-      guestName: 'Ahmed Diallo',
-      type: 'Réservation Table',
-      checkIn: '17/04/2024',
-      checkOut: '-',
-      status: 'Confirmée',
-      price: '25,000 FCFA',
-      nights: 0
-    }
-  ];
-
-  const getEstablishmentIcon = () => {
-    switch (establishmentType) {
-      case 'hotel':
-        return <Building2 className="h-8 w-8" />;
-      case 'restaurant':
-        return <UtensilsCrossed className="h-8 w-8" />;
-      default:
-        return <Building2 className="h-8 w-8" />;
-    }
-  };
-
-  const getEstablishmentName = () => {
-    return establishmentType === 'hotel' ? 'Hôtel' : 'Restaurant';
-  };
+  const isHotel = user.role === 'hotel';
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Section - Beautiful Gradient */}
-      <Card className="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white border-0 shadow-xl">
-        <CardContent className="p-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center space-x-3 mb-3">
-                {getEstablishmentIcon()}
-                <Badge className="bg-white/20 text-white border-white/30">
-                  {establishmentType === 'hotel' ? 'Hôtel' : 'Restaurant'}
-                </Badge>
-              </div>
-              <h2 className="text-3xl font-bold mb-2">Bienvenue, {user.name}! 👋</h2>
-              <p className="text-white/90 text-lg">
-                Gérez votre {getEstablishmentName().toLowerCase()} et offrez une expérience inoubliable à vos clients
-              </p>
-            </div>
-            <div className="hidden md:block">
-              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-6 border border-white/30">
-                <div className="text-4xl font-bold mb-1">{mockStats.averageRating}</div>
-                <div className="flex items-center space-x-1 mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-white text-white" />
-                  ))}
-                </div>
-                <div className="text-sm text-white/90">Note moyenne</div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Stats Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Réservations actives</CardTitle>
-            <Calendar className="h-5 w-5 text-emerald-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{mockStats.activeBookings}</div>
-            <p className="text-xs text-muted-foreground mt-1">+3 cette semaine</p>
-            <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-emerald-500 h-2 rounded-full" style={{ width: `${mockStats.occupancyRate}%` }}></div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">En attente</CardTitle>
-            <Clock className="h-5 w-5 text-amber-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{mockStats.pendingReservations}</div>
-            <p className="text-xs text-muted-foreground mt-1">Nécessitent confirmation</p>
-            <Button size="sm" variant="outline" className="mt-3 w-full">
-              Voir les demandes
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenus ce mois</CardTitle>
-            <DollarSign className="h-5 w-5 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{mockStats.monthlyRevenue}</div>
-            <p className="text-xs text-muted-foreground mt-1">+18% vs mois dernier</p>
-            <div className="mt-2 flex items-center text-green-600">
-              <TrendingUp className="h-4 w-4 mr-1" />
-              <span className="text-sm font-semibold">En hausse</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {establishmentType === 'hotel' ? "Taux d'occupation" : 'Taux de remplissage'}
-            </CardTitle>
-            <TrendingUp className="h-5 w-5 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{mockStats.occupancyRate}%</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {establishmentType === 'hotel'
-                ? `${mockStats.occupiedRooms}/${mockStats.totalRooms} chambres occupées`
-                : `${mockStats.occupiedRooms}/${mockStats.totalRooms} tables occupées`}
-            </p>
-            <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${mockStats.occupancyRate}%` }}></div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Performance Overview */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <TrendingUp className="mr-2 h-5 w-5 text-emerald-500" />
-              Performance
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-5">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Taux d'occupation</span>
-                  <span className="text-sm text-gray-600">{mockStats.occupancyRate}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-3 rounded-full" style={{ width: `${mockStats.occupancyRate}%` }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Satisfaction client</span>
-                  <span className="text-sm text-gray-600">96%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full" style={{ width: '96%' }}></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Réactivité</span>
-                  <span className="text-sm text-gray-600">1h</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div className="bg-gradient-to-r from-cyan-500 to-blue-500 h-3 rounded-full" style={{ width: '90%' }}></div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Statistics */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Award className="mr-2 h-5 w-5 text-purple-500" />
-              Statistiques
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center pb-3 border-b">
-                <span className="text-sm">Réservations totales</span>
-                <span className="font-semibold text-lg">{mockStats.totalBookings}</span>
-              </div>
-              <div className="flex justify-between items-center pb-3 border-b">
-                <span className="text-sm">
-                  {establishmentType === 'hotel' ? 'Chambres disponibles' : 'Tables disponibles'}
-                </span>
-                <span className="font-semibold text-lg">{mockStats.totalRooms - mockStats.occupiedRooms}</span>
-              </div>
-              <div className="flex justify-between items-center pb-3 border-b">
-                <span className="text-sm">Revenus totaux</span>
-                <span className="font-semibold text-lg text-emerald-600">{mockStats.totalRevenue}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Temps de réponse moyen</span>
-                <span className="font-semibold text-lg">{mockStats.responseTime}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Rewards */}
-        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Award className="mr-2 h-5 w-5 text-purple-500" />
-              Badges & Récompenses
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <Badge className="bg-yellow-100 text-yellow-700 border-yellow-300">Établissement Premium</Badge>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Badge className="bg-emerald-100 text-emerald-700 border-emerald-300">Certifié</Badge>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Badge className="bg-blue-100 text-blue-700 border-blue-300">Top Qualité</Badge>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Badge className="bg-orange-100 text-orange-700 border-orange-300">Meilleure Note</Badge>
-              </div>
-              <div className="text-sm text-gray-600 mt-4 space-y-1">
-                <p>✓ Service exceptionnel</p>
-                <p>✓ Accueil chaleureux</p>
-                <p>✓ Excellente réputation</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Bookings */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="flex items-center">
-            <Calendar className="mr-2 h-5 w-5" />
-            Réservations récentes
-          </CardTitle>
-          <Link to="/establishment/bookings">
-            <Button variant="outline" size="sm">
-              Voir tout
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </CardHeader>
-        <CardContent>
+    <div className="space-y-6 md:space-y-8 pb-12 animate-in fade-in duration-700 min-h-screen">
+      {/* 🏛️ Premium Establishment Header */}
+      <div className="relative rounded-3xl md:rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-[#2D1B08] via-[#5D4037] to-[#2D1B08] p-6 md:p-12 text-white shadow-2xl">
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#F2A900]/10 to-transparent pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#F2A900]/5 rounded-full blur-[100px]" />
+        
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="space-y-4">
-            {mockRecentBookings.map((booking) => (
-              <div key={booking.id} className="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 transition-colors">
-                <div className="flex items-center space-x-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${establishmentType === 'hotel' ? 'bg-emerald-100' :
-                    establishmentType === 'restaurant' ? 'bg-orange-100' :
-                      'bg-blue-100'
-                    }`}>
-                    {establishmentType === 'hotel' ? <Bed className="h-6 w-6 text-emerald-600" /> :
-                      establishmentType === 'restaurant' ? <UtensilsCrossed className="h-6 w-6 text-orange-600" /> :
-                        <Home className="h-6 w-6 text-blue-600" />}
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge className="bg-[#F2A900] text-[#2D1B08] font-black uppercase tracking-widest text-[8px] md:text-[9px] px-3 border-none">
+                {isHotel ? 'HÔTELLERIE DE LUXE' : 'GASTRONOMIE FINE'}
+              </Badge>
+              <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest">
+                <Star size={12} className="text-[#F2A900] fill-[#F2A900]" /> 4.9 Super-hôte
+              </div>
+            </div>
+            <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase leading-[0.9]">
+              BIENVENUE, {user.name.split(' ')[0]} <span className="text-[#F2A900]">.</span>
+            </h1>
+            <p className="text-white/60 font-medium italic text-xs md:text-base max-w-xl">
+              Votre établissement brille aujourd'hui. {isHotel ? '18 clients attendus' : '12 tables réservées'} pour cette soirée sénégalaise.
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link to={isHotel ? "/establishment/rooms" : "/establishment/menu"} className="w-full sm:w-auto">
+              <Button className="w-full rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 border-white/10 text-white font-bold backdrop-blur-md h-12 px-6">
+                <Plus className="mr-2 h-4 w-4" /> {isHotel ? 'Gérer Chambres' : 'Gérer Menu'}
+              </Button>
+            </Link>
+            <Link to="/establishment/profile" className="w-full sm:w-auto">
+              <Button className="w-full rounded-xl md:rounded-2xl bg-[#F2A900] hover:bg-[#D49400] text-[#2D1B08] font-black h-12 px-6 shadow-xl shadow-[#F2A900]/20">
+                <Home className="mr-2 h-4 w-4" /> Voir Profil
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* 📈 Key Metrics Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <StatCard 
+          icon={TrendingUp} 
+          value={isHotel ? "85%" : "72%"} 
+          label={isHotel ? "Occupation" : "Remplissage"} 
+          trend={{ value: 8, isUp: true }} 
+        />
+        <StatCard 
+          icon={Calendar} 
+          value="124" 
+          label="Réser. mois" 
+          trend={{ value: 15, isUp: true }} 
+        />
+        <StatCard 
+          icon={isHotel ? Bed : UtensilsCrossed} 
+          value={isHotel ? "3/25" : "4/15"} 
+          label={isHotel ? "Libres" : "Tables disp."} 
+          trend={{ value: 2, isUp: false }} 
+        />
+        <StatCard 
+          icon={Award} 
+          value="4.9" 
+          label="Satisfaction" 
+          trend={{ value: 0.1, isUp: true }} 
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* 📊 Historical Performance */}
+        <div className="lg:col-span-2">
+          <ChartCard title="Taux d'Occupation (%)" subtitle="Performance sur les 7 derniers jours">
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={OCCUPANCY_DATA}>
+                <defs>
+                  <linearGradient id="colorRate" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#2D1B08" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="#2D1B08" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
+                <XAxis dataKey="day" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} domain={[0, 100]} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
+                  itemStyle={{ color: '#F2A900', fontWeight: 'bold' }}
+                />
+                <Area type="monotone" dataKey="rate" stroke="#2D1B08" strokeWidth={3} fillOpacity={1} fill="url(#colorRate)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        {/* 🥧 Segment Distribution */}
+        <div className="lg:col-span-1">
+          <ChartCard title={isHotel ? "Types de Chambres" : "Menus Favoris"} subtitle="Répartition des revenus">
+            <div className="h-[200px] md:h-[250px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={ROOM_TYPE_DATA}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {ROOM_TYPE_DATA.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              {ROOM_TYPE_DATA.map((seg, i) => (
+                <div key={i} className="flex justify-between items-center text-[10px] md:text-[11px] font-bold">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: seg.color }} />
+                    <span className="text-[#2D1B08] uppercase tracking-tighter">{seg.name}</span>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{booking.guestName}</h4>
-                    <p className="text-sm text-gray-600">{booking.type}</p>
-                    <div className="flex items-center space-x-3 mt-1">
-                      <span className="text-xs text-gray-500">
-                        <Calendar className="h-3 w-3 inline mr-1" />
-                        {booking.checkIn} {booking.checkOut !== '-' && `→ ${booking.checkOut}`}
-                      </span>
-                      {establishmentType === 'hotel' && booking.nights > 0 && (
-                        <span className="text-xs text-gray-500">{booking.nights} nuit{booking.nights > 1 ? 's' : ''}</span>
-                      )}
+                  <span className="text-gray-400">{seg.value}%</span>
+                </div>
+              ))}
+            </div>
+          </ChartCard>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* 📅 Recent Bookings List */}
+        <Card className="rounded-3xl md:rounded-[2.5rem] border-none bg-white shadow-sm overflow-hidden">
+          <CardHeader className="px-6 md:px-8 py-6 border-b border-gray-100 flex flex-row items-center justify-between">
+            <CardTitle className="text-lg md:text-xl font-black text-[#2D1B08] uppercase tracking-tighter flex items-center gap-2">
+              <Calendar size={20} className="text-[#F2A900]" />
+              Arrivées Récentes
+            </CardTitle>
+            <Link to="/establishment/bookings">
+              <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-[#F2A900]">Voir tout</Button>
+            </Link>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="divide-y divide-gray-50 max-h-[420px] overflow-y-auto">
+              {RECENT_BOOKINGS.map((res) => (
+                <div key={res.id} className="px-4 md:px-8 py-5 md:py-6 hover:bg-gray-50/50 transition-colors group flex items-center justify-between">
+                  <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+                    <div className="p-2 md:p-3 rounded-xl md:rounded-2xl bg-[#EBE3D5] text-[#2D1B08] flex-shrink-0 group-hover:bg-[#F2A900] group-hover:text-[#2D1B08] transition-colors">
+                      {isHotel ? <Bed size={18} className="md:size-5" /> : <UtensilsCrossed size={18} className="md:size-5" />}
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-[10px] md:text-[11px] font-black text-[#2D1B08] uppercase truncate">{res.guest}</h4>
+                      <p className="text-[9px] md:text-[10px] text-gray-400 font-bold truncate">{res.type} • {res.date}</p>
                     </div>
                   </div>
+                  <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+                    <span className="hidden sm:block text-[11px] font-black text-[#2D1B08]">{res.price}</span>
+                    <Badge className={cn(
+                      "px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[8px] md:text-[9px] font-black uppercase border-none",
+                      res.status === 'Confirmée' ? "bg-emerald-100 text-emerald-600" : "bg-amber-100 text-amber-600"
+                    )}>
+                      {res.status}
+                    </Badge>
+                    <ChevronRight size={16} className="text-gray-200 group-hover:text-[#F2A900] transition-colors" />
+                  </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <Badge
-                    variant={
-                      booking.status === 'Confirmée'
-                        ? 'default'
-                        : booking.status === 'En attente'
-                          ? 'secondary'
-                          : 'outline'
-                    }
-                    className={
-                      booking.status === 'Confirmée' ? 'bg-emerald-500 text-white' :
-                        booking.status === 'En attente' ? 'bg-amber-500 text-white' : ''
-                    }
-                  >
-                    {booking.status}
-                  </Badge>
-                  <span className="font-semibold text-emerald-600 text-lg">{booking.price}</span>
-                  {booking.status === 'En attente' && (
-                    <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700">
-                      <CheckCircle className="h-4 w-4 mr-1" />
-                      Confirmer
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200">
-          <CardHeader>
-            <CardTitle>Actions rapides</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {establishmentType === 'hotel' ? (
-              <>
-                <Link to="/establishment/rooms">
-                  <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
-                    <Bed className="mr-2 h-4 w-4" />
-                    Gérer les chambres
-                    <ArrowRight className="ml-auto h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/establishment/rooms">
-                  <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Ajouter une chambre
-                    <ArrowRight className="ml-auto h-4 w-4" />
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/establishment/menu">
-                  <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
-                    <UtensilsCrossed className="mr-2 h-4 w-4" />
-                    Gérer le menu
-                    <ArrowRight className="ml-auto h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/establishment/menu">
-                  <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Ajouter un plat
-                    <ArrowRight className="ml-auto h-4 w-4" />
-                  </Button>
-                </Link>
-              </>
-            )}
-            <Link to="/establishment/bookings">
-              <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
-                <Calendar className="mr-2 h-4 w-4" />
-                Toutes les réservations
-                <ArrowRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/establishment/create-post">
-              <Button variant="outline" className="w-full justify-start bg-white hover:bg-[#F2A900]/10 border-[#F2A900] text-[#F2A900] font-black">
-                <FileText className="mr-2 h-4 w-4" />
-                Créer une publication
-                <ArrowRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/messages">
-              <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Messagerie
-                <ArrowRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/establishment/profile">
-              <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
-                <Building2 className="mr-2 h-4 w-4" />
-                Profil de l'établissement
-                <ArrowRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/establishment/reviews">
-              <Button variant="outline" className="w-full justify-start bg-white hover:bg-emerald-50 border-emerald-200">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Avis clients
-                <ArrowRight className="ml-auto h-4 w-4" />
-              </Button>
-            </Link>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Notifications récentes</CardTitle>
+        {/* 🛠️ Strategic Tools */}
+        <Card className="rounded-3xl md:rounded-[2.5rem] border-none bg-white shadow-sm overflow-hidden text-[#2D1B08]">
+          <CardHeader className="px-6 md:px-8 py-6">
+            <CardTitle className="text-lg md:text-xl font-black uppercase tracking-tighter flex items-center gap-2">
+              <Briefcase size={20} className="text-[#2D1B08]" />
+              Pilotage Stratégique
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+          <CardContent className="px-4 md:px-8 pb-8 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link to="/establishment/create-post">
+                <button className="w-full p-4 md:p-6 rounded-2xl md:rounded-3xl bg-[#F2A900]/5 border-2 border-transparent hover:border-[#F2A900] transition-all group text-left">
+                  <FileText className="text-[#F2A900] mb-2 md:mb-3 group-hover:scale-110 transition-transform" size={20} className="md:size-6" />
+                  <h5 className="text-[11px] md:text-[12px] font-black uppercase leading-tight">Campagne Promo</h5>
+                  <p className="text-[8px] md:text-[9px] text-[#5D4037]/40 font-bold uppercase mt-1">Boostez votre visibilité</p>
+                </button>
+              </Link>
+              <Link to="/establishment/reviews">
+                <button className="w-full p-4 md:p-6 rounded-2xl md:rounded-3xl bg-brown-50/10 border-2 border-transparent hover:border-[#2D1B08] transition-all group text-left">
+                  <MessageSquare className="text-[#2D1B08] mb-2 md:mb-3 group-hover:scale-110 transition-transform" size={20} className="md:size-6" />
+                  <h5 className="text-[11px] md:text-[12px] font-black uppercase leading-tight">Réputation Web</h5>
+                  <p className="text-[8px] md:text-[9px] text-[#5D4037]/40 font-bold uppercase mt-1">Répondre aux avis</p>
+                </button>
+              </Link>
+            </div>
+
+            <div className="p-5 md:p-6 rounded-2xl md:rounded-3xl bg-[#EBE3D5]/30 border border-[#EBE3D5] flex items-center justify-between group">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-white shadow-sm">
+                  <Users size={20} className="text-[#2D1B08]" />
+                </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Nouvelle réservation</p>
-                  <p className="text-xs text-gray-600">Jean Dupont a réservé une chambre double</p>
+                  <h4 className="text-[11px] md:text-[12px] font-black uppercase tracking-tighter leading-none">Fidélisation Client</h4>
+                  <p className="text-[9px] md:text-[10px] font-bold text-[#5D4037]/60 uppercase mt-1">85 clients fidèles ce mois</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <Star className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Nouvel avis</p>
-                  <p className="text-xs text-gray-600">5 étoiles de Maria Garcia</p>
-                </div>
+              <ChevronRight size={18} className="text-gray-300 group-hover:text-[#2D1B08] transition-colors" />
+            </div>
+
+            <div className="p-6 rounded-2xl md:rounded-3xl bg-[#2D1B08] text-white relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-4 text-[#F2A900]/10 group-hover:text-[#F2A900]/20 transition-colors">
+                <CheckCircle size={60} className="md:size-20" strokeWidth={4} />
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
-                <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Rappel</p>
-                  <p className="text-xs text-gray-600">Arrivée prévue demain à 14h</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
-                <TrendingUp className="h-5 w-5 text-purple-600 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Objectif atteint</p>
-                  <p className="text-xs text-gray-600">Taux d'occupation supérieur à 70%</p>
-                </div>
+              <div className="relative z-10">
+                <h4 className="text-[12px] md:text-sm font-black uppercase tracking-tight mb-1">Qualité certifiée</h4>
+                <p className="text-[9px] md:text-[10px] text-white/50 font-medium italic mb-4">Votre établissement a été ré-approuvé pour le label 'Discover Sénégal Premium'.</p>
+                <Link to="/establishment/profile">
+                  <Button className="h-8 md:h-9 rounded-lg md:rounded-xl bg-[#F2A900] hover:bg-white text-[#2D1B08] text-[8px] md:text-[9px] font-black uppercase px-3 md:px-4 border-none transition-colors">
+                    Détails du Label <ArrowRight className="ml-1 md:ml-2 h-3 w-3" />
+                  </Button>
+                </Link>
               </div>
             </div>
           </CardContent>
@@ -490,4 +302,3 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
 };
 
 export default EstablishmentDashboard;
-
