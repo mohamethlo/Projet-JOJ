@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security' | 'hotel' | 'restaurant' | 'agency' | 'artisan';
+export type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security' | 'hotel' | 'restaurant' | 'agency' | 'artisan' | 'museum';
 
 export interface User {
   id: string;
@@ -53,6 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         else if (role === 'restaurant') parsed.name = 'La Fourchette';
         else if (role === 'agency') parsed.name = 'Sénégal Découvertes';
         else if (role === 'artisan') parsed.name = 'Artisanat d\'Excellence';
+        else if (role === 'museum') parsed.name = 'Musée Théodore Monod';
         else parsed.name = 'Voyageur';
         localStorage.setItem('discoversenegal_user', JSON.stringify(parsed));
       }
@@ -76,6 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       else if (email.includes('hotel') || email.includes('auberge')) role = 'hotel';
       else if (email.includes('agence') || email.includes('agency')) role = 'agency';
       else if (email.includes('artisan')) role = 'artisan';
+      else if (email.includes('museum') || email.includes('musee')) role = 'museum';
 
       const nameFromEmail = email.split('@')[0];
       let name = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
@@ -88,6 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         else if (role === 'restaurant') name = 'La Fourchette';
         else if (role === 'agency') name = 'Sénégal Découvertes';
         else if (role === 'artisan') name = 'Artisanat d\'Excellence';
+        else if (role === 'museum') name = 'Musée Théodore Monod';
         else name = 'Voyageur';
       }
 

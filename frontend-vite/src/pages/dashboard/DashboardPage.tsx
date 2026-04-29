@@ -9,6 +9,7 @@ import EstablishmentDashboard from '@/components/dashboard/EstablishmentDashboar
 import ArtisanDashboard from '@/components/dashboard/ArtisanDashboard';
 import RestaurantDashboard from '@/components/dashboard/RestaurantDashboard';
 import AgencyDashboard from '@/components/dashboard/AgencyDashboard';
+import MuseumDashboard from '@/components/dashboard/MuseumDashboard';
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -33,6 +34,8 @@ const DashboardPage: React.FC = () => {
         return 'Espace Agence de Voyage';
       case 'restaurant':
         return 'Espace Restaurant';
+      case 'museum':
+        return 'Espace Musée & Patrimoine';
       default:
         return 'Tableau de bord';
     }
@@ -56,6 +59,8 @@ const DashboardPage: React.FC = () => {
         return 'Gérez vos offres de voyages, vos réservations et votre visibilité';
       case 'restaurant':
         return 'Gérez votre restaurant et offrez une expérience culinaire exceptionnelle';
+      case 'museum':
+        return 'Gérez vos collections, vos expositions et accueillez les passionnés d\'histoire';
       default:
         return 'Découvrez le meilleur du Sénégal avec DiscoverSenegal';
     }
@@ -79,6 +84,8 @@ const DashboardPage: React.FC = () => {
         return <AgencyDashboard user={user} />;
       case 'restaurant':
         return <RestaurantDashboard user={user} />;
+      case 'museum':
+        return <MuseumDashboard user={user} />;
       case 'tourist':
       case 'local':
       default:

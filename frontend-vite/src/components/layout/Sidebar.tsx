@@ -168,6 +168,20 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
       ];
     }
 
+    if (user?.role === 'museum') {
+      return [
+        { href: '/dashboard', icon: Home, label: t('dashboard') },
+        { href: '/messages', icon: MessageCircle, label: 'Messages' },
+        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
+        { href: '/museum/exhibitions', icon: Calendar, label: 'Expositions' },
+        { href: '/museum/collections', icon: Palette, label: 'Collections' },
+        { href: '/museum/tickets', icon: Ticket, label: 'Billetterie' },
+        { href: '/museum/profile', icon: Building, label: 'Profil Musée' },
+        { href: '/history', icon: BookOpen, label: t('history') },
+        { href: '/profile', icon: User, label: 'Mon Profil' }
+      ];
+    }
+
     return commonItems;
   }, [user, t]);
 

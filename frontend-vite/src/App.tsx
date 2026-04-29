@@ -50,6 +50,8 @@ import ArtisanProductsPage from '@/pages/artisan/ProductsPage'
 import ArtisanProfilePage from '@/pages/artisan/ProfilePage'
 import ArtisanOrdersPage from '@/pages/artisan/OrdersPage'
 import PublicArtisanProfilePage from '@/pages/artisans/PublicArtisanProfilePage'
+import MuseumExhibitionsPage from '@/pages/museum/MuseumExhibitionsPage'
+import MuseumCollectionsPage from '@/pages/museum/MuseumCollectionsPage'
 
 import { FeedProvider } from '@/context/FeedContext'
 import { VisitorEngagementProvider } from '@/context/VisitorEngagementContext'
@@ -169,6 +171,14 @@ const App = () => {
               <Route path="/artisan/orders" element={<ArtisanOrdersPage />} />
               <Route path="/artisan/products" element={<ArtisanProductsPage />} />
               <Route path="/artisan/profile" element={<ArtisanProfilePage />} />
+            </Route>
+
+            {/* Museum Routes */}
+            <Route element={<ProtectedRoute roles={['museum']}><Layout><Outlet /></Layout></ProtectedRoute>}>
+              <Route path="/museum/exhibitions" element={<MuseumExhibitionsPage />} />
+              <Route path="/museum/collections" element={<MuseumCollectionsPage />} />
+              <Route path="/museum/tickets" element={<DashboardPage />} /> {/* Reuse dashboard for tickets overview for now */}
+              <Route path="/museum/profile" element={<EstablishmentProfilePage />} /> {/* Reuse generic profile for now */}
             </Route>
 
             <Route path="*" element={
