@@ -24,8 +24,19 @@ import {
   Camera,
   Utensils,
   Hotel,
-  Check
+  Check,
+  Building2,
+  ChevronDown
 } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+import { cn } from '@/lib/utils';
 
 const ProfilePage: React.FC = () => {
   const [coverImage] = useState('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1920&h=600&fit=crop');
@@ -35,11 +46,25 @@ const ProfilePage: React.FC = () => {
   const [tagline, setTagline] = useState('Saveurs authentiques du Sénégal dans un cadre royal');
   const [description, setDescription] = useState('Découvrez l\'essence de la cuisine sénégalaise dans notre restaurant emblématique. Depuis 1998, nous perpétuons les traditions culinaires avec passion et authenticité.');
   const [location, setLocation] = useState('Dakar, Plateau');
+  const [address, setAddress] = useState('12 Rue de Fatick, Dakar');
+  const [gps, setGps] = useState({ lat: '14.6937', lng: '-17.4441' });
+  const [city, setCity] = useState('Dakar');
+  const [region, setRegion] = useState('Dakar');
   const [phone, setPhone] = useState('+221 33 821 45 67');
+  const [whatsapp, setWhatsapp] = useState('+221 77 123 45 67');
   const [email, setEmail] = useState('contact@djoloffroyal.sn');
   const [website, setWebsite] = useState('www.djoloffroyal.sn');
+  const [slug, setSlug] = useState('le-djoloff-royal');
+  const [isActive, setIsActive] = useState(true);
+  const [checkIn, setCheckIn] = useState('14:00');
+  const [checkOut, setCheckOut] = useState('12:00');
+  const [cancellationPolicy, setCancellationPolicy] = useState('Annulation gratuite jusqu\'à 24h avant l\'arrivée.');
+  const [paymentModes, setPaymentModes] = useState(['Wave', 'Orange Money', 'Cash']);
   const [amenities, setAmenities] = useState(['WiFi Gratuit', 'Terrasse', 'Parking', 'Climatisation', 'Service Traiteur']);
   const [newAmenity, setNewAmenity] = useState('');
+  const [isWifiFree, setIsWifiFree] = useState(true);
+  const [hasRestaurant, setHasRestaurant] = useState(true);
+  const [hasPool, setHasPool] = useState(true);
 
 
   const handleAddAmenity = () => {
@@ -163,27 +188,20 @@ const ProfilePage: React.FC = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="category" className="text-sm font-black text-[#2D1B08]">Catégorie *</Label>
-                  <div className="mt-2 grid grid-cols-2 gap-3">
-                    <Button
-                      type="button"
-                      variant={category === 'Restaurant' ? 'default' : 'outline'}
-                      className={`w-full ${category === 'Restaurant' ? 'bg-[#F2A900] hover:bg-[#D49400]' : 'border-[#EBE3D5]'}`}
-                      onClick={() => setCategory('Restaurant')}
-                    >
-                      <Utensils className="h-4 w-4 mr-2 shrink-0" />
-                      <span className="truncate">Restaurant</span>
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={category === 'Hôtel' ? 'default' : 'outline'}
-                      className={`w-full ${category === 'Hôtel' ? 'bg-[#F2A900] hover:bg-[#D49400]' : 'border-[#EBE3D5]'}`}
-                      onClick={() => setCategory('Hôtel')}
-                    >
-                      <Hotel className="h-4 w-4 mr-2 shrink-0" />
-                      <span className="truncate">Hôtel</span>
-                    </Button>
-                  </div>
+                  <Label htmlFor="category" className="text-sm font-black text-[#2D1B08]">Type d'établissement *</Label>
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger className="mt-2 h-12 rounded-xl border-[#EBE3D5] font-bold">
+                      <SelectValue placeholder="Sélectionnez le type" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-none shadow-2xl">
+                      <SelectItem value="Restaurant" className="font-bold">Restaurant / Gastronomie</SelectItem>
+                      <SelectItem value="Hôtel" className="font-bold">Hôtel Classique</SelectItem>
+                      <SelectItem value="Auberge" className="font-bold">Auberge / Maison d'Hôtes</SelectItem>
+                      <SelectItem value="Campement" className="font-bold">Campement / Lodge</SelectItem>
+                      <SelectItem value="Appartement" className="font-bold">Appartement / Résidence</SelectItem>
+                      <SelectItem value="Villas" className="font-bold">Villas / Location Saisonnière</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>
@@ -203,10 +221,48 @@ const ProfilePage: React.FC = () => {
                     id="description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    rows={4}
+                    rows={6}
+                    placeholder="Présentez votre établissement en détails (min 100 mots)..."
                     className="mt-1 border-[#EBE3D5] focus:border-[#F2A900] resize-none"
                   />
-                  <p className="text-xs text-[#5D4037]/60 mt-1">{description.length} caractères</p>
+                  <div className="flex justify-between mt-1">
+                    <p className="text-[10px] font-bold text-[#5D4037]/60 uppercase tracking-widest">{description.split(/\s+/).length} mots</p>
+                    <p className="text-[10px] font-bold text-[#5D4037]/60 uppercase tracking-widest">{description.length} caractères</p>
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="slug" className="text-sm font-black text-[#2D1B08]">Slug URL personnalisée *</Label>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[10px] text-gray-400 font-bold">discover.sn/h/</span>
+                      <Input
+                        id="slug"
+                        value={slug}
+                        onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+                        className="border-[#EBE3D5] h-10 font-bold text-xs"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <Label className="text-sm font-black text-[#2D1B08] mb-2">Visibilité du profil</Label>
+                    <div className="flex items-center gap-4">
+                      <Button 
+                        variant={isActive ? 'default' : 'outline'}
+                        onClick={() => setIsActive(true)}
+                        className={cn("flex-1 h-10 rounded-xl font-bold text-[10px] uppercase", isActive && "bg-emerald-600")}
+                      >
+                        ACTIF
+                      </Button>
+                      <Button 
+                        variant={!isActive ? 'destructive' : 'outline'}
+                        onClick={() => setIsActive(false)}
+                        className="flex-1 h-10 rounded-xl font-bold text-[10px] uppercase"
+                      >
+                        INACTIF
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -218,44 +274,112 @@ const ProfilePage: React.FC = () => {
               </div>
               <div className="p-4 sm:p-6 space-y-4">
                 <div>
-                  <Label htmlFor="location" className="text-sm font-black text-[#2D1B08]">Localisation *</Label>
+                  <Label htmlFor="location" className="text-sm font-black text-[#2D1B08]">Adresse Physique *</Label>
                   <div className="relative mt-1">
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#F2A900]" />
                     <Input
                       id="location"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="pl-10 border-[#EBE3D5] focus:border-[#F2A900]"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="Ex: 12 Rue de Fatick, Dakar Plateau"
+                      className="pl-10 border-[#EBE3D5] focus:border-[#F2A900] font-bold"
                     />
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="phone" className="text-sm font-black text-[#2D1B08]">Téléphone *</Label>
+                    <Label className="text-sm font-black text-[#2D1B08]">Ville *</Label>
+                    <Select value={city} onValueChange={setCity}>
+                      <SelectTrigger className="mt-1 border-[#EBE3D5] font-bold">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Dakar">Dakar</SelectItem>
+                        <SelectItem value="Saly">Saly / Mbour</SelectItem>
+                        <SelectItem value="Saint-Louis">Saint-Louis</SelectItem>
+                        <SelectItem value="Ziguinchor">Ziguinchor</SelectItem>
+                        <SelectItem value="Cap Skirring">Cap Skirring</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-black text-[#2D1B08]">Région *</Label>
+                    <Select value={region} onValueChange={setRegion}>
+                      <SelectTrigger className="mt-1 border-[#EBE3D5] font-bold">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Dakar">Dakar</SelectItem>
+                        <SelectItem value="Thiès">Thiès</SelectItem>
+                        <SelectItem value="Saint-Louis">Saint-Louis</SelectItem>
+                        <SelectItem value="Casamance">Casamance</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-black text-[#2D1B08]">Latitude GPS *</Label>
+                    <Input
+                      value={gps.lat}
+                      onChange={(e) => setGps({ ...gps, lat: e.target.value })}
+                      placeholder="14.6937"
+                      className="mt-1 border-[#EBE3D5] font-bold"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm font-black text-[#2D1B08]">Longitude GPS *</Label>
+                    <Input
+                      value={gps.lng}
+                      onChange={(e) => setGps({ ...gps, lng: e.target.value })}
+                      placeholder="-17.4441"
+                      className="mt-1 border-[#EBE3D5] font-bold"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="phone" className="text-sm font-black text-[#2D1B08]">Téléphone Pro *</Label>
                     <div className="relative mt-1">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#F2A900]" />
                       <Input
                         id="phone"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="pl-10 border-[#EBE3D5] focus:border-[#F2A900]"
+                        className="pl-10 border-[#EBE3D5] focus:border-[#F2A900] font-bold"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="email" className="text-sm font-black text-[#2D1B08]">Email *</Label>
+                    <Label htmlFor="whatsapp" className="text-sm font-black text-[#2D1B08]">Contact WhatsApp</Label>
                     <div className="relative mt-1">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#F2A900]" />
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-emerald-500 text-xs">WA</span>
                       <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 border-[#EBE3D5] focus:border-[#F2A900]"
+                        id="whatsapp"
+                        value={whatsapp}
+                        onChange={(e) => setWhatsapp(e.target.value)}
+                        placeholder="+221 77..."
+                        className="pl-10 border-[#EBE3D5] focus:border-[#F2A900] font-bold"
                       />
                     </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="email" className="text-sm font-black text-[#2D1B08]">Email de contact *</Label>
+                  <div className="relative mt-1">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#F2A900]" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10 border-[#EBE3D5] focus:border-[#F2A900] font-bold"
+                    />
                   </div>
                 </div>
 
@@ -275,48 +399,122 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Amenities */}
+            {/* Reservation & Policies */}
+            <div className="bg-white rounded-2xl border-2 border-[#EBE3D5] overflow-hidden shadow-sm">
+              <div className="p-4 sm:p-6 border-b-2 border-[#EBE3D5]">
+                <h2 className="text-lg sm:text-xl font-black text-[#2D1B08] flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-[#F2A900]" />
+                  Paramètres de Réservation
+                </h2>
+              </div>
+              <div className="p-4 sm:p-6 space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-black text-[#2D1B08]">Heure de Check-in</Label>
+                    <Input type="time" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} className="border-[#EBE3D5] font-bold" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-black text-[#2D1B08]">Heure de Check-out</Label>
+                    <Input type="time" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} className="border-[#EBE3D5] font-bold" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-black text-[#2D1B08]">Modes de Paiement Acceptés</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {['Wave', 'Orange Money', 'Paypal', 'Carte Bancaire', 'Cash'].map(mode => (
+                      <Badge 
+                        key={mode}
+                        onClick={() => {
+                          if (paymentModes.includes(mode)) setPaymentModes(paymentModes.filter(m => m !== mode));
+                          else setPaymentModes([...paymentModes, mode]);
+                        }}
+                        className={cn(
+                          "cursor-pointer px-4 py-2 font-black text-[10px] uppercase transition-all",
+                          paymentModes.includes(mode) ? "bg-[#2D1B08] text-white" : "bg-gray-100 text-gray-400"
+                        )}
+                      >
+                        {mode}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="policy" className="text-sm font-black text-[#2D1B08]">Conditions d'annulation</Label>
+                  <Textarea
+                    id="policy"
+                    value={cancellationPolicy}
+                    onChange={(e) => setCancellationPolicy(e.target.value)}
+                    className="border-[#EBE3D5] focus:border-[#F2A900] italic text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Amenities & Services */}
             <div className="bg-white rounded-2xl border-2 border-[#EBE3D5] overflow-hidden shadow-sm">
               <div className="p-4 sm:p-6 border-b-2 border-[#EBE3D5]">
                 <h2 className="text-lg sm:text-xl font-black text-[#2D1B08] flex items-center gap-2">
                   <Award className="h-5 w-5 text-[#F2A900]" />
-                  Commodités & Services
+                  Commodités & Services Standards
                 </h2>
               </div>
-              <div className="p-4 sm:p-6 space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  {amenities.map((amenity, index) => (
-                    <Badge
-                      key={index}
-                      variant="outline"
-                      className="border-[#1B5E20] text-[#1B5E20] font-bold px-4 py-2 text-sm"
-                    >
-                      {amenity}
-                      <button
-                        onClick={() => handleRemoveAmenity(index)}
-                        className="ml-2 hover:text-red-600"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </Badge>
+              <div className="p-4 sm:p-6 space-y-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {[
+                    { id: 'wifi', label: 'WiFi Haut Débit', state: isWifiFree, setState: setIsWifiFree },
+                    { id: 'resto', label: 'Restaurant', state: hasRestaurant, setState: setHasRestaurant },
+                    { id: 'pool', label: 'Piscine', state: hasPool, setState: setHasPool },
+                  ].map(service => (
+                    <div key={service.id} className="flex items-center space-x-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                      <input 
+                        type="checkbox" 
+                        checked={service.state} 
+                        onChange={() => service.setState(!service.state)}
+                        className="h-4 w-4 accent-[#F2A900]"
+                      />
+                      <span className="text-[10px] font-black uppercase text-[#2D1B08]">{service.label}</span>
+                    </div>
                   ))}
                 </div>
 
-                <div className="flex gap-2">
-                  <Input
-                    value={newAmenity}
-                    onChange={(e) => setNewAmenity(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddAmenity()}
-                    placeholder="Ajouter une commodité..."
-                    className="border-[#EBE3D5] focus:border-[#F2A900]"
-                  />
-                  <Button
-                    onClick={handleAddAmenity}
-                    className="bg-[#1B5E20] hover:bg-[#15490F] text-white shrink-0"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Ajouter
-                  </Button>
+                <div className="space-y-4">
+                  <Label className="text-sm font-black text-[#2D1B08]">Autres Services</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {amenities.map((amenity, index) => (
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="border-[#1B5E20] text-[#1B5E20] font-bold px-4 py-2 text-[10px] uppercase"
+                      >
+                        {amenity}
+                        <button
+                          onClick={() => handleRemoveAmenity(index)}
+                          className="ml-2 hover:text-red-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Input
+                      value={newAmenity}
+                      onChange={(e) => setNewAmenity(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddAmenity()}
+                      placeholder="Ajouter un service (Ex: Navette Aéroport)..."
+                      className="border-[#EBE3D5] focus:border-[#F2A900]"
+                    />
+                    <Button
+                      onClick={handleAddAmenity}
+                      className="bg-[#1B5E20] hover:bg-[#15490F] text-white shrink-0"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      AJOUTER
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

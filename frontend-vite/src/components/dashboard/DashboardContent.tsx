@@ -124,60 +124,67 @@ const DashboardContent: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           
           <ChartCard title="Évolution des Utilisateurs" subtitle="Croissance cumulée - 7 derniers jours">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={USER_GROWTH_DATA}>
-                <defs>
-                  <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#F2A900" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#F2A900" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
-                <XAxis dataKey="name" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
-                  itemStyle={{ color: '#F2A900', fontWeight: 'bold' }}
-                />
-                <Area type="monotone" dataKey="users" stroke="#F2A900" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="h-full w-full min-h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={USER_GROWTH_DATA}>
+                  <defs>
+                    <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#F2A900" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#F2A900" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
+                  <XAxis dataKey="name" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                  <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
+                    itemStyle={{ color: '#F2A900', fontWeight: 'bold' }}
+                  />
+                  <Area type="monotone" dataKey="users" stroke="#F2A900" strokeWidth={3} fillOpacity={1} fill="url(#colorUsers)" isAnimationActive={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </ChartCard>
 
           <ChartCard title="Activité Plateforme" subtitle="Posts, Commentaires & Likes par jour">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={ACTIVITY_DATA}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
-                <XAxis dataKey="name" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
-                />
-                <Bar dataKey="posts" fill="#6B4226" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="comments" fill="#F2A900" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="h-full w-full min-h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={ACTIVITY_DATA}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
+                  <XAxis dataKey="name" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                  <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
+                  />
+                  <Bar dataKey="posts" fill="#6B4226" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+                  <Bar dataKey="comments" fill="#F2A900" radius={[4, 4, 0, 0]} isAnimationActive={false} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </ChartCard>
 
           <ChartCard title="Répartition des Rôles" subtitle="Répartition par type de compte">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={ROLES_DATA}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {ROLES_DATA.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="h-full w-full min-h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={ROLES_DATA}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="value"
+                    isAnimationActive={false}
+                  >
+                    {ROLES_DATA.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
             <div className="flex flex-wrap justify-center gap-4 mt-[-40px] relative z-10">
               {ROLES_DATA.map((role) => (
                 <div key={role.name} className="flex items-center gap-1.5">

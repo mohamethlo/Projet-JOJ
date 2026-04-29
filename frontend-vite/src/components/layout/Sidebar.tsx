@@ -105,8 +105,8 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
         { href: '/messages', icon: MessageCircle, label: 'Messages' },
         { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
         { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
-        { href: '/establishment/rooms', icon: Bed, label: 'Chambres' },
-        { href: '/establishment/profile', icon: Building, label: 'Profil Hôtel' },
+        { href: '/establishment/rooms', icon: Bed, label: 'Unités / Chambres' },
+        { href: '/establishment/profile', icon: Building, label: 'Profil Établissement' },
         { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
         { href: '/history', icon: BookOpen, label: t('history') },
         { href: '/profile', icon: User, label: 'Mon Profil' }

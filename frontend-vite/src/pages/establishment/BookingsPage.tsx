@@ -72,15 +72,18 @@ const BookingsPage: React.FC = () => {
       checkIn: '2024-04-15',
       checkInTime: '14:00',
       checkOut: '2024-04-18',
-      type: 'Chambre Double',
+      checkOutTime: '12:00',
+      type: 'Double',
       roomNumber: '101',
       status: 'Confirmée',
       paymentStatus: 'Payé',
+      paymentMode: 'Wave',
       price: '75,000 FCFA',
       guests: 2,
       nights: 3,
       bookingDate: '2024-04-10',
-      source: 'Direct',
+      source: 'En ligne',
+      cancellationPolicy: 'Gratuit jusqu\'à 24h avant',
       specialRequests: 'Lit supplémentaire demandé, Arrivée tardive (22h)'
     },
     {
@@ -91,54 +94,19 @@ const BookingsPage: React.FC = () => {
       checkIn: '2024-04-16',
       checkInTime: '15:30',
       checkOut: '2024-04-17',
-      type: 'Suite Junior',
+      checkOutTime: '12:00',
+      type: 'Suite',
       roomNumber: '205',
       status: 'En attente',
       paymentStatus: 'Acompte',
+      paymentMode: 'Orange Money',
       price: '45,000 FCFA',
       guests: 1,
       nights: 1,
       bookingDate: '2024-04-12',
-      source: 'Booking.com',
-      specialRequests: null
-    },
-    {
-      id: '103',
-      guestName: 'Moussa Diop',
-      guestEmail: 'moussa.diop@email.com',
-      guestPhone: '+221 76 555 44 33',
-      checkIn: '2024-04-20',
-      checkInTime: '12:00',
-      checkOut: '2024-04-25',
-      type: 'Chambre Twin',
-      roomNumber: '108',
-      status: 'Annulée',
-      paymentStatus: 'Remboursé',
-      price: '120,000 FCFA',
-      guests: 2,
-      nights: 5,
-      bookingDate: '2024-04-08',
-      source: 'Expedia',
-      specialRequests: 'Chambre non-fumeur impérative'
-    },
-    {
-      id: '104',
-      guestName: 'Fatou Ndiaye',
-      guestEmail: 'fatou.ndiaye@email.com',
-      guestPhone: '+221 77 222 33 44',
-      checkIn: '2024-04-22',
-      checkInTime: '14:00',
-      checkOut: '2024-04-24',
-      type: 'Suite Royale',
-      roomNumber: '401',
-      status: 'Confirmée',
-      paymentStatus: 'Sur place',
-      price: '180,000 FCFA',
-      guests: 3,
-      nights: 2,
-      bookingDate: '2024-04-14',
       source: 'Direct',
-      specialRequests: 'Panier de fruits à l\'arrivée'
+      cancellationPolicy: 'Non remboursable',
+      specialRequests: null
     }
   ]);
 
@@ -220,14 +188,14 @@ const BookingsPage: React.FC = () => {
                   </Button>
                 </Link>
                 <Badge className="bg-[#F2A900] text-[#2D1B08] font-black uppercase tracking-widest text-[9px] px-3 border-none">
-                  ESPACE HÔTELLERIE
+                  ESPACE HÉBERGEMENT
                 </Badge>
               </div>
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter uppercase leading-[0.9]">
                 PILOTAGE DES <br /> <span className="text-[#F2A900]">RÉSERVATIONS .</span>
               </h1>
               <p className="text-white/60 font-medium italic text-xs md:text-base max-w-xl">
-                Suivez vos arrivées, gérez vos disponibilités et offrez un accueil d'exception à vos clients.
+                Suivez vos arrivées, gérez vos disponibilités et offrez un accueil d'exception à vos hôtes.
               </p>
             </div>
             
@@ -475,20 +443,42 @@ const BookingsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-4 md:p-6 rounded-2xl bg-gray-50 border border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                   <div className="h-10 w-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#F2A900]">
-                    <Bed size={18} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-tight">{selectedBooking.type}</p>
-                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Chambre {selectedBooking.roomNumber}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                     <div className="h-10 w-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#F2A900]">
+                      <Bed size={18} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-tight">{selectedBooking.type}</p>
+                      <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Unité {selectedBooking.roomNumber}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="text-center sm:text-right">
-                  <p className="text-[7px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Check-in</p>
-                  <p className="text-xs font-black">{selectedBooking.checkIn} à {selectedBooking.checkInTime}</p>
+                <div className="p-4 rounded-2xl bg-[#2D1B08]/5 border border-[#2D1B08]/10 flex flex-col justify-center">
+                   <div className="flex justify-between items-center text-[9px] font-bold uppercase tracking-widest text-[#2D1B08]">
+                      <span>Check-in: {selectedBooking.checkInTime}</span>
+                      <span>Check-out: {selectedBooking.checkOutTime || '12:00'}</span>
+                   </div>
+                   <div className="mt-1 h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#F2A900] w-1/2" />
+                   </div>
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                 <div className="space-y-1">
+                    <Label className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Mode Réservation</Label>
+                    <Badge className="w-full justify-center bg-gray-100 text-[#2D1B08] border-none font-bold text-[9px] h-8">{selectedBooking.source}</Badge>
+                 </div>
+                 <div className="space-y-1">
+                    <Label className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Moyen Paiement</Label>
+                    <Badge className="w-full justify-center bg-emerald-50 text-emerald-700 border-none font-bold text-[9px] h-8">{selectedBooking.paymentMode || 'Cash'}</Badge>
+                 </div>
+                 <div className="hidden sm:block space-y-1">
+                    <Label className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Politique</Label>
+                    <Badge variant="outline" className="w-full justify-center border-gray-200 text-gray-500 font-bold text-[8px] h-8 truncate">{selectedBooking.cancellationPolicy}</Badge>
+                 </div>
               </div>
 
               {selectedBooking.specialRequests && (

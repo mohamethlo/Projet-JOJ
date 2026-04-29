@@ -142,6 +142,7 @@ const TouristDashboard: React.FC<TouristDashboardProps> = ({ user }) => {
                     outerRadius={80}
                     paddingAngle={5}
                     dataKey="value"
+                    isAnimationActive={false}
                   >
                     {EXPLORATION_STATS.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

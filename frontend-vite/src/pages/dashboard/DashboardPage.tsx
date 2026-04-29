@@ -29,7 +29,7 @@ const DashboardPage: React.FC = () => {
       case 'security':
         return 'Sécurité & Surveillance';
       case 'hotel':
-        return 'Espace Hôtel';
+        return 'Espace Hébergement';
       case 'agency':
         return 'Espace Agence de Voyage';
       case 'restaurant':
@@ -54,7 +54,7 @@ const DashboardPage: React.FC = () => {
       case 'security':
         return 'Assurez la sécurité et la tranquillité sur la plateforme';
       case 'hotel':
-        return 'Gérez votre hôtel et offrez un séjour inoubliable à vos clients';
+        return 'Gérez votre établissement et offrez un séjour inoubliable à vos clients';
       case 'agency':
         return 'Gérez vos offres de voyages, vos réservations et votre visibilité';
       case 'restaurant':

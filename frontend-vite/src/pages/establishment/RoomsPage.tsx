@@ -27,7 +27,8 @@ import {
   CheckCircle2,
   Clock,
   AlertTriangle,
-  Building
+  Building,
+  Bed
 } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -56,6 +57,45 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import StatCard from '@/components/dashboard/StatCard';
 
+const ROOM_EQUIPMENT = [
+  { 
+    category: 'Confort de base', 
+    items: ['Lit', 'Linge de lit', 'Serviettes', 'Armoire / penderie', 'Table / bureau', 'Chaise'] 
+  },
+  { 
+    category: 'Climatisation & ventilation', 
+    items: ['Climatisation', 'Ventilateur', 'Chauffage'] 
+  },
+  { 
+    category: 'Équipements électroniques', 
+    items: ['Télévision', 'Télévision écran plat', 'Chaînes satellite', 'Prises électriques accessibles'] 
+  },
+  { 
+    category: 'Connectivité', 
+    items: ['Wifi'] 
+  },
+  { 
+    category: 'Équipements complémentaires', 
+    items: ['Bouilloire électrique', 'Plateau de courtoisie', 'Minibar', 'Réfrigérateur', 'Micro-ondes', 'Coin repas', 'Table à manger'] 
+  },
+  { 
+    category: 'Salle de bain', 
+    items: ['Douche', 'Baignoire', 'Toilettes', 'Papier toilette', 'Serviettes (SDB)', 'Articles de toilette', 'Sèche-cheveux', 'Peignoir', 'Chaussons', 'Bidet', 'Baignoire spa'] 
+  },
+  { 
+    category: 'Extérieur & Vue', 
+    items: ['Balcon', 'Terrasse', 'Vue mer', 'Vue jardin', 'Vue ville'] 
+  },
+  { 
+    category: 'Sécurité', 
+    items: ['Coffre-fort'] 
+  }
+];
+
+const ROOM_TYPES = ['Simple', 'Double', 'Twin', 'Triple', 'Familiale', 'Suite', 'Dortoir'];
+const BED_TYPES = ['Simple', 'Double', 'Queen', 'King'];
+const VIEW_TYPES = ['Mer', 'Ville', 'Jardin', 'Piscine', 'Montagne'];
+
 const RoomsPage: React.FC = () => {
   const { user } = useAuth();
 
@@ -70,54 +110,53 @@ const RoomsPage: React.FC = () => {
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  // Form State
+  const [formImages, setFormImages] = useState<string[]>(['']);
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [customAmenities, setCustomAmenities] = useState<string[]>([]);
+  const [newCustomAmenity, setNewCustomAmenity] = useState('');
+  const [roomNumber, setRoomNumber] = useState('');
+  const [roomType, setRoomType] = useState('Double');
+  const [bedType, setBedType] = useState('Double');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('25,000');
+  const [capacity, setCapacity] = useState(2);
+
   const [rooms, setRooms] = useState([
     {
       id: '1',
       number: '101',
-      type: 'Double Premium',
-      price: '25,000 FCFA',
+      type: 'Double',
+      bedType: 'King',
+      price: '25,000',
+      currency: 'FCFA',
       capacity: 2,
       status: 'Disponible',
-      amenities: ['WiFi', 'TV', 'Climatisation', 'Salle de bain privée', 'Vue Mer'],
+      hasBathroom: true,
+      bathroomType: 'Douche',
+      amenities: ['Wifi', 'Télévision', 'Climatisation', 'Linge de lit', 'Serviettes', 'Armoire / penderie', 'Table / bureau'],
+      customAmenities: ['Vue mer'],
       description: 'Chambre confortable avec vue imprenable sur la mer et finitions haut de gamme.',
       images: ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800', 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800']
     },
     {
       id: '2',
       number: '102',
-      type: 'Suite Royale',
-      price: '45,000 FCFA',
+      type: 'Suite',
+      bedType: 'King',
+      price: '45,000',
+      currency: 'FCFA',
       capacity: 4,
       status: 'Occupée',
-      amenities: ['WiFi', 'TV', 'Climatisation', 'Salle de bain privée', 'Balcon', 'Mini-bar', 'Jacuzzi'],
+      hasBathroom: true,
+      bathroomType: 'Baignoire',
+      amenities: ['Wifi', 'Télévision écran plat', 'Climatisation', 'Minibar', 'Coffre-fort', 'Peignoir', 'Sèche-cheveux'],
+      customAmenities: ['Petit-déjeuner inclus'],
       description: 'Suite spacieuse avec balcon privé, vue panoramique et services de conciergerie.',
       images: ['https://images.unsplash.com/photo-1591088398332-8a7791972843?w=800']
-    },
-    {
-      id: '3',
-      number: '103',
-      type: 'Standard Simple',
-      price: '18,000 FCFA',
-      capacity: 1,
-      status: 'Disponible',
-      amenities: ['WiFi', 'TV', 'Ventilateur'],
-      description: 'Chambre simple, calme et fonctionnelle, idéale pour les voyages d\'affaires.',
-      images: ['https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800']
-    },
-    {
-      id: '4',
-      number: '201',
-      type: 'Suite Familiale',
-      price: '55,000 FCFA',
-      capacity: 6,
-      status: 'Réservée',
-      amenities: ['WiFi', 'TV', 'Climatisation', 'Salle de bain privée', 'Salon', 'Cuisine équipée'],
-      description: 'Espace familial complet avec salon séparé et kitchenette pour un séjour en toute autonomie.',
-      images: ['https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800']
     }
   ]);
 
-  const [formImages, setFormImages] = useState<string[]>(['']);
 
   const filteredRooms = rooms.filter(room =>
     room.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -129,6 +168,14 @@ const RoomsPage: React.FC = () => {
     setSelectedRoom(null);
     setIsEditing(false);
     setFormImages(['']);
+    setSelectedAmenities([]);
+    setCustomAmenities([]);
+    setRoomNumber('');
+    setRoomType('Double');
+    setBedType('Double');
+    setDescription('');
+    setPrice('25,000');
+    setCapacity(2);
     setIsDialogOpen(true);
   };
 
@@ -136,6 +183,14 @@ const RoomsPage: React.FC = () => {
     setSelectedRoom(room);
     setIsEditing(true);
     setFormImages(room.images && room.images.length > 0 ? [...room.images] : ['']);
+    setSelectedAmenities(room.amenities || []);
+    setCustomAmenities(room.customAmenities || []);
+    setRoomNumber(room.number);
+    setRoomType(room.type);
+    setBedType(room.bedType);
+    setDescription(room.description);
+    setPrice(room.price);
+    setCapacity(room.capacity);
     setIsDialogOpen(true);
   };
 
@@ -155,7 +210,49 @@ const RoomsPage: React.FC = () => {
     setFormImages(newImages);
   };
 
+  const toggleAmenity = (amenity: string) => {
+    setSelectedAmenities(prev => 
+      prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]
+    );
+  };
+
+  const handleAddCustomAmenity = () => {
+    if (newCustomAmenity.trim()) {
+      if (!customAmenities.includes(newCustomAmenity.trim())) {
+        setCustomAmenities([...customAmenities, newCustomAmenity.trim()]);
+      }
+      setNewCustomAmenity('');
+    }
+  };
+
+  const removeCustomAmenity = (amenity: string) => {
+    setCustomAmenities(customAmenities.filter(a => a !== amenity));
+  };
+
   const handleSaveRoom = () => {
+    const roomData = {
+      id: isEditing ? selectedRoom.id : (rooms.length + 1).toString(),
+      number: roomNumber,
+      type: roomType,
+      bedType,
+      price,
+      currency: 'FCFA',
+      capacity,
+      status: isEditing ? selectedRoom.status : 'Disponible',
+      hasBathroom: true,
+      bathroomType: 'Douche',
+      amenities: selectedAmenities,
+      customAmenities: customAmenities,
+      description: description,
+      images: formImages.filter(img => img.trim() !== '')
+    };
+
+    if (isEditing) {
+      setRooms(rooms.map(r => r.id === selectedRoom.id ? roomData : r));
+    } else {
+      setRooms([...rooms, roomData]);
+    }
+
     toast.success(isEditing ? 'Chambre mise à jour !' : 'Nouvelle chambre ajoutée !');
     setIsDialogOpen(false);
   };
@@ -184,15 +281,13 @@ const RoomsPage: React.FC = () => {
 
   const getAmenityIcon = (amenity: string) => {
     const iconClass = "h-3.5 w-3.5 text-[#F2A900]";
-    switch (amenity) {
-      case 'WiFi': return <Wifi className={iconClass} />;
-      case 'TV': return <Tv className={iconClass} />;
-      case 'Parking': return <Car className={iconClass} />;
-      case 'Petit-déjeuner': return <Coffee className={iconClass} />;
-      case 'Piscine': return <Waves className={iconClass} />;
-      case 'Vue Mer': return <Sparkles className={iconClass} />;
-      default: return null;
-    }
+    const lower = amenity.toLowerCase();
+    if (lower.includes('wifi')) return <Wifi className={iconClass} />;
+    if (lower.includes('télévision') || lower.includes('tv')) return <Tv className={iconClass} />;
+    if (lower.includes('climatisation')) return <Sparkles className={iconClass} />;
+    if (lower.includes('mini')) return <Coffee className={iconClass} />;
+    if (lower.includes('vue mer')) return <Waves className={iconClass} />;
+    return <CheckCircle2 className={iconClass} />;
   };
 
   return (
@@ -213,14 +308,14 @@ const RoomsPage: React.FC = () => {
                   </Button>
                 </Link>
                 <Badge className="bg-[#F2A900] text-[#2D1B08] font-black uppercase tracking-widest text-[10px] px-3 border-none">
-                  PATRIMOINE HÔTELIER
+                  PATRIMOINE & HÉBERGEMENT
                 </Badge>
               </div>
               <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-[0.85]">
                 INVENTAIRE DES <br /> <span className="text-[#F2A900]">UNITÉS .</span>
               </h1>
               <p className="text-white/60 font-medium italic text-sm md:text-lg max-w-xl">
-                Gérez vos chambres, optimisez vos tarifs et assurez une qualité de service irréprochable.
+                Gérez vos unités, optimisez vos tarifs et assurez une qualité de séjour irréprochable pour tous types d'hébergements.
               </p>
             </div>
             
@@ -228,7 +323,7 @@ const RoomsPage: React.FC = () => {
               onClick={handleAddRoom}
               className="bg-[#F2A900] hover:bg-[#D49400] text-[#2D1B08] font-black h-14 px-8 rounded-2xl shadow-xl shadow-[#F2A900]/20 transition-all hover:scale-105"
             >
-              <Plus className="mr-3 h-5 w-5" /> NOUVELLE CHAMBRE
+              <Plus className="mr-3 h-5 w-5" /> NOUVELLE UNITÉ
             </Button>
           </div>
         </div>
@@ -344,12 +439,19 @@ const RoomsPage: React.FC = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-8">
-                  {room.amenities.map((amenity, idx) => (
+                  {room.amenities.slice(0, 4).map((amenity, idx) => (
                     <div key={idx} className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-xl">
                       {getAmenityIcon(amenity)}
                       <span className="text-[10px] font-bold uppercase text-[#2D1B08]/70 tracking-tight">{amenity}</span>
                     </div>
                   ))}
+                  {(room.amenities.length > 4 || room.customAmenities?.length > 0) && (
+                    <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-xl">
+                      <span className="text-[10px] font-black uppercase text-[#F2A900] tracking-tight">
+                        +{(room.amenities.length - 4) + (room.customAmenities?.length || 0)}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-6 border-t border-gray-50 mt-auto flex items-center justify-between">
@@ -373,58 +475,142 @@ const RoomsPage: React.FC = () => {
 
       {/* 🧾 Add/Edit Room Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl rounded-[2.5rem] border-none p-0 overflow-hidden">
-          <div className="bg-[#2D1B08] p-8 text-white relative">
-             <div className="absolute top-0 right-0 p-8 text-white/5 pointer-events-none">
-                <Bed size={120} strokeWidth={4} />
+        <DialogContent className="max-w-2xl rounded-[2rem] border-none p-0 overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-[#2D1B08] px-6 py-4 flex items-center justify-between shrink-0">
+             <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-[#F2A900] text-[#2D1B08]">
+                   <Bed size={18} strokeWidth={3} />
+                </div>
+                <div>
+                   <h2 className="text-sm font-black text-white uppercase tracking-widest">
+                      {isEditing ? `CHAMBRE ${roomNumber}` : 'NOUVEL UNITÉ'}
+                   </h2>
+                   <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest">Configuration de l'hébergement</p>
+                </div>
              </div>
-             <div className="relative z-10">
-                <Badge className="bg-[#F2A900] text-[#2D1B08] font-black uppercase tracking-widest text-[9px] border-none mb-4">
-                  {isEditing ? 'MODIFICATION UNITÉ' : 'CRÉATION UNITÉ'}
-                </Badge>
-                <h2 className="text-3xl font-black uppercase tracking-tighter">
-                  {isEditing ? `Chambre ${selectedRoom?.number}` : 'Nouvel Hébergement'}
-                </h2>
-                <p className="text-white/50 text-xs font-bold uppercase tracking-widest mt-1">Configurez les paramètres de votre actif immobilier</p>
-             </div>
+             <Badge className="bg-[#F2A900]/10 text-[#F2A900] border border-[#F2A900]/20 font-black uppercase tracking-widest text-[8px] px-2 py-0.5">
+                {isEditing ? 'ÉDITION' : 'CRÉATION'}
+             </Badge>
           </div>
           
-          <div className="p-8 bg-white space-y-6 max-h-[60vh] overflow-y-auto">
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Numéro</Label>
-                <Input defaultValue={selectedRoom?.number} placeholder="Ex: 101" className="h-12 rounded-xl bg-gray-50 border-none font-bold" />
+          <div className="p-5 bg-white space-y-5 overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-gray-200">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Numéro</Label>
+                <Input value={roomNumber} onChange={(e) => setRoomNumber(e.target.value)} placeholder="Ex: 101" className="h-10 rounded-xl bg-gray-50 border-none font-bold text-xs" />
               </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Type</Label>
-                <Select defaultValue={selectedRoom?.type || 'Double'}>
-                   <SelectTrigger className="h-12 rounded-xl bg-gray-50 border-none font-bold">
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Type</Label>
+                <Select value={roomType} onValueChange={setRoomType}>
+                   <SelectTrigger className="h-10 rounded-xl bg-gray-50 border-none font-bold text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl border-none shadow-2xl">
-                    <SelectItem value="Simple">Simple</SelectItem>
-                    <SelectItem value="Double">Double Premium</SelectItem>
-                    <SelectItem value="Suite Royale">Suite Royale</SelectItem>
-                    <SelectItem value="Famille">Suite Familiale</SelectItem>
+                    {ROOM_TYPES.map(type => (
+                      <SelectItem key={type} value={type} className="text-xs font-bold">{type}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Prix (FCFA)</Label>
-                <Input defaultValue={selectedRoom?.price} placeholder="25,000" className="h-12 rounded-xl bg-gray-50 border-none font-bold" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Type de Lit</Label>
+                <Select value={bedType} onValueChange={setBedType}>
+                   <SelectTrigger className="h-10 rounded-xl bg-gray-50 border-none font-bold text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-none shadow-2xl">
+                    {BED_TYPES.map(type => (
+                      <SelectItem key={type} value={type} className="text-xs font-bold">{type}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Capacité Max</Label>
-                <Input type="number" defaultValue={selectedRoom?.capacity} className="h-12 rounded-xl bg-gray-50 border-none font-bold" />
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Prix par Nuit (FCFA)</Label>
+                <Input value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Ex: 25,000" className="h-10 rounded-xl bg-gray-50 border-none font-bold text-xs" />
               </div>
             </div>
 
+            <div className="space-y-6">
+               <div className="flex items-center gap-2 mb-1">
+                 <Settings2 className="h-3.5 w-3.5 text-[#F2A900]" />
+                 <Label className="text-[10px] font-black text-[#2D1B08] uppercase tracking-widest">Équipements & Commodités</Label>
+               </div>
+               
+               <div className="space-y-5">
+                 {ROOM_EQUIPMENT.map((category) => (
+                   <div key={category.category} className="space-y-2">
+                     <h4 className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-100 pb-0.5">{category.category}</h4>
+                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                       {category.items.map(item => (
+                         <div 
+                           key={item} 
+                           onClick={() => toggleAmenity(item)}
+                           className={cn(
+                             "flex items-center space-x-2 p-2 rounded-lg border-2 transition-all cursor-pointer",
+                             selectedAmenities.includes(item) 
+                               ? "bg-[#F2A900]/5 border-[#F2A900] shadow-sm" 
+                               : "bg-gray-50 border-transparent hover:bg-gray-100"
+                           )}
+                         >
+                           <div className={cn(
+                             "h-3 w-3 rounded flex items-center justify-center transition-colors",
+                             selectedAmenities.includes(item) ? "bg-[#F2A900] text-[#2D1B08]" : "bg-gray-200"
+                           )}>
+                             {selectedAmenities.includes(item) && <CheckCircle2 size={10} strokeWidth={4} />}
+                           </div>
+                           <span className={cn(
+                             "text-[8px] font-black uppercase tracking-tighter transition-colors truncate",
+                             selectedAmenities.includes(item) ? "text-[#2D1B08]" : "text-gray-500"
+                           )}>{item}</span>
+                         </div>
+                       ))}
+                     </div>
+                   </div>
+                 ))}
+
+                 {/* 🏷️ Autres Services (Custom) */}
+                 <div className="space-y-3 pt-3 border-t border-dashed border-gray-200">
+                    <h4 className="text-[9px] font-black text-[#2D1B08] uppercase tracking-widest flex items-center gap-2">
+                      <Plus size={12} className="text-[#F2A900]" /> Autres Équipements & Services
+                    </h4>
+                    
+                    <div className="flex flex-wrap gap-1.5">
+                      {customAmenities.map((amenity) => (
+                        <Badge key={amenity} className="bg-emerald-50 text-emerald-700 border border-emerald-100 rounded-full px-2 py-1 flex items-center gap-1.5">
+                          <span className="text-[8px] font-black uppercase tracking-widest">{amenity}</span>
+                          <button onClick={() => removeCustomAmenity(amenity)} className="hover:text-red-500 transition-colors">
+                            <Trash2 size={10} />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Input 
+                        value={newCustomAmenity}
+                        onChange={(e) => setNewCustomAmenity(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleAddCustomAmenity()}
+                        placeholder="Ex: Vue sur piscine..." 
+                        className="h-10 rounded-xl bg-gray-50 border-none font-bold text-[10px]"
+                      />
+                      <Button 
+                        onClick={handleAddCustomAmenity}
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl h-10 px-4 text-[9px] uppercase tracking-widest shrink-0"
+                      >
+                        AJOUTER
+                      </Button>
+                    </div>
+                 </div>
+               </div>
+            </div>
+
             <div className="space-y-2">
-               <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Description Gastronomique / Hôtel</Label>
-               <Textarea defaultValue={selectedRoom?.description} rows={3} className="rounded-2xl bg-gray-50 border-none font-medium italic" />
+               <Label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Description Détaillée</Label>
+               <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="rounded-2xl bg-gray-50 border-none font-medium italic" placeholder="Présentation de l'unité..." />
             </div>
 
             <div className="space-y-4">
@@ -440,10 +626,10 @@ const RoomsPage: React.FC = () => {
             </div>
           </div>
 
-          <DialogFooter className="p-8 border-t border-gray-50 flex items-center justify-between">
-            <Button variant="ghost" className="rounded-xl h-12 font-bold px-6 uppercase text-[10px] tracking-widest" onClick={() => setIsDialogOpen(false)}>ANNULER</Button>
-            <Button className="bg-[#2D1B08] hover:bg-black text-white font-black h-12 px-8 rounded-2xl shadow-xl" onClick={handleSaveRoom}>
-               ENREGISTRER L'UNITÉ
+          <DialogFooter className="p-4 border-t border-gray-50 flex items-center justify-between bg-gray-50/50 shrink-0">
+            <Button variant="ghost" className="rounded-xl h-10 font-bold px-6 uppercase text-[9px] tracking-widest" onClick={() => setIsDialogOpen(false)}>ANNULER</Button>
+            <Button className="bg-[#2D1B08] hover:bg-black text-white font-black h-10 px-8 rounded-xl shadow-lg transition-all active:scale-95" onClick={handleSaveRoom}>
+               ENREGISTRER
             </Button>
           </DialogFooter>
         </DialogContent>

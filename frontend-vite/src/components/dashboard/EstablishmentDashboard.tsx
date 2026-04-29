@@ -80,7 +80,7 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               <Badge className="bg-[#F2A900] text-[#2D1B08] font-black uppercase tracking-widest text-[8px] md:text-[9px] px-3 border-none">
-                {isHotel ? 'HÔTELLERIE DE LUXE' : 'GASTRONOMIE FINE'}
+                {isHotel ? 'HÉBERGEMENT TOURISTIQUE' : 'GASTRONOMIE FINE'}
               </Badge>
               <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest">
                 <Star size={12} className="text-[#F2A900] fill-[#F2A900]" /> 4.9 Super-hôte
@@ -97,7 +97,7 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
           <div className="flex flex-col sm:flex-row gap-3">
             <Link to={isHotel ? "/establishment/rooms" : "/establishment/menu"} className="w-full sm:w-auto">
               <Button className="w-full rounded-xl md:rounded-2xl bg-white/10 hover:bg-white/20 border-white/10 text-white font-bold backdrop-blur-md h-12 px-6">
-                <Plus className="mr-2 h-4 w-4" /> {isHotel ? 'Gérer Chambres' : 'Gérer Menu'}
+                <Plus className="mr-2 h-4 w-4" /> {isHotel ? 'Gérer Unités' : 'Gérer Menu'}
               </Button>
             </Link>
             <Link to="/establishment/profile" className="w-full sm:w-auto">
@@ -141,30 +141,32 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
         {/* 📊 Historical Performance */}
         <div className="lg:col-span-2">
           <ChartCard title="Taux d'Occupation (%)" subtitle="Performance sur les 7 derniers jours">
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={OCCUPANCY_DATA}>
-                <defs>
-                  <linearGradient id="colorRate" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2D1B08" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#2D1B08" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
-                <XAxis dataKey="day" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} domain={[0, 100]} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
-                  itemStyle={{ color: '#F2A900', fontWeight: 'bold' }}
-                />
-                <Area type="monotone" dataKey="rate" stroke="#2D1B08" strokeWidth={3} fillOpacity={1} fill="url(#colorRate)" />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={OCCUPANCY_DATA}>
+                  <defs>
+                    <linearGradient id="colorRate" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2D1B08" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#2D1B08" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
+                  <XAxis dataKey="day" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                  <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} domain={[0, 100]} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
+                    itemStyle={{ color: '#F2A900', fontWeight: 'bold' }}
+                  />
+                  <Area type="monotone" dataKey="rate" stroke="#2D1B08" strokeWidth={3} fillOpacity={1} fill="url(#colorRate)" isAnimationActive={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </ChartCard>
         </div>
 
         {/* 🥧 Segment Distribution */}
         <div className="lg:col-span-1">
-          <ChartCard title={isHotel ? "Types de Chambres" : "Menus Favoris"} subtitle="Répartition des revenus">
+          <ChartCard title={isHotel ? "Répartition par Unités" : "Menus Favoris"} subtitle="Répartition des revenus">
             <div className="h-[200px] md:h-[250px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -176,6 +178,7 @@ const EstablishmentDashboard: React.FC<EstablishmentDashboardProps> = ({ user })
                     outerRadius={80}
                     paddingAngle={5}
                     dataKey="value"
+                    isAnimationActive={false}
                   >
                     {ROOM_TYPE_DATA.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

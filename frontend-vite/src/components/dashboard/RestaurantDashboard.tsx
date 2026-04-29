@@ -138,21 +138,23 @@ const RestaurantDashboard: React.FC<RestaurantDashboardProps> = ({ user }) => {
         {/* 📈 Peak Hours Chart */}
         <div className="lg:col-span-2">
           <ChartCard title="Affluence par Heure" subtitle="Estimation du nombre de convives par créneau">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={PEAK_HOURS_DATA}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
-                <XAxis dataKey="time" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
-                />
-                <Bar dataKey="guests" fill="#F2A900" radius={[4, 4, 0, 0]}>
-                  {PEAK_HOURS_DATA.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.guests > 90 ? '#6B4226' : '#F2A900'} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={PEAK_HOURS_DATA}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
+                  <XAxis dataKey="time" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                  <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
+                  />
+                  <Bar dataKey="guests" fill="#F2A900" radius={[4, 4, 0, 0]} isAnimationActive={false}>
+                    {PEAK_HOURS_DATA.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.guests > 90 ? '#6B4226' : '#F2A900'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </ChartCard>
         </div>
 
@@ -170,6 +172,7 @@ const RestaurantDashboard: React.FC<RestaurantDashboardProps> = ({ user }) => {
                     outerRadius={80}
                     paddingAngle={5}
                     dataKey="value"
+                    isAnimationActive={false}
                   >
                     {DISH_POPULARITY_DATA.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

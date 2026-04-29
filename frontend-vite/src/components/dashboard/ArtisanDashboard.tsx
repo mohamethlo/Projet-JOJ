@@ -135,24 +135,26 @@ const ArtisanDashboard: React.FC<ArtisanDashboardProps> = ({ user }) => {
         {/* 📈 Performance Chart */}
         <div className="lg:col-span-2">
           <ChartCard title="Activité des Ventes" subtitle="Évolution du revenu sur les 7 derniers jours">
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={SALES_DATA}>
-                <defs>
-                  <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#F2A900" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#F2A900" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
-                <XAxis dataKey="name" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} tickFormatter={(val) => `${val/1000}k`} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
-                  itemStyle={{ color: '#F2A900', fontWeight: 'bold' }}
-                />
-                <Area type="monotone" dataKey="sales" stroke="#F2A900" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={SALES_DATA}>
+                  <defs>
+                    <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#F2A900" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#F2A900" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EBE3D5" />
+                  <XAxis dataKey="name" stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                  <YAxis stroke="#5D4037" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} tickFormatter={(val) => `${val/1000}k`} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#2D1B08', border: 'none', borderRadius: '12px', color: '#fff' }}
+                    itemStyle={{ color: '#F2A900', fontWeight: 'bold' }}
+                  />
+                  <Area type="monotone" dataKey="sales" stroke="#F2A900" strokeWidth={3} fillOpacity={1} fill="url(#colorSales)" isAnimationActive={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </ChartCard>
         </div>
 
@@ -170,6 +172,7 @@ const ArtisanDashboard: React.FC<ArtisanDashboardProps> = ({ user }) => {
                     outerRadius={80}
                     paddingAngle={5}
                     dataKey="value"
+                    isAnimationActive={false}
                   >
                     {CATEGORY_DATA.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
