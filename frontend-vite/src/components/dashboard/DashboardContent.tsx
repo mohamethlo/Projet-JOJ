@@ -60,6 +60,14 @@ const ROLES_DATA = [
 ];
 
 const DashboardContent: React.FC = () => {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <div className="space-y-12 pb-20 animate-in fade-in duration-1000">
       

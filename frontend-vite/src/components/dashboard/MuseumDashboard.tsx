@@ -65,6 +65,14 @@ const RECENT_EXHIBITS = [
 ];
 
 const MuseumDashboard: React.FC<MuseumDashboardProps> = ({ user }) => {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <div className="space-y-6 md:space-y-8 pb-12 animate-in fade-in duration-700 min-h-screen">
       {/* 🏛️ Museum's Welcome Header */}

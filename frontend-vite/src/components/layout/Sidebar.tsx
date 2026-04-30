@@ -41,148 +41,127 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
   const location = useLocation();
 
   const menuItems = useMemo(() => {
-    const guestItems = [
-      { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
-      { href: '/videos', icon: Video, label: 'Vidéos' },
-      { href: '/guides', icon: Users, label: t('guides') },
-      { href: '/events', icon: Calendar, label: t('events') },
-      { href: '/accommodation', icon: Building, label: 'Hébergement' },
-      { href: '/restaurants', icon: Utensils, label: 'Restauration' },
-      { href: '/agencies', icon: Plane, label: 'Agences de Voyage' },
-      { href: '/artisans', icon: Palette, label: 'Artisans' },
-      { href: '/history', icon: BookOpen, label: t('history') },
-      { href: '/map', icon: Map, label: t('map') },
-    ];
-
     if (!user) {
-      return guestItems;
-    }
-
-    const commonItems = [
-      { href: '/dashboard', icon: Home, label: t('dashboard') },
-      ...guestItems.filter(item => item.href !== '/dashboard'), // Avoid duplicates if any
-      { href: '/messages', icon: MessageCircle, label: 'Messages' },
-      { href: '/mes-tickets', icon: Ticket, label: 'Mes Tickets' },
-      { href: '/signaler', icon: Flag, label: 'Signaler/Commenter' }
-    ].sort((a, b) => {
-      // Simple sorting or custom order if needed
-      const order = ['/dashboard', '/echos-senegal', '/videos', '/messages', '/guides', '/artisans', '/events', '/accommodation', '/restaurants', '/agencies', '/mes-tickets', '/history', '/map', '/signaler'];
-      return order.indexOf(a.href) - order.indexOf(b.href);
-    });
-
-    if (user?.role === 'admin') {
       return [
-        ...commonItems,
-        { href: '/admin/validation', icon: CheckCircle, label: 'Validation', isAdminSection: true },
-        { href: '/admin/moderation', icon: MessageSquare, label: 'Modération', isAdminSection: true },
-        { href: '/admin/users', icon: UserCog, label: 'Gestion des Utilisateurs', isAdminSection: true },
-        { href: '/admin/statistics', icon: BarChart3, label: 'Statistiques', isAdminSection: true },
-        { href: '/admin/articles', icon: FileText, label: 'Gestion des Articles', isAdminSection: true },
-        {href: '/admin/accommodation', icon: Building, label: 'Gestion Hébergements', isAdminSection: true },
-        { href: '/admin/restaurants', icon: Utensils, label: 'Gestion Restaurants', isAdminSection: true },
-        { href: '/admin/agencies', icon: Plane, label: 'Gestion Agences', isAdminSection: true }
-      ];
-    }
-
-    if (user?.role === 'guide') {
-      return [
-        ...commonItems,
-        { href: '/guide/tours', icon: Compass, label: 'Mes Visites Guidées' },
-        { href: '/guide/bookings', icon: Calendar, label: 'Réservations' }
-      ];
-    }
-
-    if (user?.role === 'organizer') {
-      return [
-        ...commonItems,
-        { href: '/organizer/events', icon: Calendar, label: 'Mes Événements' }
-      ];
-    }
-
-    if (user?.role === 'hotel') {
-      return [
-        { href: '/dashboard', icon: Home, label: t('dashboard') },
-        { href: '/messages', icon: MessageCircle, label: 'Messages' },
         { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
-        { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
-        { href: '/establishment/rooms', icon: Bed, label: 'Unités / Chambres' },
-        { href: '/establishment/profile', icon: Building, label: 'Profil Établissement' },
-        { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
-        { href: '/history', icon: BookOpen, label: t('history') },
-        { href: '/profile', icon: User, label: 'Mon Profil' }
-      ];
-    }
-
-    if (user?.role === 'restaurant') {
-      return [
-        { href: '/dashboard', icon: Home, label: t('dashboard') },
-        { href: '/messages', icon: MessageCircle, label: 'Messages' },
-        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
-        { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
-        { href: '/establishment/menu', icon: UtensilsCrossed, label: 'Menu' },
-        { href: '/establishment/profile', icon: Building, label: 'Profil Restaurant' },
-        { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
-        { href: '/history', icon: BookOpen, label: t('history') },
-        { href: '/profile', icon: User, label: 'Mon Profil' }
-      ];
-    }
-
-    if (user?.role === 'agency') {
-      return [
-        { href: '/dashboard', icon: Home, label: t('dashboard') },
-        { href: '/messages', icon: MessageCircle, label: 'Messages' },
-        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
-        { href: '/agency/bookings', icon: Calendar, label: 'Réservations' },
-        { href: '/establishment/offers', icon: Plane, label: 'Nos Offres' },
-        { href: '/agency/profile', icon: Building, label: 'Profil Agence' },
-        { href: '/agency/reviews', icon: Star, label: 'Avis Clients' },
-        { href: '/history', icon: BookOpen, label: t('history') },
-        { href: '/profile', icon: User, label: 'Mon Profil' }
-      ];
-    }
-
-    if (user?.role === 'security') {
-      return [
-        { href: '/security/dashboard', icon: Home, label: 'Dashboard' },
         { href: '/videos', icon: Video, label: 'Vidéos' },
         { href: '/guides', icon: Users, label: t('guides') },
         { href: '/accommodation', icon: Building, label: 'Hébergement' },
         { href: '/restaurants', icon: Utensils, label: 'Restauration' },
-        { href: '/security/reports', icon: Shield, label: 'Signalements' },
-        { href: '/signaler', icon: Flag, label: 'Signaler/Commenter' },
-        { href: '/security/scanner', icon: QrCode, label: 'Scanner QR' }
-      ];
-    }
-
-    if (user?.role === 'artisan') {
-      return [
-        { href: '/dashboard', icon: Home, label: t('dashboard') },
-        { href: '/messages', icon: MessageCircle, label: 'Messages' },
-        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
-        { href: '/artisan/orders', icon: Calendar, label: 'Mes Commandes' },
-        { href: '/artisan/products', icon: ShoppingBag, label: 'Mes Produits' },
-        { href: '/artisan/profile', icon: Building, label: 'Mon Échoppe' },
-        { href: '/admin/statistics', icon: BarChart3, label: 'Statistiques' },
+        { href: '/agencies', icon: Plane, label: 'Agences de Voyage' },
+        { href: '/artisans', icon: Palette, label: 'Artisans' },
         { href: '/history', icon: BookOpen, label: t('history') },
-        { href: '/profile', icon: User, label: 'Mon Profil' }
+        { href: '/map', icon: Map, label: t('map') },
       ];
     }
 
-    if (user?.role === 'museum') {
+    // --- 🛠️ Admin Role ---
+    if (user?.role === 'admin') {
       return [
-        { href: '/dashboard', icon: Home, label: t('dashboard') },
-        { href: '/messages', icon: MessageCircle, label: 'Messages' },
-        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
-        { href: '/museum/exhibitions', icon: Calendar, label: 'Expositions' },
-        { href: '/museum/collections', icon: Palette, label: 'Collections' },
-        { href: '/museum/tickets', icon: Ticket, label: 'Billetterie' },
-        { href: '/museum/profile', icon: Building, label: 'Profil Musée' },
-        { href: '/history', icon: BookOpen, label: t('history') },
-        { href: '/profile', icon: User, label: 'Mon Profil' }
+        { section: 'ADMINISTRATION', items: [
+          { href: '/dashboard', icon: Home, label: 'Tableau de Bord' },
+          { href: '/admin/validation', icon: CheckCircle, label: 'Validation' },
+          { href: '/admin/moderation', icon: MessageSquare, label: 'Modération' },
+          { href: '/admin/users', icon: UserCog, label: 'Utilisateurs' },
+          { href: '/admin/statistics', icon: BarChart3, label: 'Statistiques Globales' },
+        ]},
+        { section: 'CONTENU', items: [
+          { href: '/admin/articles', icon: FileText, label: 'Articles & Échos' },
+          { href: '/admin/accommodation', icon: Building, label: 'Hébergements' },
+          { href: '/admin/restaurants', icon: Utensils, label: 'Restaurants' },
+          { href: '/admin/agencies', icon: Plane, label: 'Agences' },
+        ]}
       ];
     }
 
-    return commonItems;
+    // --- 🏨 Accommodation / Hotel Role ---
+    if (user?.role === 'hotel') {
+      // Logic for dynamic label (simulated here)
+      const isHotel = true; // In real use, check user data
+      
+      return [
+        { section: 'PILOTAGE', items: [
+          { href: '/dashboard', icon: Home, label: 'Tableau de Bord' },
+          { href: '/messages', icon: MessageCircle, label: 'Messages' },
+        ]},
+        { section: 'GESTION LOCATIVE', items: [
+          { href: '/establishment/bookings', icon: Calendar, label: 'Réservations' },
+          { href: '/establishment/rooms', icon: Bed, label: isHotel ? 'Chambres & Suites' : 'Mes Logements' },
+        ]},
+        { section: 'VISIBILITÉ & RÉSEAU', items: [
+          { href: '/establishment/profile', icon: Building, label: 'Profil Public' },
+          { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
+          { href: '/echos-senegal', icon: Newspaper, label: 'Publier un Écho' },
+        ]},
+        { section: 'COMPTE', items: [
+          { href: '/profile', icon: User, label: 'Mon Compte' },
+          { href: '/history', icon: BookOpen, label: 'Aide & Support' },
+        ]}
+      ];
+    }
+
+    // --- 🍽️ Restaurant Role ---
+    if (user?.role === 'restaurant') {
+      return [
+        { section: 'PILOTAGE', items: [
+          { href: '/dashboard', icon: Home, label: 'Tableau de Bord' },
+          { href: '/messages', icon: MessageCircle, label: 'Messages' },
+        ]},
+        { section: 'SERVICE', items: [
+          { href: '/establishment/bookings', icon: Calendar, label: 'Réservations Tables' },
+          { href: '/establishment/menu', icon: UtensilsCrossed, label: 'Carte & Menu' },
+        ]},
+        { section: 'VISIBILITÉ', items: [
+          { href: '/establishment/profile', icon: Building, label: 'Profil Restaurant' },
+          { href: '/establishment/reviews', icon: Star, label: 'Avis Clients' },
+        ]}
+      ];
+    }
+
+    // --- ✈️ Agency Role ---
+    if (user?.role === 'agency') {
+      return [
+        { section: 'PILOTAGE', items: [
+          { href: '/dashboard', icon: Home, label: 'Tableau de Bord' },
+          { href: '/messages', icon: MessageCircle, label: 'Messages' },
+        ]},
+        { section: 'OFFRES', items: [
+          { href: '/agency/bookings', icon: Calendar, label: 'Réservations Clients' },
+          { href: '/establishment/offers', icon: Plane, label: 'Nos Circuits & Offres' },
+        ]},
+        { section: 'PROFIL', items: [
+          { href: '/agency/profile', icon: Building, label: 'Profil Agence' },
+          { href: '/agency/reviews', icon: Star, label: 'Avis Clients' },
+        ]}
+      ];
+    }
+
+    // --- 🌍 Default / Tourist (User) Role ---
+    return [
+      { section: 'PILOTAGE', items: [
+        { href: '/dashboard', icon: Home, label: 'Tableau de Bord' },
+        { href: '/messages', icon: MessageCircle, label: 'Mes Messages' },
+      ]},
+      { section: 'DÉCOUVRIR LE SÉNÉGAL', items: [
+        { href: '/echos-senegal', icon: Newspaper, label: 'Échos du Sénégal' },
+        { href: '/videos', icon: Video, label: 'Vidéos Discover' },
+        { href: '/events', icon: Calendar, label: 'Événements' },
+        { href: '/accommodation', icon: Bed, label: 'Hébergements' },
+        { href: '/restaurants', icon: Utensils, label: 'Restaurants' },
+        { href: '/agencies', icon: Plane, label: 'Agences de Voyage' },
+        { href: '/guides', icon: Users, label: 'Guides Locaux' },
+        { href: '/artisans', icon: Palette, label: 'Artisans & Boutiques' },
+      ]},
+      { section: 'MON VOYAGE', items: [
+        { href: '/mes-tickets', icon: Ticket, label: 'Mes Tickets & Résas' },
+        { href: '/history', icon: BookOpen, label: 'Historique de Visite' },
+        { href: '/map', icon: Map, label: 'Carte Interactive' },
+      ]},
+      { section: 'COMPTE', items: [
+        { href: '/profile', icon: User, label: 'Mon Profil' },
+        { href: '/signaler', icon: Flag, label: 'Signaler un Problème' },
+      ]}
+    ];
   }, [user, t]);
 
   if (location.pathname === '/auth/login' || location.pathname === '/auth/register') {
@@ -218,37 +197,62 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }
           </div>
         )}
 
-        <div className="px-4 space-y-1">
-          {menuItems.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.href;
-            const isAdminSection = 'isAdminSection' in item ? item.isAdminSection : false;
-            const prevItem = index > 0 ? menuItems[index - 1] : null;
-            const showSeparator = isAdminSection && (!prevItem || !('isAdminSection' in prevItem) || !prevItem.isAdminSection);
+        <div className="px-4 space-y-7">
+          {menuItems.map((sectionOrItem, sIndex) => {
+            if ('section' in sectionOrItem) {
+              return (
+                <div key={sIndex} className="space-y-2">
+                  <h3 className="px-3 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{sectionOrItem.section}</h3>
+                  <div className="space-y-1">
+                    {sectionOrItem.items.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = location.pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          to={item.href}
+                          onClick={onClose}
+                          className={cn(
+                            'flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all group',
+                            isActive
+                              ? 'bg-[#2D1B08] text-white font-black shadow-xl shadow-[#2D1B08]/10'
+                              : 'text-[#5D4037]/70 hover:bg-gray-50 hover:text-[#2D1B08]'
+                          )}
+                        >
+                          <Icon size={18} className={cn(
+                            "transition-transform group-hover:scale-110",
+                            isActive ? "text-[#F2A900]" : "text-[#5D4037]/40"
+                          )} />
+                          <span className="text-[11px] font-bold tracking-tight uppercase">{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            }
 
+            // Fallback for simple items (guests)
+            const Icon = sectionOrItem.icon;
+            const isActive = location.pathname === sectionOrItem.href;
             return (
-              <div key={item.href}>
-                {showSeparator && (
-                  <div className="my-2 border-t border-gray-100 mx-2"></div>
+              <Link
+                key={sectionOrItem.href}
+                to={sectionOrItem.href}
+                onClick={onClose}
+                className={cn(
+                  'flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all group',
+                  isActive
+                    ? 'bg-[#2D1B08] text-white font-black shadow-xl shadow-[#2D1B08]/10'
+                    : 'text-[#5D4037]/70 hover:bg-gray-50 hover:text-[#2D1B08]'
                 )}
-                <Link
-                  to={item.href}
-                  onClick={onClose}
-                  className={cn(
-                    'flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all group',
-                    isActive
-                      ? 'bg-[#F2A900]/10 text-[#2D1B08] font-black'
-                      : 'text-[#5D4037]/70 hover:bg-gray-50 hover:text-[#2D1B08]',
-                    isAdminSection && 'ml-2'
-                  )}
-                >
-                  <Icon size={18} className={cn(
-                    "transition-transform group-hover:scale-110",
-                    isActive ? "text-[#F2A900]" : "text-[#5D4037]/40"
-                  )} />
-                  <span className="text-xs font-bold tracking-tight uppercase">{item.label}</span>
-                </Link>
-              </div>
+              >
+                <Icon size={18} className={cn(
+                  "transition-transform group-hover:scale-110",
+                  isActive ? "text-[#F2A900]" : "text-[#5D4037]/40"
+                )} />
+                <span className="text-[11px] font-bold tracking-tight uppercase">{sectionOrItem.label}</span>
+              </Link>
             );
           })}
         </div>

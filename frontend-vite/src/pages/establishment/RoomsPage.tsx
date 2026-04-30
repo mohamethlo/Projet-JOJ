@@ -1,34 +1,34 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import {
-  Plus,
-  Search,
+import { 
+  Plus, 
+  Minus,
+  Search, 
+  Filter, 
+  Bed, 
+  Trash2, 
   Edit,
-  Trash2,
-  Users,
-  Wifi,
-  Tv,
-  Car,
-  Coffee,
-  Waves,
-  ArrowLeft,
-  LayoutGrid,
-  List as ListIcon,
+  Edit2, 
+  CheckCircle2, 
   ChevronRight,
-  Sparkles,
-  Camera,
-  Settings2,
-  MoreVertical,
-  CheckCircle2,
+  TrendingUp,
+  Calendar,
+  Eye,
+  Info,
   Clock,
   AlertTriangle,
   Building,
-  Bed
+  ArrowLeft,
+  LayoutGrid,
+  List as ListIcon,
+  Users,
+  Wifi,
+  Tv,
+  Sparkles,
+  Coffee,
+  Waves,
+  Camera,
+  Settings2,
+  MoreVertical
 } from 'lucide-react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -47,52 +47,65 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
+import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import StatCard from '@/components/dashboard/StatCard';
 
 const ROOM_EQUIPMENT = [
-  { 
-    category: 'Confort de base', 
-    items: ['Lit', 'Linge de lit', 'Serviettes', 'Armoire / penderie', 'Table / bureau', 'Chaise'] 
+  {
+    category: 'Confort de base',
+    items: ['Lit', 'Linge de lit', 'Serviettes', 'Armoire / penderie', 'Table / bureau', 'Chaise']
   },
-  { 
-    category: 'Climatisation & ventilation', 
-    items: ['Climatisation', 'Ventilateur', 'Chauffage'] 
+  {
+    category: 'Cuisine & Alimentation',
+    items: ['Cuisine équipée', 'Réfrigérateur', 'Micro-ondes', 'Cuisinière', 'Bouilloire', 'Vaisselle', 'Table manger']
   },
-  { 
-    category: 'Équipements électroniques', 
-    items: ['Télévision', 'Télévision écran plat', 'Chaînes satellite', 'Prises électriques accessibles'] 
+  {
+    category: 'Climatisation & Ventilation',
+    items: ['Climatisation', 'Ventilateur', 'Chauffage']
   },
-  { 
-    category: 'Connectivité', 
-    items: ['Wifi'] 
+  {
+    category: 'Électronique & Connectivité',
+    items: ['Télévision écran plat', 'Chaînes satellite', 'Wifi haut débit', 'Prises accessibles']
   },
-  { 
-    category: 'Équipements complémentaires', 
-    items: ['Bouilloire électrique', 'Plateau de courtoisie', 'Minibar', 'Réfrigérateur', 'Micro-ondes', 'Coin repas', 'Table à manger'] 
+  {
+    category: 'Salle de bain',
+    items: ['Douche', 'Baignoire', 'Baignoire spa', 'Articles de toilette', 'Sèche-cheveux', 'Peignoir']
   },
-  { 
-    category: 'Salle de bain', 
-    items: ['Douche', 'Baignoire', 'Toilettes', 'Papier toilette', 'Serviettes (SDB)', 'Articles de toilette', 'Sèche-cheveux', 'Peignoir', 'Chaussons', 'Bidet', 'Baignoire spa'] 
+  {
+    category: 'Extérieur & Vue',
+    items: ['Balcon', 'Terrasse', 'Piscine privée', 'Vue mer', 'Vue jardin']
   },
-  { 
-    category: 'Extérieur & Vue', 
-    items: ['Balcon', 'Terrasse', 'Vue mer', 'Vue jardin', 'Vue ville'] 
-  },
-  { 
-    category: 'Sécurité', 
-    items: ['Coffre-fort'] 
+  {
+    category: 'Sécurité & Services',
+    items: ['Coffre-fort', 'Gardien', 'Caméra surveillance', 'Machine à laver', 'Fer à repasser']
   }
 ];
 
-const ROOM_TYPES = ['Simple', 'Double', 'Twin', 'Triple', 'Familiale', 'Suite', 'Dortoir'];
+const ROOM_TYPES = [
+  'Chambre Simple',
+  'Chambre Double',
+  'Suite Deluxe',
+  'Appartement',
+  'Villa',
+  'Résidence',
+  'Chambre privée',
+  'Dortoir',
+  'Studio'
+];
 const BED_TYPES = ['Simple', 'Double', 'Queen', 'King'];
 const VIEW_TYPES = ['Mer', 'Ville', 'Jardin', 'Piscine', 'Montagne'];
 
@@ -110,6 +123,13 @@ const RoomsPage: React.FC = () => {
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  // 🏨 Adaptive Logic
+  const [establishmentType, setEstablishmentType] = useState<'hotel' | 'villa'>('hotel');
+  
+  const isIndividual = establishmentType === 'villa';
+  const termSingular = isIndividual ? 'Logement' : 'Chambre';
+  const termPlural = isIndividual ? 'Logements' : 'Chambres';
+
   // Form State
   const [formImages, setFormImages] = useState<string[]>(['']);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -121,8 +141,14 @@ const RoomsPage: React.FC = () => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('25,000');
   const [capacity, setCapacity] = useState(2);
+  
+  // 🏠 Villa/Appart Specific State
+  const [nbChambres, setNbChambres] = useState(1);
+  const [nbSdbPrivatives, setNbSdbPrivatives] = useState(1);
+  const [nbSalons, setNbSalons] = useState(1);
+  const [surface, setSurface] = useState('');
 
-  const [rooms, setRooms] = useState([
+  const [rooms, setRooms] = useState<any[]>([
     {
       id: '1',
       number: '101',
@@ -253,14 +279,14 @@ const RoomsPage: React.FC = () => {
       setRooms([...rooms, roomData]);
     }
 
-    toast.success(isEditing ? 'Chambre mise à jour !' : 'Nouvelle chambre ajoutée !');
+    toast.success(isEditing ? `${termSingular} mise à jour !` : `Nouveau ${termSingular.toLowerCase()} ajouté !`);
     setIsDialogOpen(false);
   };
 
   const handleDeleteRoom = (id: string) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette chambre ?')) {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer ce ${termSingular.toLowerCase()} ?`)) {
       setRooms(rooms.filter(room => room.id !== id));
-      toast.error('Chambre supprimée.');
+      toast.error(`${termSingular} supprimé.`);
     }
   };
 
@@ -294,7 +320,25 @@ const RoomsPage: React.FC = () => {
     <div className="min-h-screen bg-[#FDFCFB] pb-20 animate-in fade-in duration-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         
-        {/* 🏛️ Premium Header */}
+        {/* 🧪 Test Switcher (Temporary) */}
+        <div className="mb-6 flex justify-center">
+          <div className="bg-white p-1 rounded-xl shadow-sm border flex gap-1">
+            <Button 
+              variant={!isIndividual ? 'default' : 'ghost'} 
+              size="sm" 
+              onClick={() => setEstablishmentType('hotel')}
+              className={cn("rounded-lg text-[10px] font-black uppercase", !isIndividual && "bg-[#2D1B08]")}
+            >MODE HÔTEL</Button>
+            <Button 
+              variant={isIndividual ? 'default' : 'ghost'} 
+              size="sm" 
+              onClick={() => setEstablishmentType('villa')}
+              className={cn("rounded-lg text-[10px] font-black uppercase", isIndividual && "bg-[#2D1B08]")}
+            >MODE VILLA / APPART</Button>
+          </div>
+        </div>
+        
+        {/* 🏔️ Page Header */}
         <div className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-[#2D1B08] via-[#5D4037] to-[#2D1B08] p-8 md:p-14 text-white shadow-2xl mb-12">
           <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#F2A900]/10 to-transparent pointer-events-none" />
           <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#F2A900]/5 rounded-full blur-[100px]" />
@@ -308,14 +352,17 @@ const RoomsPage: React.FC = () => {
                   </Button>
                 </Link>
                 <Badge className="bg-[#F2A900] text-[#2D1B08] font-black uppercase tracking-widest text-[10px] px-3 border-none">
-                  PATRIMOINE & HÉBERGEMENT
+                  GESTION INVENTAIRE
                 </Badge>
               </div>
               <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase leading-[0.85]">
-                INVENTAIRE DES <br /> <span className="text-[#F2A900]">UNITÉS .</span>
+                VOS <br /> <span className="text-[#F2A900]">{termPlural.toUpperCase()} .</span>
               </h1>
               <p className="text-white/60 font-medium italic text-sm md:text-lg max-w-xl">
-                Gérez vos unités, optimisez vos tarifs et assurez une qualité de séjour irréprochable pour tous types d'hébergements.
+                {isIndividual 
+                  ? "Gérez vos propriétés, ajustez vos tarifs et optimisez la visibilité de vos logements."
+                  : "Optimisez l'occupation de vos chambres, gérez les types d'unités et vos tarifs saisonniers."
+                }
               </p>
             </div>
             
@@ -323,7 +370,7 @@ const RoomsPage: React.FC = () => {
               onClick={handleAddRoom}
               className="bg-[#F2A900] hover:bg-[#D49400] text-[#2D1B08] font-black h-14 px-8 rounded-2xl shadow-xl shadow-[#F2A900]/20 transition-all hover:scale-105"
             >
-              <Plus className="mr-3 h-5 w-5" /> NOUVELLE UNITÉ
+              <Plus className="mr-3 h-5 w-5" /> {isIndividual ? `AJOUTER UN ${termSingular.toUpperCase()}` : `AJOUTER UNE ${termSingular.toUpperCase()}`}
             </Button>
           </div>
         </div>
@@ -482,10 +529,12 @@ const RoomsPage: React.FC = () => {
                    <Bed size={18} strokeWidth={3} />
                 </div>
                 <div>
-                   <h2 className="text-sm font-black text-white uppercase tracking-widest">
-                      {isEditing ? `CHAMBRE ${roomNumber}` : 'NOUVEL UNITÉ'}
-                   </h2>
-                   <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest">Configuration de l'hébergement</p>
+                   <DialogTitle className="text-sm font-black text-white uppercase tracking-widest">
+                      {isEditing ? `${termSingular.toUpperCase()} ${roomNumber}` : `NOUVEAU ${termSingular.toUpperCase()}`}
+                   </DialogTitle>
+                   <DialogDescription className="text-[9px] font-bold text-white/40 uppercase tracking-widest">
+                      Configuration détaillée de votre hébergement Discovery.
+                   </DialogDescription>
                 </div>
              </div>
              <Badge className="bg-[#F2A900]/10 text-[#F2A900] border border-[#F2A900]/20 font-black uppercase tracking-widest text-[8px] px-2 py-0.5">
@@ -496,8 +545,8 @@ const RoomsPage: React.FC = () => {
           <div className="p-5 bg-white space-y-5 overflow-y-auto flex-grow scrollbar-thin scrollbar-thumb-gray-200">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Numéro</Label>
-                <Input value={roomNumber} onChange={(e) => setRoomNumber(e.target.value)} placeholder="Ex: 101" className="h-10 rounded-xl bg-gray-50 border-none font-bold text-xs" />
+                <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">{isIndividual ? 'Nom du Logement' : 'Numéro'}</Label>
+                <Input value={roomNumber} onChange={(e) => setRoomNumber(e.target.value)} placeholder={isIndividual ? "Ex: Villa Océan" : "Ex: 101"} className="h-10 rounded-xl bg-gray-50 border-none font-bold text-xs" />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Type</Label>
@@ -513,6 +562,58 @@ const RoomsPage: React.FC = () => {
                 </Select>
               </div>
             </div>
+
+            {isIndividual && (
+              <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="flex items-center gap-2 mb-2">
+                   <div className="h-px flex-1 bg-gray-100" />
+                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em]">Composition du Logement</span>
+                   <div className="h-px flex-1 bg-gray-100" />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Superficie Totale (m²)</Label>
+                    <Input value={surface} onChange={(e) => setSurface(e.target.value)} placeholder="Ex: 150" className="h-10 rounded-xl bg-gray-50 border-none font-bold text-xs" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Nombre de Salons</Label>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg border-none bg-gray-100 text-[#2D1B08]" onClick={() => setNbSalons(Math.max(0, nbSalons - 1))}><Minus size={12} /></Button>
+                      <span className="w-8 text-center font-black text-xs">{nbSalons}</span>
+                      <Button variant="outline" size="icon" className="h-8 w-8 rounded-lg border-none bg-gray-100 text-[#2D1B08]" onClick={() => setNbSalons(nbSalons + 1)}><Plus size={12} /></Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5 p-3 rounded-xl bg-emerald-50/50 border border-emerald-100/50">
+                    <Label className="text-[9px] font-black text-emerald-700 uppercase tracking-widest block mb-2">Chambres (Total)</Label>
+                    <div className="flex items-center justify-between">
+                       <span className="text-xl font-black text-emerald-900">{nbChambres}</span>
+                       <div className="flex gap-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7 rounded-md hover:bg-emerald-100" onClick={() => setNbChambres(Math.max(1, nbChambres - 1))}><Minus size={10} /></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 rounded-md hover:bg-emerald-100" onClick={() => setNbChambres(nbChambres + 1)}><Plus size={10} /></Button>
+                       </div>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 p-3 rounded-xl bg-blue-50/50 border border-blue-100/50">
+                    <Label className="text-[9px] font-black text-blue-700 uppercase tracking-widest block mb-2">Salles de bain (Privées)</Label>
+                    <div className="flex items-center justify-between">
+                       <span className="text-xl font-black text-blue-900">{nbSdbPrivatives}</span>
+                       <div className="flex gap-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7 rounded-md hover:bg-blue-100" onClick={() => setNbSdbPrivatives(Math.max(0, nbSdbPrivatives - 1))}><Minus size={10} /></Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 rounded-md hover:bg-blue-100" onClick={() => setNbSdbPrivatives(Math.min(nbChambres, nbSdbPrivatives + 1))}><Plus size={10} /></Button>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="text-[9px] font-bold text-gray-400 italic">
+                  Note: {nbChambres - nbSdbPrivatives} chambre(s) utiliseront une salle de bain commune ou externe.
+                </p>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">

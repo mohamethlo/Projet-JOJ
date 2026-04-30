@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 import {
   Select,
@@ -113,40 +114,41 @@ const AccommodationPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FFFDFB]">
       {/* Hero Banner */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#1565C0] via-[#1976D2] to-[#0D47A1] text-white">
-        <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
-          <div className="absolute top-4 right-1/4 text-7xl rotate-12 select-none">🏨</div>
-          <div className="absolute bottom-2 left-1/3 text-5xl -rotate-6 select-none">🏖️</div>
-          <div className="absolute top-2 left-10 text-4xl rotate-3 select-none">🛎️</div>
-          <div className="absolute bottom-4 right-10 text-4xl -rotate-12 select-none">🏊</div>
-        </div>
-        <div className="relative container mx-auto px-4 py-8 sm:py-12">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="bg-white/20 backdrop-blur-sm p-2.5 rounded-2xl flex-shrink-0">
-              <Hotel className="h-7 w-7 text-white" />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight truncate">
-                Hébergement
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#2D1B08] via-[#5D4037] to-[#2D1B08] text-white">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#F2A900]/10 to-transparent pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#F2A900]/5 rounded-full blur-[100px]" />
+        
+        <div className="absolute top-4 right-1/4 text-7xl rotate-12 select-none opacity-10">🏨</div>
+        <div className="absolute bottom-2 left-1/3 text-5xl -rotate-6 select-none opacity-10">🏖️</div>
+        
+        <div className="relative container mx-auto px-4 py-12 sm:py-20">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="space-y-4 z-10 relative">
+               <Badge className="bg-[#F2A900] text-[#2D1B08] font-black uppercase tracking-widest text-[10px] px-3 border-none">
+                SÉJOURS PREMIUM
+               </Badge>
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9]">
+                Hébergements <span className="text-[#F2A900]">.</span>
               </h1>
-              <p className="text-white/80 text-xs sm:text-sm font-medium mt-0.5 line-clamp-1">
-                Hôtels, auberges, villas et plus encore au Sénégal
+              <p className="text-white/60 font-medium italic text-sm sm:text-lg max-w-xl">
+                Découvrez notre sélection d'hôtels de luxe, auberges authentiques, villas privées et résidences au Sénégal.
               </p>
             </div>
-          </div>
-          <div className="flex flex-wrap gap-3 mt-6">
-            {['Hôtel', 'Auberge', 'Villa', 'Appartement', 'Résidence'].map((type) => (
-              <button
-                key={type}
-                onClick={() => setSelectedType(type)}
-                className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all ${selectedType === type
-                  ? 'bg-white text-blue-700 border-white'
-                  : 'bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30'
-                  }`}
-              >
-                {type}
-              </button>
-            ))}
+            
+            <div className="flex flex-wrap gap-2 z-10 relative max-w-md">
+              {['Hôtel', 'Auberge', 'Villa', 'Appartement', 'Résidence'].map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setSelectedType(type)}
+                  className={`text-[10px] font-black uppercase tracking-widest px-4 py-3 rounded-2xl border transition-all duration-300 ${selectedType === type
+                    ? 'bg-[#F2A900] text-[#2D1B08] border-[#F2A900] shadow-xl shadow-[#F2A900]/20 scale-105'
+                    : 'bg-white/5 backdrop-blur-md text-white border-white/10 hover:bg-white/10 hover:border-white/20'
+                    }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -156,30 +158,30 @@ const AccommodationPage: React.FC = () => {
           {/* Controls */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <Badge className="bg-blue-100 text-blue-700 border-blue-200 font-bold text-sm px-4 py-1.5">
-                <Hotel className="h-3.5 w-3.5 mr-1.5" />
-                {sortedAccommodations.length} hébergement(s)
+              <Badge className="bg-[#EBE3D5] text-[#2D1B08] font-black uppercase tracking-widest text-[10px] px-4 py-2 border-none">
+                <Hotel className="h-3.5 w-3.5 mr-1.5 text-[#F2A900]" />
+                {sortedAccommodations.length} établissement(s)
               </Badge>
               {hasActiveFilters && (
-                <button onClick={clearFilters} className="text-blue-500 hover:text-blue-700 font-bold text-xs flex items-center gap-1">
-                  <X className="h-3.5 w-3.5" />Effacer les filtres
+                <button onClick={clearFilters} className="text-[#F2A900] hover:text-[#D49400] font-black uppercase tracking-widest text-[9px] flex items-center gap-1 transition-colors">
+                  <X className="h-3.5 w-3.5" />Effacer filtres
                 </button>
               )}
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 bg-white p-1.5 rounded-2xl border border-[#EBE3D5] shadow-sm">
               <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
-                className={viewMode === 'grid' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'border-[#EBE3D5] text-[#5D4037]'}
+                className={cn("rounded-xl h-10 w-10 p-0", viewMode === 'grid' ? 'bg-[#2D1B08] text-[#F2A900]' : 'text-[#5D4037]/50 hover:text-[#2D1B08]')}
               >
                 <Grid3X3 className="h-4 w-4" />
               </Button>
               <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('list')}
-                className={viewMode === 'list' ? 'bg-[#1B5E20] hover:bg-[#144718] text-white' : 'border-[#EBE3D5] text-[#5D4037]'}
+                className={cn("rounded-xl h-10 w-10 p-0", viewMode === 'list' ? 'bg-[#2D1B08] text-[#F2A900]' : 'text-[#5D4037]/50 hover:text-[#2D1B08]')}
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -324,7 +326,7 @@ const AccommodationPage: React.FC = () => {
             {/* Liste des établissements */}
             {sortedAccommodations.length > 0 ? (
               <div className={`grid gap-8 ${viewMode === 'grid'
-                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+                ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
                 : 'grid-cols-1'
                 }`}>
                 {sortedAccommodations.map((accommodation) => (
@@ -336,17 +338,18 @@ const AccommodationPage: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <Card className="p-12 text-center border-2 border-[#EBE3D5] border-dashed bg-white shadow-none">
-                <div className="text-[#5D4037]">
-                  <Building className="h-16 w-16 mx-auto mb-4 text-[#EBE3D5]" />
-                  <h3 className="text-xl font-bold mb-2 text-[#2D1B08]">Aucun hébergement trouvé</h3>
-                  <p className="font-medium">Essayez de modifier vos critères de recherche ou vos filtres.</p>
+              <Card className="p-16 text-center border-2 border-[#EBE3D5] border-dashed bg-[#FFFDFB] shadow-none rounded-[2.5rem]">
+                <div className="flex flex-col items-center text-[#5D4037]">
+                  <div className="w-24 h-24 bg-[#F2A900]/10 rounded-full flex items-center justify-center mb-6">
+                     <Building className="h-10 w-10 text-[#F2A900]" />
+                  </div>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter mb-3 text-[#2D1B08]">Aucun hébergement trouvé</h3>
+                  <p className="font-medium italic opacity-70 max-w-md text-center">Modifiez vos critères de recherche ou retirez certains filtres pour voir plus de résultats.</p>
                   <Button
-                    variant="outline"
                     onClick={clearFilters}
-                    className="mt-6 border-blue-400 text-blue-600 font-black uppercase tracking-tighter hover:bg-blue-50"
+                    className="mt-8 bg-[#2D1B08] hover:bg-black text-[#F2A900] font-black uppercase tracking-widest text-[10px] h-12 px-8 rounded-2xl shadow-xl transition-all hover:-translate-y-1"
                   >
-                    Réinitialiser les filtres
+                    Réinitialiser la recherche
                   </Button>
                 </div>
               </Card>

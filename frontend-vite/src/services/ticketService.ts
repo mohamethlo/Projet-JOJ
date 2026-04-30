@@ -25,8 +25,8 @@ export const getTickets = async (userId: string, filters: Partial<TicketFilters>
 
     return await response.json();
   } catch (error) {
-    console.error('Erreur dans getTickets:', error);
-    // En cas d'erreur, retourner des données de démonstration pour le développement
+    // En cas d'erreur de connexion, on utilise les données de démo sans polluer la console avec des erreurs critiques
+    console.warn('Backend non disponible (getTickets), utilisation des données de démonstration.');
     return getMockTickets();
   }
 };

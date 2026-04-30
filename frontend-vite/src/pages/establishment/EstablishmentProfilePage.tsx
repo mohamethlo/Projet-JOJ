@@ -36,7 +36,10 @@ import {
     ChevronLeft,
     ChevronRight,
     Plane,
-    Map
+    Map,
+    X,
+    Clock,
+    ShieldCheck
 } from 'lucide-react';
 
 import useProtectedAction from '../../hooks/useProtectedAction';
@@ -524,6 +527,70 @@ const AboutTab: React.FC<{ establishment: any }> = ({ establishment }) => {
                         ))}
                     </div>
                 </div>
+
+                {/* Informations Générales d'Hébergement */}
+                <div className="bg-white rounded-[2rem] p-6 sm:p-8 border-2 border-[#EBE3D5] shadow-sm animate-in fade-in duration-500">
+                    <h3 className="text-xl font-black text-[#2D1B08] uppercase tracking-tighter mb-6 flex items-center gap-2">
+                        <Hotel className="h-5 w-5 text-[#F2A900]" />
+                        Informations sur l'Hébergement
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {/* Horaires */}
+                        <div className="space-y-4">
+                            <h4 className="text-[10px] font-black text-[#5D4037]/70 uppercase tracking-widest flex items-center gap-2">
+                                <Clock className="h-4 w-4 text-[#F2A900]" />
+                                Horaires
+                            </h4>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex items-center justify-between bg-[#FDFCFB] p-3 rounded-xl border border-[#EBE3D5]/50">
+                                    <span className="text-xs font-bold text-[#2D1B08]">Arrivée (Check-in)</span>
+                                    <Badge className="bg-[#1B5E20]/10 text-[#1B5E20] border-none font-black text-[10px]">{establishment.checkIn || '15:00'}</Badge>
+                                </div>
+                                <div className="flex items-center justify-between bg-[#FDFCFB] p-3 rounded-xl border border-[#EBE3D5]/50">
+                                    <span className="text-xs font-bold text-[#2D1B08]">Départ (Check-out)</span>
+                                    <Badge className="bg-[#E11D48]/10 text-[#E11D48] border-none font-black text-[10px]">{establishment.checkOut || '12:00'}</Badge>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Capacité et Disponibilité */}
+                        <div className="space-y-4">
+                            <h4 className="text-[10px] font-black text-[#5D4037]/70 uppercase tracking-widest flex items-center gap-2">
+                                <Users className="h-4 w-4 text-[#F2A900]" />
+                                Capacité
+                            </h4>
+                            <div className="flex flex-col gap-3">
+                                <div className="flex items-center justify-between bg-[#FDFCFB] p-3 rounded-xl border border-[#EBE3D5]/50">
+                                    <span className="text-xs font-bold text-[#2D1B08]">Capacité totale</span>
+                                    <span className="text-xs font-black text-[#F2A900]">{establishment.capacity ? `${establishment.capacity} pers.` : 'Non spécifié'}</span>
+                                </div>
+                                <div className="flex items-center justify-between bg-[#FDFCFB] p-3 rounded-xl border border-[#EBE3D5]/50">
+                                    <span className="text-xs font-bold text-[#2D1B08]">Statut actuel</span>
+                                    <Badge className={`border-none font-black text-[10px] uppercase ${establishment.availability === 'Disponible' || establishment.availability === 'Ouvert' ? 'bg-[#1B5E20] text-white' : 'bg-[#E11D48] text-white'}`}>
+                                        {establishment.availability}
+                                    </Badge>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Politiques ou Équipements généraux */}
+                        <div className="space-y-4 sm:col-span-2">
+                            <h4 className="text-[10px] font-black text-[#5D4037]/70 uppercase tracking-widest flex items-center gap-2">
+                                <ShieldCheck className="h-4 w-4 text-[#F2A900]" />
+                                Règlement
+                            </h4>
+                            <ul className="grid sm:grid-cols-2 gap-2.5">
+                                {(establishment.policies || ['Animaux non admis', 'Non-fumeur', 'Paiement à l\'arrivée']).map((policy: string, idx: number) => (
+                                    <li key={idx} className="flex items-start gap-2.5 text-xs text-[#5D4037] font-bold">
+                                        <Check className="h-3.5 w-3.5 text-[#F2A900] shrink-0 mt-0.5" />
+                                        <span>{policy}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div className="space-y-6">
@@ -658,6 +725,11 @@ const RoomsTab: React.FC<{ establishment: any; performAction: (callback: () => v
 
     return (
         <div className="space-y-6">
+            <h3 className="text-xl font-black text-[#2D1B08] uppercase tracking-tighter mb-4 flex items-center gap-2">
+                <Bed className="h-5 w-5 text-[#F2A900]" />
+                Chambres Disponibles ({establishment.rooms.length})
+            </h3>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {establishment.rooms.map((room: any) => (
                     <Card key={room.id} className="overflow-hidden border-2 border-[#EBE3D5] hover:border-[#F2A900] transition-all group shadow-sm hover:shadow-xl rounded-2xl">
@@ -730,6 +802,7 @@ const RoomsTab: React.FC<{ establishment: any; performAction: (callback: () => v
                     isOpen={!!selectedRoom}
                     onClose={() => setSelectedRoom(null)}
                     room={selectedRoom}
+                    establishment={establishment}
                     onBook={() => handleBookRoom(selectedRoom)}
                 />
             )}
@@ -759,8 +832,9 @@ const RoomDetailsModal: React.FC<{
     isOpen: boolean;
     onClose: () => void;
     room: any;
+    establishment?: any;
     onBook: () => void;
-}> = ({ isOpen, onClose, room, onBook }) => {
+}> = ({ isOpen, onClose, room, establishment, onBook }) => {
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const images = room.images && room.images.length > 0 ? room.images : [room.image];
 
@@ -776,49 +850,50 @@ const RoomDetailsModal: React.FC<{
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-4xl p-0 overflow-hidden bg-white border-none rounded-3xl shadow-2xl h-[90vh] lg:h-auto lg:max-h-[85vh]">
-                <div className="flex flex-col lg:flex-row h-full lg:max-h-[85vh]">
+            <DialogContent aria-describedby={undefined} className="max-w-5xl p-0 overflow-hidden bg-white border-none rounded-3xl shadow-2xl h-[90vh] md:h-[85vh] flex flex-col [&>button]:hidden">
+                <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
                     {/* Visual Section: Image Gallery */}
-                    <div className="w-full lg:w-1/2 relative bg-[#F8F9FA] h-[35vh] sm:h-[45vh] lg:h-auto flex-shrink-0">
+                    <div className="w-full md:w-[40%] relative bg-black h-[35vh] md:h-full flex-shrink-0">
                         <div className="h-full w-full relative overflow-hidden">
                             <img
                                 src={images[activeImageIndex]}
                                 alt={room.name}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover opacity-90 transition-opacity duration-500"
                             />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
 
                             {/* Navigation arrows for images */}
                             {images.length > 1 && (
                                 <>
                                     <button
                                         onClick={() => setActiveImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1))}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all text-[#2D1B08] z-10"
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-md p-2 rounded-full shadow-lg transition-all text-white z-10"
                                     >
-                                        <ChevronLeft className="h-5 w-5" />
+                                        <ChevronLeft className="h-4 w-4" />
                                     </button>
                                     <button
                                         onClick={() => setActiveImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0))}
-                                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all text-[#2D1B08] z-10"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-md p-2 rounded-full shadow-lg transition-all text-white z-10"
                                     >
-                                        <ChevronRight className="h-5 w-5" />
+                                        <ChevronRight className="h-4 w-4" />
                                     </button>
                                 </>
                             )}
 
                             {/* Image counter */}
-                            <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest z-10">
+                            <div className="absolute top-5 left-5 bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest z-10 border border-white/20">
                                 {activeImageIndex + 1} / {images.length}
                             </div>
                         </div>
 
                         {/* Thumbnails */}
                         {images.length > 1 && (
-                            <div className="absolute bottom-4 left-4 right-16 flex gap-2 overflow-x-auto p-1 scrollbar-hide z-10">
+                            <div className="absolute bottom-5 left-5 right-5 flex gap-2 overflow-x-auto p-1 scrollbar-hide z-10">
                                 {images.map((img: string, idx: number) => (
                                     <button
                                         key={idx}
                                         onClick={() => setActiveImageIndex(idx)}
-                                        className={`relative h-10 w-10 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${activeImageIndex === idx ? 'border-white ring-2 ring-[#F2A900]' : 'border-transparent opacity-70 hover:opacity-100'
+                                        className={`relative h-12 w-16 rounded-xl overflow-hidden border-2 transition-all shrink-0 shadow-lg ${activeImageIndex === idx ? 'border-[#F2A900] scale-105' : 'border-white/50 opacity-60 hover:opacity-100 hover:scale-105'
                                             }`}
                                     >
                                         <img src={img} alt="" className="w-full h-full object-cover" />
@@ -829,74 +904,115 @@ const RoomDetailsModal: React.FC<{
                     </div>
 
                     {/* Info Section */}
-                    <div className="w-full lg:w-1/2 p-6 sm:p-8 flex flex-col overflow-y-auto bg-white">
-                        <div className="flex justify-between items-start mb-2">
-                            <Badge className="bg-[#F2A900]/10 text-[#F2A900] border-none font-black text-[10px] uppercase tracking-widest px-3">
-                                {room.type}
-                            </Badge>
-                            <button onClick={onClose} className="text-[#2D1B08]/40 hover:text-[#2D1B08] p-1 transition-colors">
-                                <X className="h-6 w-6" />
-                            </button>
-                        </div>
-
-                        <DialogHeader className="text-left p-0 mb-4">
-                            <DialogTitle className="text-2xl sm:text-3xl font-black text-[#2D1B08] leading-tight">
-                                {room.name}
-                            </DialogTitle>
-                        </DialogHeader>
-
-                        <div className="flex items-center gap-6 mb-8 text-sm">
-                            <div className="flex items-center gap-2">
-                                <div className="h-8 w-8 rounded-full bg-[#EBE3D5]/30 flex items-center justify-center">
-                                    <Users className="h-4 w-4 text-[#6B4226]" />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] text-[#5D4037]/60 font-black uppercase tracking-tighter">Capacité</p>
-                                    <p className="font-black text-[#2D1B08]">{room.capacity} personnes</p>
-                                </div>
+                    <div className="w-full md:w-[60%] flex flex-col bg-white relative h-[55vh] md:h-full">
+                        <div className="p-6 sm:p-8 flex-1 overflow-y-auto scrollbar-hide">
+                            <div className="flex justify-between items-start mb-4">
+                                <Badge className="bg-gradient-to-r from-[#F2A900] to-[#D49400] text-white border-none font-black text-[10px] uppercase tracking-widest px-4 py-1.5 shadow-md shadow-[#F2A900]/20">
+                                    {room.type}
+                                </Badge>
+                                <button onClick={onClose} className="bg-[#F8F9FA] text-[#2D1B08]/40 hover:text-[#2D1B08] p-2 rounded-full hover:bg-[#EBE3D5] transition-colors">
+                                    <X className="h-5 w-5" />
+                                </button>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <div className="h-8 w-8 rounded-full bg-[#F2A900]/10 flex items-center justify-center">
-                                    <Award className="h-4 w-4 text-[#F2A900]" />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] text-[#5D4037]/60 font-black uppercase tracking-tighter">Prix</p>
-                                    <p className="font-black text-[#F2A900]">{room.price}</p>
-                                </div>
-                            </div>
-                        </div>
 
-                        {/* Description */}
-                        <div className="mb-8">
-                            <h3 className="text-xs font-black text-[#5D4037]/40 uppercase tracking-[0.2em] mb-3">Description</h3>
-                            <p className="text-[#5D4037] leading-relaxed text-sm">
-                                {room.description || "Profitez d'un séjour exceptionnel dans cette chambre élégamment aménagée, alliant confort moderne et charme authentique."}
-                            </p>
-                        </div>
-
-                        {/* Amenities Grid */}
-                        <div className="mb-8">
-                            <h3 className="text-xs font-black text-[#5D4037]/40 uppercase tracking-[0.2em] mb-4">Équipements inclus</h3>
-                            <div className="grid grid-cols-2 gap-3">
-                                {room.amenities.map((amenity: string) => (
-                                    <div key={amenity} className="flex items-center gap-2.5 p-2 rounded-xl bg-gray-50 border border-gray-100">
-                                        <div className="text-[#1B5E20]">
-                                            {getAmenityIcon(amenity)}
-                                        </div>
-                                        <span className="text-xs font-bold text-[#5D4037]">{amenity}</span>
+                            <DialogHeader className="text-left p-0 mb-6">
+                                <DialogTitle className="text-3xl sm:text-4xl font-black text-[#2D1B08] leading-none mb-4">
+                                    {room.name}
+                                </DialogTitle>
+                                <div className="flex flex-wrap items-center gap-4 text-sm">
+                                    <div className="flex items-center gap-2 bg-[#F8F9FA] px-3 py-1.5 rounded-lg border border-[#EBE3D5]">
+                                        <Users className="h-4 w-4 text-[#F2A900]" />
+                                        <span className="font-bold text-[#5D4037] text-xs">Jusqu'à {room.capacity} pers.</span>
                                     </div>
-                                ))}
+                                    <div className="flex items-center gap-2 bg-[#F8F9FA] px-3 py-1.5 rounded-lg border border-[#EBE3D5]">
+                                        <Award className="h-4 w-4 text-[#F2A900]" />
+                                        <span className="font-bold text-[#5D4037] text-xs">Premium</span>
+                                    </div>
+                                </div>
+                            </DialogHeader>
+
+                            <div className="space-y-8">
+                                {/* Description */}
+                                <div>
+                                    <h3 className="text-[10px] font-black text-[#5D4037]/50 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
+                                        <span className="w-4 h-0.5 bg-[#F2A900] rounded-full"></span>
+                                        À propos
+                                    </h3>
+                                    <p className="text-[#5D4037] leading-relaxed text-sm">
+                                        {room.description || "Profitez d'un séjour exceptionnel dans cette chambre élégamment aménagée. Alliant confort moderne, matériaux nobles et charme authentique, cet espace a été pensé pour vous offrir une expérience de détente absolue."}
+                                    </p>
+                                </div>
+
+                                {/* Amenities Grid */}
+                                <div>
+                                    <h3 className="text-[10px] font-black text-[#5D4037]/50 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                                        <span className="w-4 h-0.5 bg-[#F2A900] rounded-full"></span>
+                                        Équipements de la chambre
+                                    </h3>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {room.amenities.map((amenity: string) => (
+                                            <div key={amenity} className="flex items-center gap-3 p-3 rounded-xl bg-[#FDFCFB] border border-[#EBE3D5] hover:border-[#F2A900]/30 transition-colors group">
+                                                <div className="text-[#F2A900] group-hover:scale-110 transition-transform">
+                                                    {getAmenityIcon(amenity)}
+                                                </div>
+                                                <span className="text-xs font-bold text-[#2D1B08]">{amenity}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Informations complémentaires (Check-in/out, Règlement) */}
+                                {establishment && (
+                                    <div className="bg-[#1B5E20]/5 rounded-2xl p-5 border border-[#1B5E20]/10">
+                                        <h3 className="text-[10px] font-black text-[#1B5E20] uppercase tracking-[0.2em] mb-4">Informations Pratiques</h3>
+                                        <div className="grid grid-cols-2 gap-4 mb-5">
+                                            <div className="bg-white p-3 rounded-xl border border-[#1B5E20]/10 shadow-sm">
+                                                <p className="text-[9px] text-[#5D4037]/60 font-black uppercase tracking-tighter mb-1">Check-in</p>
+                                                <p className="font-black text-[#2D1B08] text-sm flex items-center gap-2">
+                                                    <Clock className="h-3.5 w-3.5 text-[#1B5E20]" />
+                                                    {establishment.checkIn || '15:00'}
+                                                </p>
+                                            </div>
+                                            <div className="bg-white p-3 rounded-xl border border-[#1B5E20]/10 shadow-sm">
+                                                <p className="text-[9px] text-[#5D4037]/60 font-black uppercase tracking-tighter mb-1">Check-out</p>
+                                                <p className="font-black text-[#2D1B08] text-sm flex items-center gap-2">
+                                                    <Clock className="h-3.5 w-3.5 text-[#E11D48]" />
+                                                    {establishment.checkOut || '12:00'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-[9px] text-[#5D4037]/60 font-black uppercase tracking-tighter mb-3 flex items-center gap-1.5">
+                                                <ShieldCheck className="h-3.5 w-3.5 text-[#1B5E20]" /> Règlement
+                                            </h4>
+                                            <ul className="grid sm:grid-cols-2 gap-y-2 gap-x-4">
+                                                {(establishment.policies || ['Animaux non admis', 'Non-fumeur', 'Paiement à l\'arrivée']).map((policy: string, idx: number) => (
+                                                    <li key={idx} className="flex items-start gap-2 text-xs text-[#2D1B08] font-semibold">
+                                                        <Check className="h-3.5 w-3.5 text-[#1B5E20] shrink-0 mt-0.5" />
+                                                        <span className="leading-tight">{policy}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
-                        {/* Footer Action */}
-                        <div className="mt-auto pt-6 border-t border-[#EBE3D5]/50">
+                        {/* Footer Action (Sticky) */}
+                        <div className="p-6 bg-white border-t border-[#EBE3D5] shrink-0 z-10 drop-shadow-[0_-4px_16px_rgba(0,0,0,0.05)]">
+                            <div className="flex items-center justify-between mb-4">
+                                <div>
+                                    <p className="text-[10px] font-black text-[#5D4037]/60 uppercase tracking-widest">Tarif par nuit</p>
+                                    <p className="text-2xl font-black text-[#2D1B08]">{room.price}</p>
+                                </div>
+                            </div>
                             <Button
                                 onClick={onBook}
-                                className="w-full bg-[#1B5E20] hover:bg-[#15490F] text-white font-black py-4 sm:py-6 rounded-2xl text-lg transition-all shadow-xl shadow-[#1B5E20]/10 flex items-center justify-center gap-3"
+                                className="w-full bg-[#1B5E20] hover:bg-[#15490F] text-white font-black py-6 rounded-2xl text-base transition-all shadow-xl shadow-[#1B5E20]/20 flex items-center justify-center gap-2"
                             >
                                 <Calendar className="h-5 w-5" />
-                                Réserver pour {room.price}
+                                Réserver cette chambre
                             </Button>
                         </div>
                     </div>

@@ -58,13 +58,19 @@ const ProfilePage: React.FC = () => {
   const [isActive, setIsActive] = useState(true);
   const [checkIn, setCheckIn] = useState('14:00');
   const [checkOut, setCheckOut] = useState('12:00');
+  const [bookingMode, setBookingMode] = useState('En ligne');
+  const [hasKitchen, setHasKitchen] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
   const [cancellationPolicy, setCancellationPolicy] = useState('Annulation gratuite jusqu\'à 24h avant l\'arrivée.');
   const [paymentModes, setPaymentModes] = useState(['Wave', 'Orange Money', 'Cash']);
-  const [amenities, setAmenities] = useState(['WiFi Gratuit', 'Terrasse', 'Parking', 'Climatisation', 'Service Traiteur']);
+  const [amenities, setAmenities] = useState(['WiFi Gratuit', 'Terrasse', 'Parking', 'Climatisation', 'Cuisine équipée']);
   const [newAmenity, setNewAmenity] = useState('');
   const [isWifiFree, setIsWifiFree] = useState(true);
-  const [hasRestaurant, setHasRestaurant] = useState(true);
+  const [hasRestaurant, setHasRestaurant] = useState(false);
   const [hasPool, setHasPool] = useState(true);
+  const [hasSecurity, setHasSecurity] = useState(true);
+  const [hasCleaning, setHasCleaning] = useState(true);
+  const [hasTransport, setHasTransport] = useState(false);
 
 
   const handleAddAmenity = () => {
@@ -188,18 +194,22 @@ const ProfilePage: React.FC = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="category" className="text-sm font-black text-[#2D1B08]">Type d'établissement *</Label>
+                  <Label htmlFor="category" className="text-sm font-black text-[#2D1B08]">Type d'hébergement *</Label>
                   <Select value={category} onValueChange={setCategory}>
                     <SelectTrigger className="mt-2 h-12 rounded-xl border-[#EBE3D5] font-bold">
                       <SelectValue placeholder="Sélectionnez le type" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl border-none shadow-2xl">
-                      <SelectItem value="Restaurant" className="font-bold">Restaurant / Gastronomie</SelectItem>
+                    <SelectContent className="rounded-xl border-none shadow-2xl max-h-[300px] overflow-y-auto">
                       <SelectItem value="Hôtel" className="font-bold">Hôtel Classique</SelectItem>
+                      <SelectItem value="Résidence" className="font-bold">Résidence</SelectItem>
                       <SelectItem value="Auberge" className="font-bold">Auberge / Maison d'Hôtes</SelectItem>
-                      <SelectItem value="Campement" className="font-bold">Campement / Lodge</SelectItem>
-                      <SelectItem value="Appartement" className="font-bold">Appartement / Résidence</SelectItem>
-                      <SelectItem value="Villas" className="font-bold">Villas / Location Saisonnière</SelectItem>
+                      <SelectItem value="Appartement" className="font-bold">Appartement Meublé</SelectItem>
+                      <SelectItem value="Villa" className="font-bold">Villa / Location Saisonnière</SelectItem>
+                      <SelectItem value="Lodge" className="font-bold">Lodge / Écolodge</SelectItem>
+                      <SelectItem value="Campement" className="font-bold">Campement</SelectItem>
+                      <SelectItem value="Studio" className="font-bold">Studio</SelectItem>
+                      <SelectItem value="Dortoir" className="font-bold">Dortoir</SelectItem>
+                      <SelectItem value="Résidence hôtelière" className="font-bold">Résidence Hôtelière</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -399,15 +409,45 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Reservation & Policies */}
+            {/* Booking & Policies */}
             <div className="bg-white rounded-2xl border-2 border-[#EBE3D5] overflow-hidden shadow-sm">
               <div className="p-4 sm:p-6 border-b-2 border-[#EBE3D5]">
                 <h2 className="text-lg sm:text-xl font-black text-[#2D1B08] flex items-center gap-2">
                   <Clock className="h-5 w-5 text-[#F2A900]" />
-                  Paramètres de Réservation
+                  Paramètres de Réservation & Séjour
                 </h2>
               </div>
               <div className="p-4 sm:p-6 space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-black text-[#2D1B08]">Mode de Réservation *</Label>
+                    <Select value={bookingMode} onValueChange={setBookingMode}>
+                      <SelectTrigger className="border-[#EBE3D5] font-bold">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="En ligne">Réservation En Ligne</SelectItem>
+                        <SelectItem value="Contact direct">Contact Direct / WhatsApp</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-black text-[#2D1B08]">Access Cuisine *</Label>
+                    <div className="flex items-center gap-4 h-10">
+                      <Button 
+                        variant={hasKitchen ? 'default' : 'outline'}
+                        onClick={() => setHasKitchen(true)}
+                        className={cn("flex-1 h-10 rounded-xl font-bold text-[10px] uppercase", hasKitchen && "bg-emerald-600")}
+                      >OUI</Button>
+                      <Button 
+                        variant={!hasKitchen ? 'destructive' : 'outline'}
+                        onClick={() => setHasKitchen(false)}
+                        className="flex-1 h-10 rounded-xl font-bold text-[10px] uppercase"
+                      >NON</Button>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="text-sm font-black text-[#2D1B08]">Heure de Check-in</Label>
@@ -422,7 +462,7 @@ const ProfilePage: React.FC = () => {
                 <div className="space-y-2">
                   <Label className="text-sm font-black text-[#2D1B08]">Modes de Paiement Acceptés</Label>
                   <div className="flex flex-wrap gap-2">
-                    {['Wave', 'Orange Money', 'Paypal', 'Carte Bancaire', 'Cash'].map(mode => (
+                    {['Wave', 'Orange Money', 'Cash', 'Carte Bancaire', 'Virement'].map(mode => (
                       <Badge 
                         key={mode}
                         onClick={() => {
@@ -441,12 +481,13 @@ const ProfilePage: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="policy" className="text-sm font-black text-[#2D1B08]">Conditions d'annulation</Label>
+                  <Label htmlFor="policy" className="text-sm font-black text-[#2D1B08]">Règles & Conditions de séjour *</Label>
                   <Textarea
                     id="policy"
                     value={cancellationPolicy}
                     onChange={(e) => setCancellationPolicy(e.target.value)}
-                    className="border-[#EBE3D5] focus:border-[#F2A900] italic text-sm"
+                    placeholder="Précisez vos conditions (annulation, enfants, animaux, bruit...)"
+                    className="border-[#EBE3D5] focus:border-[#F2A900] italic text-sm min-h-[100px]"
                   />
                 </div>
               </div>
@@ -463,9 +504,12 @@ const ProfilePage: React.FC = () => {
               <div className="p-4 sm:p-6 space-y-6">
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {[
-                    { id: 'wifi', label: 'WiFi Haut Débit', state: isWifiFree, setState: setIsWifiFree },
-                    { id: 'resto', label: 'Restaurant', state: hasRestaurant, setState: setHasRestaurant },
+                    { id: 'wifi', label: 'WiFi', state: isWifiFree, setState: setIsWifiFree },
                     { id: 'pool', label: 'Piscine', state: hasPool, setState: setHasPool },
+                    { id: 'parking', label: 'Parking', state: true, setState: () => {} },
+                    { id: 'security', label: 'Sécurité', state: hasSecurity, setState: setHasSecurity },
+                    { id: 'cleaning', label: 'Ménage', state: hasCleaning, setState: setHasCleaning },
+                    { id: 'transport', label: 'Transport', state: hasTransport, setState: setHasTransport },
                   ].map(service => (
                     <div key={service.id} className="flex items-center space-x-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
                       <input 
@@ -522,27 +566,72 @@ const ProfilePage: React.FC = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Certification Discovery Tracker */}
+            <div className="bg-[#2D1B08] rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-[#F2A900]/10 rounded-full -mr-16 -mt-16 blur-2xl" />
+               <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className={cn("h-10 w-10 rounded-full flex items-center justify-center shadow-lg transition-all", isVerified ? "bg-emerald-500" : "bg-[#F2A900]")}>
+                      <Award size={24} className={isVerified ? "text-white" : "text-[#2D1B08]"} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-black uppercase tracking-tighter">Certification Discovery</h3>
+                      <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Gagnez en visibilité & crédibilité</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 mb-8">
+                    <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                       <span>Progression du Badge</span>
+                       <span className="text-[#F2A900]">60%</span>
+                    </div>
+                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                       <div className="h-full bg-gradient-to-r from-[#F2A900] to-[#FFD700] rounded-full w-[60%]" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="flex items-center gap-2 bg-white/5 p-3 rounded-xl border border-white/10">
+                       <Check size={14} className="text-emerald-500" />
+                       <span className="text-[9px] font-bold uppercase tracking-tight text-white/70">Profil Complet</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/5 p-3 rounded-xl border border-white/10">
+                       <Check size={14} className="text-emerald-500" />
+                       <span className="text-[9px] font-bold uppercase tracking-tight text-white/70">Photos HD</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/5 p-3 rounded-xl border border-white/10 opacity-40">
+                       <div className="h-3.5 w-3.5 rounded-full border border-white/50" />
+                       <span className="text-[9px] font-bold uppercase tracking-tight text-white/70">Visite terrain</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/5 p-3 rounded-xl border border-white/10 opacity-40">
+                       <div className="h-3.5 w-3.5 rounded-full border border-white/50" />
+                       <span className="text-[9px] font-bold uppercase tracking-tight text-white/70">Validation Admin</span>
+                    </div>
+                  </div>
+
+                  <Button className="w-full bg-[#F2A900] text-[#2D1B08] hover:bg-[#D49400] font-black uppercase text-xs h-12 rounded-xl shadow-xl shadow-[#F2A900]/10">
+                    DEMANDER LA CERTIFICATION
+                  </Button>
+               </div>
+            </div>
+
             {/* Preview Card */}
-            <div className="bg-gradient-to-br from-[#F2A900] to-[#D49400] rounded-2xl p-6 text-white shadow-lg">
-              <h3 className="text-lg font-black mb-4">Aperçu du profil</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4" />
-                  <span>Badge vérifié actif</span>
+            <div className="bg-white rounded-2xl border-2 border-[#EBE3D5] p-6 text-[#2D1B08] shadow-sm">
+              <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">Aperçu Visiteur</h3>
+              <div className="space-y-4 mb-6">
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-gray-400">Page active</span>
+                  <Badge className="bg-emerald-50 text-emerald-600 border-none rounded-full px-3 py-1 font-black">OUI</Badge>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4" />
-                  <span>Profil public visible</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4" />
-                  <span>Réservations activées</span>
+                <div className="flex justify-between items-center text-sm font-medium">
+                  <span className="text-gray-400">Thème visuel</span>
+                  <Badge variant="outline" className="border-[#2D1B08] text-[#2D1B08] rounded-full px-3 py-1 font-black">TERRE DE SIENNE</Badge>
                 </div>
               </div>
               <Link to="/establishment/1">
-                <Button className="w-full mt-4 bg-white text-[#F2A900] hover:bg-[#FFFDFB] font-black">
+                <Button variant="outline" className="w-full border-[#2D1B08] text-[#2D1B08] hover:bg-[#2D1B08] hover:text-white font-black h-12 rounded-xl transition-all">
                   <Eye className="h-4 w-4 mr-2" />
-                  Voir comme visiteur
+                  VOIR COMME VISITEUR
                 </Button>
               </Link>
             </div>

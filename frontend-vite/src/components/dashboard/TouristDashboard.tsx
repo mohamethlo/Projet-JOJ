@@ -59,6 +59,12 @@ const AI_RECOMMENDED_LOCALS = [
 ];
 
 const TouristDashboard: React.FC<TouristDashboardProps> = ({ user }) => {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="space-y-6 md:space-y-8 pb-12 animate-in fade-in duration-700 min-h-screen">
       {/* 🧭 Explorer's Welcome Header */}
@@ -132,25 +138,27 @@ const TouristDashboard: React.FC<TouristDashboardProps> = ({ user }) => {
         <div className="lg:col-span-1">
           <ChartCard title="Profil d'Exploration" subtitle="Répartition de vos centres d'intérêt">
             <div className="h-[200px] md:h-[250px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={EXPLORATION_STATS}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                    isAnimationActive={false}
-                  >
-                    {EXPLORATION_STATS.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+              {mounted && (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={EXPLORATION_STATS}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                      isAnimationActive={false}
+                    >
+                      {EXPLORATION_STATS.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
             </div>
             <div className="flex flex-col gap-2 mt-4">
               {EXPLORATION_STATS.map((stat, i) => (

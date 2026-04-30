@@ -137,6 +137,11 @@ const GuideManagementPage: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedTour, setSelectedTour] = useState<any>(null);
   const [editMode, setEditMode] = useState<'create' | 'edit'>('create');
+  const [mounted, setMounted] = useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const locations = ['Tous', 'Dakar', 'Saint-Louis', 'Thiès', 'Kaolack', 'Mbour'];
   const statuses = ['Tous', 'Disponible', 'Auto-publié', 'En attente', 'Brouillon', 'Suspendu'];
@@ -191,6 +196,8 @@ const GuideManagementPage: React.FC = () => {
     const matchesStatus = selectedStatus === 'Tous' || tour.status === selectedStatus;
     return matchesSearch && matchesLocation && matchesStatus;
   });
+
+  if (!mounted) return null;
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] pb-20 animate-in fade-in duration-700">
