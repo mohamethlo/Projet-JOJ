@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CheckCircle, UserPlus, Star, Info, MapPin } from 'lucide-react';
+import { CheckCircle, UserPlus, Star, Info, MapPin, Calendar, Users, Phone, Mail, Globe, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import TicketModal from '@/components/tickets/TicketModal';
@@ -64,7 +64,6 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
     }
   });
 
-  // Pre-fill form data if a specific room is selected
   useEffect(() => {
     if (isOpen && accommodation.roomType) {
       setFormData(prev => ({
@@ -79,71 +78,43 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
     }
   }, [isOpen, accommodation]);
 
-  const roomTypes = [
-    'Chambre Standard',
-    'Chambre Supérieure',
-    'Suite',
-    'Chambre Familiale',
-    'Chambre Deluxe',
-    'Villa'
-  ];
-
-  const guestOptions = [
-    '1 personne',
-    '2 personnes',
-    '3 personnes',
-    '4 personnes',
-    '5 personnes',
-    '6 personnes',
-    'Plus de 6 personnes'
-  ];
-
-  const roomOptions = [
-    '1 chambre',
-    '2 chambres',
-    '3 chambres',
-    '4 chambres',
-    'Plus de 4 chambres'
-  ];
+  const guestOptions = ['1 personne', '2 personnes', '3 personnes', '4 personnes', '5 personnes', '6 personnes', 'Plus de 6 personnes'];
+  const roomOptions = ['1 chambre', '2 chambres', '3 chambres', '4 chambres', 'Plus de 4 chambres'];
+  const roomTypes = ['Chambre Standard', 'Chambre Supérieure', 'Suite', 'Chambre Familiale', 'Chambre Deluxe', 'Villa'];
 
   const handleInputChange = (field: string, value: string) => {
     if (field.includes('.')) {
       const [parent, child] = field.split('.');
       setFormData(prev => ({
         ...prev,
-        [parent]: {
-          ...prev[parent as keyof typeof prev],
-          [child]: value
-        }
+        [parent]: { ...prev[parent as keyof typeof prev], [child]: value }
       }));
     } else {
-      setFormData(prev => ({
-        ...prev,
-        [field]: value
-      }));
+      setFormData(prev => ({ ...prev, [field]: value }));
     }
   };
 
   const calculateTotalPrice = () => {
     const basePrice = parseInt(accommodation.price.replace(/[^\d]/g, '')) || 0;
+    if (!formData.bookingDetails.checkIn || !formData.bookingDetails.checkOut) return basePrice;
+    
     const checkInDate = new Date(formData.bookingDetails.checkIn);
     const checkOutDate = new Date(formData.bookingDetails.checkOut);
-    const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+    const nights = Math.max(1, Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24)));
     const rooms = parseInt(formData.bookingDetails.rooms) || 1;
 
     return basePrice * nights * rooms;
   };
 
   const handleSubmit = () => {
-    // Générer les données du ticket
     const totalPrice = calculateTotalPrice();
     const ticket = {
-      id: `ACCOMMODATION-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `ACC-${Date.now()}`,
       type: 'accommodation' as const,
       title: `Réservation - ${accommodation.name}`,
       description: `Séjour du ${formData.bookingDetails.checkIn} au ${formData.bookingDetails.checkOut}`,
       date: formData.bookingDetails.checkIn,
-      time: accommodation.checkIn || '14h00',
+      time: accommodation.checkIn || '14:00',
       location: accommodation.location,
       price: `${totalPrice.toLocaleString()} FCFA`,
       customerName: formData.contactInfo.name,
@@ -152,17 +123,8 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
       status: 'confirmed' as const,
       bookingDate: new Date().toLocaleDateString('fr-FR'),
       qrCode: `QR-${Date.now()}`,
-      additionalInfo: {
-        accommodationName: accommodation.name,
-        checkIn: formData.bookingDetails.checkIn,
-        checkOut: formData.bookingDetails.checkOut,
-        guests: formData.bookingDetails.guests,
-        rooms: formData.bookingDetails.rooms,
-        roomType: formData.bookingDetails.roomType,
-        specialRequests: formData.bookingDetails.specialRequests
-      }
+      additionalInfo: { ...formData.bookingDetails }
     };
-
     setTicketData(ticket);
     setStep(3);
   };
@@ -175,431 +137,268 @@ const AccommodationBookingModal: React.FC<AccommodationBookingModalProps> = ({ i
       additionalInfo: { transportation: '', dietaryRestrictions: '', accessibility: '', celebration: '', additionalServices: '' }
     });
     setTicketData(null);
-    setIsTicketModalOpen(false);
     onClose();
   };
 
-  const handleDialogClose = (open: boolean) => {
-    if (!open) {
-      // Si on est à l'étape 3 (confirmation), on ne ferme pas automatiquement
-      if (step === 3) {
-        return;
-      }
-
-      // Vérifier s'il y a des données saisies
-      const hasData = formData.contactInfo.name || formData.contactInfo.email || formData.contactInfo.phone ||
-        formData.bookingDetails.checkIn || formData.bookingDetails.checkOut || formData.bookingDetails.guests;
-
-      if (hasData) {
-        // Demander confirmation avant de fermer
-        const confirmed = window.confirm(
-          'Vous avez saisi des informations. Êtes-vous sûr de vouloir annuler la réservation ?'
-        );
-        if (!confirmed) {
-          return; // Ne pas fermer si l'utilisateur annule
-        }
-      }
-
-      // Fermer normalement
-      handleClose();
-    }
-  };
-
-  const handleShowTicket = () => {
-    setIsTicketModalOpen(true);
-  };
-
-  const totalPrice = calculateTotalPrice();
-  const nights = formData.bookingDetails.checkIn && formData.bookingDetails.checkOut ?
-    Math.ceil((new Date(formData.bookingDetails.checkOut).getTime() - new Date(formData.bookingDetails.checkIn).getTime()) / (1000 * 60 * 60 * 24)) : 0;
-
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={handleDialogClose}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <UserPlus className="h-5 w-5 text-blue-500" />
-                <span>Réservation - {accommodation.name}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">Étape {step}/3</span>
-                <div className="flex space-x-1">
-                  {[1, 2, 3].map((stepNumber) => (
-                    <div
-                      key={stepNumber}
-                      className={`w-2 h-2 rounded-full ${stepNumber <= step ? 'bg-blue-500' : 'bg-gray-300'
-                        }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-6">
-            {/* Informations sur l'hébergement */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="flex items-start space-x-4">
-                <img
-                  src={accommodation.image}
-                  alt={accommodation.name}
-                  className="w-20 h-20 rounded-lg object-cover"
-                />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg">{accommodation.name}</h3>
-                  <div className="flex items-center space-x-4 text-sm text-gray-600 mt-2">
-                    <div className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{accommodation.location}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                      <span>{accommodation.rating} ({accommodation.reviews} avis)</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-3">
-                    <div className="flex gap-2">
-                      <Badge variant="outline" className="text-blue-600 border-blue-600">
-                        {accommodation.price} {accommodation.type === 'Restaurant' ? 'par personne' : 'par nuit'}
-                      </Badge>
-                      {accommodation.roomName && (
-                        <Badge className="bg-blue-600 text-white border-none shadow-sm animate-pulse">
-                          Réservation spécifique
-                        </Badge>
-                      )}
-                    </div>
-                    <Badge variant="outline" className="text-green-600 border-green-600">
-                      {accommodation.availability}
+      <style>
+        {`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #F2A900;
+            border-radius: 10px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #D49400;
+          }
+        `}
+      </style>
+      <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-none bg-[#FFFDFB] rounded-[2rem] shadow-2xl custom-scrollbar">
+          {/* Header Image/Banner */}
+          <div className="relative h-40 bg-[#2D1B08] overflow-hidden">
+             <div className="absolute inset-0 bg-gradient-to-r from-[#2D1B08] via-[#2D1B08]/80 to-transparent z-10" />
+             <img src={accommodation.image} alt={accommodation.name} className="w-full h-full object-cover opacity-50" />
+             <div className="absolute inset-0 z-20 p-8 flex flex-col justify-end">
+                <div className="flex items-center gap-2 mb-2">
+                    <Badge className="bg-[#F2A900] text-[#2D1B08] font-black uppercase tracking-widest text-[9px] border-none">
+                        Étape {step} sur 3
                     </Badge>
-                  </div>
+                    <div className="flex gap-1.5 ml-2">
+                        {[1, 2, 3].map(s => (
+                            <div key={s} className={`h-1.5 rounded-full transition-all duration-500 ${s === step ? 'w-8 bg-[#F2A900]' : 'w-2 bg-white/20'}`} />
+                        ))}
+                    </div>
                 </div>
-              </div>
-            </div>
+                <DialogTitle className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter leading-none">
+                    {step === 3 ? "Confirmation" : `Réserver votre séjour`}
+                </DialogTitle>
+             </div>
+             <Sparkles className="absolute top-6 right-6 h-8 w-8 text-[#F2A900]/20" />
+          </div>
+
+          <div className="p-8 space-y-8">
+            {/* Summary Card (Floating style) */}
+            {step < 3 && (
+                <div className="relative -mt-16 bg-white p-6 rounded-3xl shadow-2xl border border-[#EBE3D5] z-30">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <div className="h-14 w-14 rounded-2xl overflow-hidden border-2 border-[#F2A900]/20 shadow-inner">
+                                <img src={accommodation.image} className="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                                <h3 className="font-black text-[#2D1B08] uppercase tracking-tighter leading-none mb-1">{accommodation.name}</h3>
+                                <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400">
+                                    <MapPin className="h-3 w-3 text-[#F2A900]" />
+                                    <span>{accommodation.location}</span>
+                                    <Star className="h-3 w-3 fill-[#F2A900] text-[#F2A900] ml-1" />
+                                    <span>{accommodation.rating}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-xl font-black text-[#2D1B08] tracking-tighter">{accommodation.price}</div>
+                            <div className="text-[8px] font-black uppercase tracking-widest text-gray-400">par nuit</div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {step === 1 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Informations personnelles</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name" className="text-sm font-medium">
-                        Nom complet <span className="text-red-500">*</span>
-                      </Label>
+              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-6">
+                  <h3 className="text-xs font-black text-[#2D1B08] uppercase tracking-[0.2em] flex items-center gap-2">
+                    <UserPlus className="h-4 w-4 text-[#F2A900]" />
+                    Vos Coordonnées
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Nom Complet</Label>
                       <Input
-                        id="name"
                         value={formData.contactInfo.name}
                         onChange={(e) => handleInputChange('contactInfo.name', e.target.value)}
-                        placeholder="Votre nom complet"
-                        required
-                        className={!formData.contactInfo.name ? 'border-red-300' : ''}
+                        placeholder="Ex: Moussa Ndiaye"
+                        className="h-12 bg-white rounded-xl border-[#EBE3D5] focus:border-[#F2A900] focus:ring-[#F2A900]/10 font-bold"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="email" className="text-sm font-medium">
-                        Email <span className="text-red-500">*</span>
-                      </Label>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Email professionnel</Label>
                       <Input
-                        id="email"
                         type="email"
                         value={formData.contactInfo.email}
                         onChange={(e) => handleInputChange('contactInfo.email', e.target.value)}
-                        placeholder="votre@email.com"
-                        required
-                        className={!formData.contactInfo.email ? 'border-red-300' : ''}
+                        placeholder="moussa@exemple.com"
+                        className="h-12 bg-white rounded-xl border-[#EBE3D5] focus:border-[#F2A900] focus:ring-[#F2A900]/10 font-bold"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="phone" className="text-sm font-medium">
-                        Téléphone <span className="text-red-500">*</span>
-                      </Label>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Téléphone</Label>
                       <Input
-                        id="phone"
                         type="tel"
                         value={formData.contactInfo.phone}
                         onChange={(e) => handleInputChange('contactInfo.phone', e.target.value)}
                         placeholder="+221 XX XXX XX XX"
-                        required
-                        className={!formData.contactInfo.phone ? 'border-red-300' : ''}
+                        className="h-12 bg-white rounded-xl border-[#EBE3D5] focus:border-[#F2A900] focus:ring-[#F2A900]/10 font-bold"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="nationality">Nationalité</Label>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Nationalité</Label>
                       <Input
-                        id="nationality"
                         value={formData.contactInfo.nationality}
                         onChange={(e) => handleInputChange('contactInfo.nationality', e.target.value)}
-                        placeholder="Votre nationalité"
+                        placeholder="Ex: Sénégalaise"
+                        className="h-12 bg-white rounded-xl border-[#EBE3D5] focus:border-[#F2A900] focus:ring-[#F2A900]/10 font-bold"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="flex justify-between">
-                  <Button variant="outline" onClick={handleClose} className="text-red-600 border-red-600 hover:bg-red-50">
-                    Annuler la réservation
-                  </Button>
+                <div className="flex justify-end pt-4">
                   <Button
                     onClick={() => setStep(2)}
                     disabled={!formData.contactInfo.name || !formData.contactInfo.email || !formData.contactInfo.phone}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-[#2D1B08] hover:bg-black text-[#F2A900] font-black uppercase tracking-widest h-12 px-10 rounded-xl shadow-xl transition-all disabled:opacity-50"
                   >
-                    Suivant
+                    Continuer vers le séjour
                   </Button>
                 </div>
               </div>
             )}
 
             {step === 2 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Détails de la réservation</h3>
-
-                  {/* Information importante */}
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="flex-shrink-0">
-                        <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                          <Info className="text-blue-600 text-sm font-bold">!</Info>
-                        </div>
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-semibold text-blue-800 mb-1">Politique de réservation</h4>
-                        <p className="text-sm text-blue-700">
-                          Annulation gratuite jusqu'à 24h avant l'arrivée.
-                          <strong> Arrivée : {accommodation.checkIn || '14h00'} - Départ : {accommodation.checkOut || '12h00'}</strong>
-                        </p>
-                      </div>
+              <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+                <div className="space-y-6">
+                  <h3 className="text-xs font-black text-[#2D1B08] uppercase tracking-[0.2em] flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-[#F2A900]" />
+                    Détails du Séjour
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Arrivée</Label>
+                      <Input
+                        type="date"
+                        value={formData.bookingDetails.checkIn}
+                        onChange={(e) => handleInputChange('bookingDetails.checkIn', e.target.value)}
+                        className="h-12 bg-white rounded-xl border-[#EBE3D5] focus:border-[#F2A900] font-bold"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Départ</Label>
+                      <Input
+                        type="date"
+                        value={formData.bookingDetails.checkOut}
+                        onChange={(e) => handleInputChange('bookingDetails.checkOut', e.target.value)}
+                        className="h-12 bg-white rounded-xl border-[#EBE3D5] focus:border-[#F2A900] font-bold"
+                      />
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="checkIn">Date d'arrivée *</Label>
-                        <Input
-                          id="checkIn"
-                          type="date"
-                          value={formData.bookingDetails.checkIn}
-                          onChange={(e) => handleInputChange('bookingDetails.checkIn', e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="checkOut">Date de départ *</Label>
-                        <Input
-                          id="checkOut"
-                          type="date"
-                          value={formData.bookingDetails.checkOut}
-                          onChange={(e) => handleInputChange('bookingDetails.checkOut', e.target.value)}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="guests">Nombre d'invités {accommodation.roomName && <span className="text-[10px] text-blue-600 ml-1 font-bold">(Verrouillé)</span>}</Label>
-                        <Select
-                          value={formData.bookingDetails.guests}
-                          onValueChange={(value) => handleInputChange('bookingDetails.guests', value)}
-                          disabled={!!accommodation.roomName}
-                        >
-                          <SelectTrigger className={accommodation.roomName ? "bg-gray-100 cursor-not-allowed border-blue-100" : ""}>
-                            <SelectValue placeholder="Nombre d'invités" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {guestOptions.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="rooms">Nombre de chambres {accommodation.roomName && <span className="text-[10px] text-blue-600 ml-1 font-bold">(Verrouillé)</span>}</Label>
-                        <Select
-                          value={formData.bookingDetails.rooms}
-                          onValueChange={(value) => handleInputChange('bookingDetails.rooms', value)}
-                          disabled={!!accommodation.roomName}
-                        >
-                          <SelectTrigger className={accommodation.roomName ? "bg-gray-100 cursor-not-allowed border-blue-100" : ""}>
-                            <SelectValue placeholder="Nombre de chambres" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {roomOptions.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="roomType">Type de chambre {accommodation.roomName && <span className="text-[10px] text-blue-600 ml-1 font-bold">(Verrouillé)</span>}</Label>
-                      <Select
-                        value={formData.bookingDetails.roomType}
-                        onValueChange={(value) => handleInputChange('bookingDetails.roomType', value)}
-                        disabled={!!accommodation.roomName}
-                      >
-                        <SelectTrigger className={accommodation.roomName ? "bg-gray-100 cursor-not-allowed border-blue-100" : ""}>
-                          <SelectValue placeholder="Sélectionnez le type de chambre" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {roomTypes.map((type) => (
-                            <SelectItem key={type} value={type}>
-                              {type}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Voyageurs</Label>
+                      <Select value={formData.bookingDetails.guests} onValueChange={(v) => handleInputChange('bookingDetails.guests', v)}>
+                        <SelectTrigger className="h-12 rounded-xl border-[#EBE3D5] font-bold"><SelectValue /></SelectTrigger>
+                        <SelectContent>{guestOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                       </Select>
                     </div>
-
-                    <div>
-                      <Label htmlFor="specialRequests">Demandes spéciales</Label>
-                      <Textarea
-                        id="specialRequests"
-                        value={formData.bookingDetails.specialRequests}
-                        onChange={(e) => handleInputChange('bookingDetails.specialRequests', e.target.value)}
-                        placeholder="Préférences alimentaires, besoins d'accessibilité, célébrations spéciales..."
-                        rows={3}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Calcul du prix */}
-                {formData.bookingDetails.checkIn && formData.bookingDetails.checkOut && (
-                  <Card className="border-green-200 bg-green-50">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold text-green-900">Estimation du coût</h4>
-                          <p className="text-sm text-green-700">
-                            {nights} nuit{nights > 1 ? 's' : ''} × {formData.bookingDetails.rooms || '1'} chambre{(formData.bookingDetails.rooms && parseInt(formData.bookingDetails.rooms) > 1) ? 's' : ''}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-xl font-bold text-green-900">
-                            {totalPrice.toLocaleString()} FCFA
-                          </div>
-                          <p className="text-xs text-green-600">
-                            Prix total estimé
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Informations complémentaires</h3>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="transportation">Transport</Label>
-                        <Select value={formData.additionalInfo.transportation} onValueChange={(value) => handleInputChange('additionalInfo.transportation', value)}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Besoin de transport ?" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="none">Pas de transport nécessaire</SelectItem>
-                            <SelectItem value="airport">Transfert aéroport</SelectItem>
-                            <SelectItem value="city">Transport en ville</SelectItem>
-                            <SelectItem value="tour">Transport pour excursions</SelectItem>
-                          </SelectContent>
+                    <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Unités</Label>
+                        <Select value={formData.bookingDetails.rooms} onValueChange={(v) => handleInputChange('bookingDetails.rooms', v)}>
+                            <SelectTrigger className="h-12 rounded-xl border-[#EBE3D5] font-bold"><SelectValue /></SelectTrigger>
+                            <SelectContent>{roomOptions.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                         </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="celebration">Célébration spéciale</Label>
-                        <Input
-                          id="celebration"
-                          value={formData.additionalInfo.celebration}
-                          onChange={(e) => handleInputChange('additionalInfo.celebration', e.target.value)}
-                          placeholder="Anniversaire, lune de miel, etc."
-                        />
-                      </div>
                     </div>
+                    <div className="space-y-2">
+                        <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Catégorie</Label>
+                        <Select value={formData.bookingDetails.roomType} onValueChange={(v) => handleInputChange('bookingDetails.roomType', v)}>
+                            <SelectTrigger className="h-12 rounded-xl border-[#EBE3D5] font-bold"><SelectValue /></SelectTrigger>
+                            <SelectContent>{roomTypes.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
+                        </Select>
+                    </div>
+                  </div>
 
-                    <div>
-                      <Label htmlFor="dietaryRestrictions">Restrictions alimentaires</Label>
-                      <Input
-                        id="dietaryRestrictions"
-                        value={formData.additionalInfo.dietaryRestrictions}
-                        onChange={(e) => handleInputChange('additionalInfo.dietaryRestrictions', e.target.value)}
-                        placeholder="Allergies, régime spécial..."
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="accessibility">Besoins d'accessibilité</Label>
-                      <Input
-                        id="accessibility"
-                        value={formData.additionalInfo.accessibility}
-                        onChange={(e) => handleInputChange('additionalInfo.accessibility', e.target.value)}
-                        placeholder="Mobilité réduite, assistance..."
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="additionalServices">Services supplémentaires</Label>
-                      <Input
-                        id="additionalServices"
-                        value={formData.additionalInfo.additionalServices}
-                        onChange={(e) => handleInputChange('additionalInfo.additionalServices', e.target.value)}
-                        placeholder="Spa, restaurant, excursions..."
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Demandes Spéciales</Label>
+                    <Textarea
+                      value={formData.bookingDetails.specialRequests}
+                      onChange={(e) => handleInputChange('bookingDetails.specialRequests', e.target.value)}
+                      placeholder="Souhaitez-vous ajouter quelque chose ?"
+                      className="rounded-xl border-[#EBE3D5] focus:border-[#F2A900] font-medium"
+                      rows={3}
+                    />
                   </div>
                 </div>
 
-                <div className="flex justify-between">
-                  <div className="flex space-x-3">
-                    <Button variant="outline" onClick={handleClose} className="text-red-600 border-red-600 hover:bg-red-50">
-                      Annuler
-                    </Button>
-                    <Button variant="outline" onClick={() => setStep(1)}>
-                      Précédent
-                    </Button>
-                  </div>
+                {/* Price Preview Card */}
+                <div className="bg-[#2D1B08] p-6 rounded-3xl text-white shadow-xl shadow-[#2D1B08]/20 flex items-center justify-between">
+                    <div>
+                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#F2A900] mb-1">Total Estimé</p>
+                        <div className="flex items-baseline gap-2">
+                            <span className="text-3xl font-black tracking-tighter">{calculateTotalPrice().toLocaleString()}</span>
+                            <span className="text-sm font-bold text-white/60 uppercase">FCFA</span>
+                        </div>
+                    </div>
+                    <Info className="h-5 w-5 text-white/20" />
+                </div>
+
+                <div className="flex justify-between items-center pt-4">
+                  <Button variant="ghost" onClick={() => setStep(1)} className="text-[#5D4037] font-black uppercase tracking-widest text-[10px]">
+                    Retour
+                  </Button>
                   <Button
                     onClick={handleSubmit}
-                    disabled={!formData.bookingDetails.checkIn || !formData.bookingDetails.checkOut || !formData.bookingDetails.guests || !formData.bookingDetails.rooms}
-                    className="bg-green-600 hover:bg-green-700"
+                    disabled={!formData.bookingDetails.checkIn || !formData.bookingDetails.checkOut || !formData.bookingDetails.guests}
+                    className="bg-[#2D1B08] hover:bg-black text-[#F2A900] font-black uppercase tracking-widest h-12 px-12 rounded-xl shadow-xl transition-all"
                   >
-                    Confirmer la réservation
+                    Valider la réservation
                   </Button>
                 </div>
               </div>
             )}
 
             {step === 3 && (
-              <div className="text-center space-y-6">
-                <div className="flex justify-center">
-                  <CheckCircle className="h-16 w-16 text-green-500" />
+              <div className="text-center space-y-8 animate-in zoom-in-95 duration-500 py-6">
+                <div className="relative inline-block">
+                    <div className="absolute inset-0 bg-[#1B5E20]/20 rounded-full blur-2xl animate-pulse" />
+                    <div className="relative w-24 h-24 bg-[#1B5E20] rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-[#1B5E20]/40 border-4 border-white">
+                        <CheckCircle className="h-12 w-12 text-white" />
+                    </div>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-green-600 mb-2">Réservation confirmée !</h3>
-                  <p className="text-gray-600 mb-4">
-                    Votre réservation à <strong>{accommodation.name}</strong> a été confirmée avec succès.
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Un email de confirmation a été envoyé à {formData.contactInfo.email}
+                  <h3 className="text-3xl font-black text-[#2D1B08] uppercase tracking-tighter mb-2">Félicitations !</h3>
+                  <p className="text-[#5D4037] font-medium max-w-sm mx-auto leading-relaxed">
+                    Votre demande de réservation pour <span className="font-black text-[#2D1B08]">{accommodation.name}</span> a été transmise avec succès.
                   </p>
                 </div>
 
-                <div className="flex justify-center space-x-3">
-                  <Button variant="outline" onClick={handleShowTicket}>
-                    Voir le ticket
-                  </Button>
-                  <Button onClick={handleClose}>
-                    Fermer
-                  </Button>
+                <div className="bg-[#F8F5F0] p-6 rounded-3xl border border-[#EBE3D5] text-left max-w-sm mx-auto">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-[#2D1B08] flex items-center justify-center text-[#F2A900]">
+                            <TicketModal.icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                            <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Référence Ticket</p>
+                            <p className="text-sm font-black text-[#2D1B08]">#{ticketData?.id.split('-')[1]}</p>
+                        </div>
+                    </div>
+                    <Button 
+                        onClick={() => setIsTicketModalOpen(true)}
+                        className="w-full bg-white hover:bg-gray-50 text-[#2D1B08] border-2 border-[#EBE3D5] font-black uppercase tracking-widest text-[10px] h-11 rounded-xl transition-all"
+                    >
+                        Accéder à mon Ticket
+                    </Button>
                 </div>
+
+                <Button onClick={handleClose} variant="ghost" className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">
+                    Fermer la fenêtre
+                </Button>
               </div>
             )}
           </div>

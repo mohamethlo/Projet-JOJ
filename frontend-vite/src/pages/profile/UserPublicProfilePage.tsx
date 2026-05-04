@@ -30,14 +30,19 @@ import {
     Flag,
     Instagram,
     Twitter,
-    Facebook
+    Facebook,
+    Home,
+    LayoutGrid
 } from 'lucide-react';
 
+import { mockAccommodations } from '@/lib/mockData';
 import useProtectedAction from '../../hooks/useProtectedAction';
+import AccommodationDetailsModal from '@/components/modals/AccommodationDetailsModal';
+import AccommodationBookingModal from '@/components/modals/AccommodationBookingModal';
 
 // ─── Types ────────────────────────────────────────────────────
 
-type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security' | 'hotel' | 'restaurant';
+type UserRole = 'tourist' | 'local' | 'guide' | 'organizer' | 'admin' | 'security' | 'hotel' | 'restaurant' | 'host';
 
 interface MockUserProfile {
     id: string;
@@ -134,6 +139,21 @@ const getMockUser = (id: string, role: UserRole): MockUserProfile => {
                 phone: '+221 78 555 44 33',
                 email: 'fatou.mbaye@local.sn',
             };
+        case 'host':
+            return {
+                ...base,
+                name: 'Moussa Diop',
+                role: 'host',
+                bio: "Hébergeur passionné avec une collection de villas et appartements de luxe au Sénégal. Mon objectif est de vous offrir un séjour inoubliable avec un service de classe mondiale.",
+                location: 'Dakar & Saly, Sénégal',
+                avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150',
+                rating: 4.9,
+                reviewCount: 156,
+                phone: '+221 77 555 66 77',
+                email: 'moussa.diop@host.sn',
+                website: 'www.moussadiop-rentals.sn',
+                verified: true,
+            };
         default: // tourist
             return {
                 ...base,
@@ -215,6 +235,7 @@ const getRoleLabel = (role: UserRole) => {
         case 'organizer': return 'Organisateur';
         case 'local': return 'Local';
         case 'tourist': return 'Touriste';
+        case 'host': return 'Hôte';
         default: return role;
     }
 };
@@ -225,6 +246,7 @@ const getRoleColor = (role: UserRole) => {
         case 'organizer': return 'bg-purple-500';
         case 'local': return 'bg-emerald-500';
         case 'tourist': return 'bg-orange-500';
+        case 'host': return 'bg-rose-500';
         default: return 'bg-gray-500';
     }
 };
@@ -236,13 +258,14 @@ const getCover = (role: UserRole) => {
         case 'guide': return 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1920&h=600&fit=crop';
         case 'organizer': return 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&h=600&fit=crop';
         case 'local': return 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1920&h=600&fit=crop';
+        case 'host': return 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1920&h=600&fit=crop';
         default: return 'https://images.unsplash.com/photo-1490750967868-88df5691cc83?w=1920&h=600&fit=crop';
     }
 };
 
 // ─── Tabs per role ────────────────────────────────────────────
 
-type TabId = 'publications' | 'about' | 'services' | 'events' | 'reviews';
+type TabId = 'publications' | 'about' | 'services' | 'events' | 'reviews' | 'properties';
 
 const getTabsForRole = (role: UserRole): { id: TabId; label: string; icon: React.ElementType }[] => {
     const publications = { id: 'publications' as TabId, label: 'Publications', icon: FileText };
@@ -254,6 +277,7 @@ const getTabsForRole = (role: UserRole): { id: TabId; label: string; icon: React
     switch (role) {
         case 'guide': return [publications, about, services, reviews];
         case 'organizer': return [publications, about, events, reviews];
+        case 'host': return [publications, about, { id: 'properties', label: 'Propriétés', icon: LayoutGrid }, reviews];
         default: return [publications, about];
     }
 };
@@ -274,6 +298,7 @@ const UserPublicProfilePage: React.FC = () => {
         if (id?.startsWith('g')) return 'guide';
         if (id?.startsWith('o')) return 'organizer';
         if (id?.startsWith('l')) return 'local';
+        if (id?.startsWith('h')) return 'host';
         return 'tourist';
     })();
 
@@ -478,6 +503,7 @@ const UserPublicProfilePage: React.FC = () => {
                     {activeTab === 'about' && <AboutTab profile={profile} role={viewedRole} />}
                     {activeTab === 'services' && viewedRole === 'guide' && <ServicesTab profile={profile} />}
                     {activeTab === 'events' && viewedRole === 'organizer' && <EventsTab profile={profile} />}
+                    {activeTab === 'properties' && viewedRole === 'host' && <PropertiesTab hostId={id || 'h-1'} />}
                     {activeTab === 'reviews' && <ReviewsTab reviews={mockReviews} rating={profile.rating || 4.5} reviewCount={profile.reviewCount || 0} />}
                 </div>
             </div>
@@ -898,6 +924,122 @@ const EventsTab: React.FC<{ profile: MockUserProfile }> = ({ profile }) => (
         </div>
     </div>
 );
+
+// ─── Properties Tab (Host only) ──────────────────────────────
+
+const PropertiesTab: React.FC<{ hostId: string }> = ({ hostId }) => {
+    const hostProperties = mockAccommodations.filter(acc => acc.host?.id === hostId);
+    const [selectedProperty, setSelectedProperty] = useState<any>(null);
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+    const handleViewDetails = (property: any) => {
+        setSelectedProperty(property);
+        setIsDetailsOpen(true);
+    };
+
+    const handleBooking = (property: any) => {
+        setSelectedProperty(property);
+        setIsBookingOpen(true);
+    };
+
+    return (
+        <div className="space-y-8">
+            <div className="bg-[#2D1B08] rounded-3xl p-8 text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#F2A900]/10 rounded-full -mr-20 -mt-20 blur-3xl" />
+                <div className="relative z-10">
+                    <h3 className="text-2xl font-black uppercase tracking-tighter mb-2">Catalogue Immobilier</h3>
+                    <p className="text-white/60 text-sm font-medium italic">
+                        Découvrez toutes les villas, appartements et résidences gérés par cet hôte.
+                    </p>
+                </div>
+            </div>
+
+            {hostProperties.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {hostProperties.map((property) => (
+                        <div key={property.id} className="group bg-white rounded-3xl overflow-hidden border-2 border-[#EBE3D5] hover:border-[#F2A900] transition-all shadow-sm hover:shadow-xl flex flex-col">
+                             <div 
+                                className="relative aspect-[16/10] overflow-hidden cursor-pointer"
+                                onClick={() => handleViewDetails(property)}
+                            >
+                                <img 
+                                    src={property.image} 
+                                    alt={property.name} 
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                />
+                                <div className="absolute top-4 left-4">
+                                    <Badge className="bg-black/50 backdrop-blur-md text-white border-none text-[10px] font-black uppercase px-3 py-1.5 rounded-full">
+                                        {property.type}
+                                    </Badge>
+                                </div>
+                                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                                    <div className="text-white font-black text-2xl tracking-tighter">{property.price}</div>
+                                </div>
+                             </div>
+                             
+                             <div className="p-6 flex-1 flex flex-col">
+                                <div className="mb-4">
+                                    <h4 className="font-black text-xl text-[#2D1B08] uppercase tracking-tighter group-hover:text-[#F2A900] transition-colors mb-1">
+                                        {property.name}
+                                    </h4>
+                                    <div className="flex items-center gap-1.5 text-xs text-[#5D4037]/70">
+                                        <MapPin className="h-3.5 w-3.5 text-[#F2A900]" />
+                                        <span className="font-bold">{property.location}</span>
+                                    </div>
+                                </div>
+
+                                <p className="text-sm text-[#5D4037]/70 italic line-clamp-2 mb-6 flex-1">
+                                    "{property.description}"
+                                </p>
+
+                                <div className="grid grid-cols-2 gap-3 mt-auto">
+                                    <Button 
+                                        variant="outline" 
+                                        className="border-[#2D1B08] text-[#2D1B08] hover:bg-[#2D1B08] hover:text-white font-black uppercase tracking-widest text-[9px] h-11 rounded-xl"
+                                        onClick={() => handleViewDetails(property)}
+                                    >
+                                        Détails
+                                    </Button>
+                                    <Button 
+                                        className="bg-[#2D1B08] hover:bg-black text-[#F2A900] font-black uppercase tracking-widest text-[9px] h-11 rounded-xl shadow-lg shadow-[#2D1B08]/10"
+                                        onClick={() => handleBooking(property)}
+                                    >
+                                        Réserver
+                                    </Button>
+                                </div>
+                             </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="py-20 text-center bg-white rounded-3xl border-2 border-[#EBE3D5] border-dashed">
+                    <div className="w-16 h-16 bg-[#F2A900]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Home className="h-8 w-8 text-[#F2A900]" />
+                    </div>
+                    <h3 className="text-lg font-black text-[#2D1B08]">Aucune propriété répertoriée</h3>
+                    <p className="text-[#5D4037]/60 text-sm italic">Cet hôte n'a pas encore ajouté de propriétés à son portfolio.</p>
+                </div>
+            )}
+
+            {/* Modales */}
+            {selectedProperty && (
+                <>
+                    <AccommodationDetailsModal 
+                        isOpen={isDetailsOpen} 
+                        onClose={() => setIsDetailsOpen(false)} 
+                        accommodation={selectedProperty} 
+                    />
+                    <AccommodationBookingModal 
+                        isOpen={isBookingOpen} 
+                        onClose={() => setIsBookingOpen(false)} 
+                        accommodation={selectedProperty} 
+                    />
+                </>
+            )}
+        </div>
+    );
+};
 
 // ─── Reviews Tab ──────────────────────────────────────────────
 

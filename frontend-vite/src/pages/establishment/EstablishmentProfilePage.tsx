@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useNotifications } from '@/context/NotificationContext';
 import { mockAccommodations } from '@/lib/mockData';
@@ -47,6 +47,7 @@ import { mockAgencies } from '@/lib/mockData';
 
 const EstablishmentProfilePage: React.FC = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { toggleFollow, isFollowing: checkFollowing } = useNotifications();
     const { performAction, AuthModalComponent } = useProtectedAction();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -101,6 +102,16 @@ const EstablishmentProfilePage: React.FC = () => {
             'Samedi - Dimanche': '11h00 - 00h00'
         }
     };
+
+    // Redirection automatique pour les propriétés indépendantes (Villas, Apparts)
+    useEffect(() => {
+        const type = baseEstablishment?.type || establishment?.category;
+        if (type && ['Villa', 'Appartement', 'Résidence'].includes(type)) {
+            const hostId = (baseEstablishment as any)?.host?.id || (establishment as any)?.host?.id || 'h-1';
+            console.log('Redirecting independent property to host:', hostId);
+            navigate(`/user/${hostId}?tab=properties`, { replace: true });
+        }
+    }, [baseEstablishment, establishment, navigate]);
 
     const isAccommodation = ['Hôtel', 'Auberge', 'Villa', 'Résidence'].includes(establishment.category);
     const isRestaurant = establishment.category === 'Restaurant';

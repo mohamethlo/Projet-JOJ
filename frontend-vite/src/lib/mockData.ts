@@ -513,19 +513,27 @@ export const mockAccommodations = [
   {
     id: '4',
     name: 'Villa Saly Beach',
-    description: 'Villa privée avec accès direct à la plage de Saly',
+    description: 'Villa privée avec accès direct à la plage de Saly. Parfait pour des vacances en famille ou entre amis, offrant luxe et intimité.',
     type: 'Villa',
     location: 'Saly',
     rating: 4.9,
     reviews: 98,
     price: '120,000 FCFA',
     image: '/images/hotel 4.jpeg',
-    amenities: ['WiFi', 'Piscine', 'Parking', 'Cuisine', 'Climatisation', 'Plage privée'],
+    amenities: ['WiFi', 'Piscine', 'Parking', 'Cuisine', 'Climatisation', 'Plage privée', 'Personnel de maison'],
     featured: true,
     availability: 'Disponible',
     capacity: 8,
     checkIn: '16:00',
     checkOut: '10:00',
+    host: {
+      id: 'h-1',
+      name: 'Moussa Diop',
+      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150',
+      role: 'Superhost',
+      propertyCount: 5,
+      rating: 4.9
+    },
     rooms: [
       {
         id: '401',
@@ -546,19 +554,27 @@ export const mockAccommodations = [
   {
     id: '5',
     name: 'Résidence Les Almadies',
-    description: 'Résidence moderne avec appartements meublés en centre-ville',
+    description: 'Résidence moderne avec appartements meublés en centre-ville. Idéal pour les séjours d\'affaires ou de loisirs.',
     type: 'Résidence',
     location: 'Dakar',
     rating: 4.4,
     reviews: 203,
     price: '45,000 FCFA',
     image: '/images/hotel 5.jpeg',
-    amenities: ['WiFi', 'Parking', 'Cuisine', 'Climatisation', 'Gym'],
+    amenities: ['WiFi', 'Parking', 'Cuisine', 'Climatisation', 'Gym', 'Sécurité 24/7'],
     featured: false,
     availability: 'Disponible',
     capacity: 100,
     checkIn: '15:00',
     checkOut: '12:00',
+    host: {
+      id: 'h-1',
+      name: 'Moussa Diop',
+      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150',
+      role: 'Superhost',
+      propertyCount: 5,
+      rating: 4.9
+    },
     rooms: [
       {
         id: '501',

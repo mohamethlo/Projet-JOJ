@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Star,
   MapPin,
@@ -39,6 +40,12 @@ interface AccommodationProps {
   capacity?: number;
   checkIn?: string;
   checkOut?: string;
+  host?: {
+    id: string;
+    name: string;
+    avatar: string;
+    role: string;
+  };
 }
 
 interface AccommodationCardProps {
@@ -71,10 +78,15 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
 
   const isAccommodation = ['Hôtel', 'Auberge', 'Villa', 'Résidence'].includes(accommodation.type);
 
+  const isIndependentProperty = ['Villa', 'Appartement', 'Résidence'].includes(accommodation.type);
+  const isHotelOrAuberge = ['Hôtel', 'Auberge'].includes(accommodation.type);
+
   const handleViewRooms = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isAccommodation) {
+    if (isHotelOrAuberge) {
       navigate(`/establishment/${accommodation.id}?tab=rooms`);
+    } else if (isIndependentProperty && accommodation.host) {
+      navigate(`/user/${accommodation.host.id}?tab=properties`);
     } else {
       setIsDetailsModalOpen(true);
     }
@@ -111,14 +123,13 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
   };
 
   const getAmenityIcon = (amenity: string) => {
-    switch (amenity) {
-      case 'WiFi': return <Wifi className="h-3 w-3" />;
-      case 'Parking': return <Car className="h-3 w-3" />;
-      case 'Piscine': return <Waves className="h-3 w-3" />;
-      case 'Gym': return <Dumbbell className="h-3 w-3" />;
-      case 'Climatisation': return <Wind className="h-3 w-3" />;
-      default: return <Star className="h-3 w-3" />;
-    }
+    const a = amenity.toLowerCase();
+    if (a.includes('wifi')) return <Wifi className="h-3 w-3" />;
+    if (a.includes('parking')) return <Car className="h-3 w-3" />;
+    if (a.includes('piscine')) return <Waves className="h-3 w-3" />;
+    if (a.includes('gym')) return <Dumbbell className="h-3 w-3" />;
+    if (a.includes('clim')) return <Wind className="h-3 w-3" />;
+    return <Star className="h-3 w-3" />;
   };
 
   if (viewMode === 'list') {
@@ -179,44 +190,38 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
               </div>
             </div>
 
-            <div className="flex items-center space-x-1.5 mb-5 bg-gray-50 w-fit px-3 py-1.5 rounded-xl border border-gray-100">
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} className={`h-3.5 w-3.5 ${s <= Math.floor(accommodation.rating) ? 'fill-[#F2A900] text-[#F2A900]' : 'text-[#EBE3D5]'}`} />
-                ))}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
+              <div className="flex items-center space-x-1.5 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} className={`h-3.5 w-3.5 ${s <= Math.floor(accommodation.rating) ? 'fill-[#F2A900] text-[#F2A900]' : 'text-[#EBE3D5]'}`} />
+                  ))}
+                </div>
+                <span className="font-black text-[#2D1B08] text-sm ml-1">{accommodation.rating}</span>
+                <span className="text-[10px] font-bold text-[#5D4037]/40 uppercase tracking-widest ml-1">({accommodation.reviews} avis)</span>
               </div>
-              <span className="font-black text-[#2D1B08] text-sm ml-1">{accommodation.rating}</span>
-              <span className="text-[10px] font-bold text-[#5D4037]/40 uppercase tracking-widest ml-1">({accommodation.reviews} avis)</span>
+
+              {accommodation.host && (
+                <Link 
+                  to={`/user/${accommodation.host.id}`}
+                  className="flex items-center gap-3 bg-[#FDFCFB] p-1.5 pr-4 rounded-full border border-[#EBE3D5] hover:border-[#F2A900] transition-all group/host"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Avatar className="h-8 w-8 border-2 border-white shadow-sm">
+                    <AvatarImage src={accommodation.host.avatar} />
+                    <AvatarFallback className="bg-[#F2A900] text-white text-[10px] font-black">
+                      {accommodation.host.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-[8px] font-black text-[#5D4037]/60 uppercase tracking-widest leading-none">Hôte vérifié</span>
+                    <span className="text-xs font-black text-[#2D1B08] group-hover/host:text-[#F2A900] transition-colors">{accommodation.host.name}</span>
+                  </div>
+                </Link>
+              )}
             </div>
 
             <p className="text-[#5D4037]/80 mb-6 line-clamp-2 font-medium leading-relaxed italic">"{accommodation.description}"</p>
-
-            {/* ADAPTIVE COMPOSITION DETAILS (Villas vs Hotels) */}
-            {(accommodation.type === 'Villa' || accommodation.type === 'Appartement' || accommodation.type === 'Résidence') && (
-              <div className="flex flex-wrap gap-4 mb-5 p-4 bg-[#F8F5F0] rounded-2xl border border-[#EBE3D5]/50">
-                <div className="flex items-center gap-2">
-                  <div className="bg-white p-1.5 rounded-lg text-[#F2A900] shadow-sm"><Building className="h-4 w-4" /></div>
-                  <div>
-                    <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Superficie</div>
-                    <div className="text-sm font-black text-[#2D1B08]">{(accommodation as any).surface || '150'} m²</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="bg-white p-1.5 rounded-lg text-[#F2A900] shadow-sm"><Bed className="h-4 w-4" /></div>
-                  <div>
-                    <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Chambres</div>
-                    <div className="text-sm font-black text-[#2D1B08]">{(accommodation as any).bedrooms || '3'}</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="bg-white p-1.5 rounded-lg text-[#F2A900] shadow-sm"><Waves className="h-4 w-4" /></div>
-                  <div>
-                    <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Salles de bain</div>
-                    <div className="text-sm font-black text-[#2D1B08]">{(accommodation as any).bathrooms || '2'}</div>
-                  </div>
-                </div>
-              </div>
-            )}
 
             <div className="mt-auto flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-6 border-t border-[#EBE3D5]/50">
               <div className="flex flex-wrap gap-2">
@@ -229,18 +234,16 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[#EBE3D5] text-[#2D1B08] hover:bg-[#F8F5F0] font-black uppercase tracking-widest px-6 rounded-xl h-12 shadow-sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleViewDetails(e);
-                  }}
-                >
-                  <Eye className="h-4 w-4 mr-2 text-gray-400" />
-                  Aperçu
-                </Button>
+                {isAccommodation && (
+                    <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-[#EBE3D5] text-[#2D1B08] hover:bg-[#F8F5F0] font-black uppercase tracking-widest px-6 rounded-xl h-12 shadow-sm"
+                    onClick={handleViewRooms}
+                    >
+                    {['Villa', 'Appartement', 'Résidence'].includes(accommodation.type) ? 'Unités' : 'Chambres'}
+                    </Button>
+                )}
                 <Button
                   onClick={handleBooking}
                   className="bg-[#2D1B08] hover:bg-black text-[#F2A900] font-black uppercase tracking-widest px-8 rounded-xl h-12 shadow-xl shadow-[#2D1B08]/10 hover:-translate-y-0.5 transition-all"
@@ -302,7 +305,7 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
             <Button
               size="sm"
               variant="ghost"
-              className="absolute top-4 right-4 h-10 w-10 p-0 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white hover:text-[#E11D48] shadow-md transition-all transform hover:scale-110"
+              className="absolute top-4 right-4 h-10 w-10 p-0 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white hover:text-[#E11D48] shadow-md transition-all transform hover:scale-110"
               onClick={handleFavorite}
             >
               <Heart className={`h-5 w-5 ${isFavorited ? 'fill-[#E11D48] text-[#E11D48]' : ''}`} />
@@ -342,36 +345,36 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
 
           <p className="text-[#5D4037]/80 text-sm mb-4 line-clamp-2 font-medium leading-relaxed italic">"{accommodation.description}"</p>
 
-          {/* ADAPTIVE COMPOSITION DETAILS (GRID VIEW) */}
-          {(accommodation.type === 'Villa' || accommodation.type === 'Appartement' || accommodation.type === 'Résidence') && (
-            <div className="flex items-center justify-between gap-2 mb-4 p-3 bg-[#F8F5F0] rounded-xl border border-[#EBE3D5]/50">
-               <div className="text-center flex-1">
-                  <div className="text-[12px] font-black text-[#2D1B08]">{(accommodation as any).surface || '150'}<span className="text-[9px]">m²</span></div>
-                  <div className="text-[7px] font-black text-gray-400 uppercase tracking-widest mt-0.5">Surface</div>
-               </div>
-               <div className="w-px h-6 bg-gray-200"></div>
-               <div className="text-center flex-1">
-                  <div className="text-[12px] font-black text-[#2D1B08]">{(accommodation as any).bedrooms || '3'}</div>
-                  <div className="text-[7px] font-black text-gray-400 uppercase tracking-widest mt-0.5">Chambres</div>
-               </div>
-               <div className="w-px h-6 bg-gray-200"></div>
-               <div className="text-center flex-1">
-                  <div className="text-[12px] font-black text-[#2D1B08]">{(accommodation as any).bathrooms || '2'}</div>
-                  <div className="text-[7px] font-black text-gray-400 uppercase tracking-widest mt-0.5">SdB</div>
-               </div>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-wrap gap-1.5">
+                {accommodation.amenities.slice(0, 2).map((amenity, index) => (
+                <Badge key={index} variant="outline" className="border-[#EBE3D5] text-[#2D1B08] bg-white font-bold text-[9px] px-2 py-1 rounded-md">
+                    {getAmenityIcon(amenity)}
+                    <span className="ml-1 uppercase tracking-tighter">{amenity}</span>
+                </Badge>
+                ))}
             </div>
-          )}
 
-          <div className="flex flex-wrap gap-1.5 mb-6 mt-auto">
-            {accommodation.amenities.slice(0, 3).map((amenity, index) => (
-              <Badge key={index} variant="outline" className="border-[#EBE3D5] text-[#2D1B08] bg-white font-bold text-[9px] px-2 py-1 rounded-md">
-                {getAmenityIcon(amenity)}
-                <span className="ml-1 uppercase tracking-tighter">{amenity}</span>
-              </Badge>
-            ))}
+            {accommodation.host && (
+                <Link 
+                  to={`/user/${accommodation.host.id}`}
+                  className="flex items-center gap-2 group/host bg-[#F8F9FA] p-1 pr-3 rounded-full border border-[#EBE3D5] hover:border-[#F2A900] transition-all"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Avatar className="h-6 w-6 border border-white">
+                    <AvatarImage src={accommodation.host.avatar} />
+                    <AvatarFallback className="text-[10px] bg-[#F2A900] text-white">
+                      {accommodation.host.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-[10px] font-black text-[#2D1B08] group-hover/host:text-[#F2A900] transition-colors truncate max-w-[80px]">
+                    {accommodation.host.name}
+                  </span>
+                </Link>
+            )}
           </div>
 
-          <div className="border-t border-[#EBE3D5]/50 pt-4 flex flex-wrap items-center justify-end gap-2">
+          <div className="border-t border-[#EBE3D5]/50 pt-4 flex flex-wrap items-center justify-end gap-2 mt-auto">
               {canLeaveReviewForAccommodation && (
                 <Button
                   variant="outline"
@@ -390,21 +393,10 @@ const AccommodationCard: React.FC<AccommodationCardProps> = ({ accommodation, vi
                   className="border-[#1B5E20] text-[#1B5E20] hover:bg-[#1B5E20] hover:text-white font-black uppercase tracking-tighter w-9 sm:w-auto sm:px-2.5 rounded-lg h-9 flex items-center justify-center gap-1 transition-all flex-shrink-0"
                   onClick={handleViewRooms}
                 >
-                  <Bed className="h-3.5 w-3.5" />
+                  <Building className="h-3.5 w-3.5" />
                   <span className="hidden xl:inline text-[9px]">
-                    Chambres
+                    {['Villa', 'Appartement', 'Résidence'].includes(accommodation.type) ? 'Unités' : 'Chambres'}
                   </span>
-                </Button>
-              )}
-              {isRestaurant && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[#F2A900] text-[#F2A900] hover:bg-[#F2A900] hover:text-white font-black uppercase tracking-tighter w-10 sm:w-auto sm:px-3 rounded-xl h-10 flex items-center justify-center gap-1.5 transition-all flex-shrink-0"
-                  onClick={handleViewMenu}
-                >
-                  <Utensils className="h-4 w-4" />
-                  <span className="hidden xl:inline text-[9px]">Menu</span>
                 </Button>
               )}
               <Button
